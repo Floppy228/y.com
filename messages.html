@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сообщения | Y.com</title>
+    <link rel="stylesheet" href="design/messages.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- Левая панель с SVG-иконками -->
+    <aside class="sidebar-left">
+        <div class="logo">Y.com</div>
+        <nav class="nav-group">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Главная
+            </a>
+            <a href="profile.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Профиль
+            </a>
+            <a href="messages.html" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Сообщения
+            </a>
+            <a href="ai.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+                Y-Core
+            </a>
+            <a href="following.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Подписки
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
+                </svg>
+                Настройки
+            </a>
+        </nav>
+        <button class="btn-main" id="newMessageBtn">
+            <svg viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Новое сообщение
+        </button>
+    </aside>
+
+    <!-- Центральная колонка -->
+    <main class="content">
+        <div class="page-header">
+            <h1>Сообщения</h1>
+        </div>
+        
+        <div class="messages-container">
+            <!-- Левая колонка - список чатов -->
+            <div class="chats-sidebar">
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск в сообщениях" id="searchChats">
+                </div>
+                
+                <div class="chats-list" id="chatsList">
+                    <!-- Чаты будут добавляться динамически -->
+                </div>
+            </div>
+            
+            <!-- Правая колонка - окно чата -->
+            <div class="chat-main" id="chatMain">
+                <!-- Приветственный экран (пока чат не выбран) -->
+                <div class="welcome-message" id="welcomeScreen">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <h3>Выберите чат</h3>
+                    <p>Начните общение с другом</p>
+                </div>
+
+                <!-- Активный чат (изначально скрыт) -->
+                <div id="activeChat" style="display: none; height: 100%; flex-direction: column;">
+                    <!-- Шапка чата -->
+                    <div class="chat-main-header">
+                        <div class="chat-main-avatar online" id="chatAvatar">TA</div>
+                        <div class="chat-main-info">
+                            <div class="chat-main-name" id="chatName">Tech Analytics</div>
+                            <div class="chat-main-status" id="chatStatus">В сети</div>
+                        </div>
+                        <div class="chat-main-actions">
+                            <button class="chat-action-btn" id="searchInChat">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </button>
+                            <button class="chat-action-btn" id="chatMenu">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="1"/>
+                                    <circle cx="12" cy="5" r="1"/>
+                                    <circle cx="12" cy="19" r="1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Сообщения -->
+                    <div class="messages-area" id="messagesArea"></div>
+                    
+                    <!-- Поле ввода -->
+                    <div class="message-input-area">
+                        <div class="message-input-wrapper">
+                            <textarea class="message-input" id="messageInput" placeholder="Написать сообщение..." rows="1"></textarea>
+                            <div class="input-tools">
+                                <button class="input-tool-btn" id="emojiBtn">
+                                    <svg viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+                                        <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
+                                        <path d="M8 14a4 4 0 0 0 8 0"/>
+                                    </svg>
+                                </button>
+                                <button class="input-tool-btn" id="attachBtn">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn-send" id="sendBtn" disabled>
+                            <svg viewBox="0 0 24 24">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Правая панель -->
+    <aside class="sidebar-right">
+        <div class="search-container">
+            <input type="text" placeholder="Поиск" id="globalSearch">
+        </div>
+        <div class="panel">
+            <h3>Актуальное</h3>
+            <div class="trend-row">
+                <span class="trend-tag">#Ycom</span>
+                <div class="trend-title">Новые функции чата</div>
+            </div>
+            <div class="trend-row">
+                <span class="trend-tag">#Update</span>
+                <div class="trend-title">Шифрование данных</div>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Кого добавить</h3>
+            <div class="suggested-user">
+                <div class="suggested-avatar">АП</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Анна Петрова</div>
+                    <div class="suggested-handle">@anna_dev</div>
+                </div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar dark-grad">МС</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Михаил Сидоров</div>
+                    <div class="suggested-handle">@mike_design</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ========== ДАННЫЕ ==========
+        let chats = [
+            {
+                id: 1,
+                name: 'Tech Analytics',
+                handle: '@tech_data',
+                avatar: 'TA',
+                online: true,
+                lastMessage: 'Новый протокол безопасности готов к внедрению...',
+                time: '14:20',
+                unread: 2,
+                messages: [
+                    { id: 1, text: 'Александр, мы обновили архитектуру сообщений в Y.com. Теперь задержка минимальна.', time: '14:15', type: 'incoming' },
+                    { id: 2, text: 'Отлично. Солидный стиль и отсутствие лишних элементов — это то, что нужно.', time: '14:18', type: 'outgoing' },
+                    { id: 3, text: 'Согласен. Никакого шума, только данные.', time: '14:20', type: 'incoming' }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Иван Иванов',
+                handle: '@ivanov_design',
+                avatar: 'II',
+                online: false,
+                lastMessage: 'Вы видели обновление дизайна?',
+                time: 'Вчера',
+                unread: 0,
+                messages: [
+                    { id: 1, text: 'Привет! Как дела?', time: '10:30', type: 'incoming' },
+                    { id: 2, text: 'Привет! Всё отлично, работаю над проектом', time: '10:32', type: 'outgoing' },
+                    { id: 3, text: 'Вы видели обновление дизайна?', time: '10:33', type: 'incoming' }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Система',
+                handle: '@system',
+                avatar: 'S',
+                online: true,
+                lastMessage: 'Обновление завершено успешно',
+                time: '12:30',
+                unread: 0,
+                messages: [
+                    { id: 1, text: 'Обновление завершено успешно', time: '12:30', type: 'incoming' }
+                ]
+            }
+        ];
+
+        let currentChatId = null;
+        let messageInput = document.getElementById('messageInput');
+        let sendBtn = document.getElementById('sendBtn');
+        let messagesArea = document.getElementById('messagesArea');
+        let welcomeScreen = document.getElementById('welcomeScreen');
+        let activeChat = document.getElementById('activeChat');
+
+        // ========== УВЕДОМЛЕНИЯ ==========
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // ========== ОТРИСОВКА СПИСКА ЧАТОВ ==========
+        function renderChats() {
+            const container = document.getElementById('chatsList');
+            container.innerHTML = '';
+
+            chats.forEach(chat => {
+                const chatElement = document.createElement('div');
+                chatElement.className = `chat-item ${currentChatId === chat.id ? 'active' : ''}`;
+                chatElement.dataset.chatId = chat.id;
+
+                chatElement.innerHTML = `
+                    <div class="chat-avatar ${chat.online ? 'online' : ''}">${chat.avatar}</div>
+                    <div class="chat-content">
+                        <div class="chat-header">
+                            <span class="chat-name">${chat.name}</span>
+                            <span class="chat-time">${chat.time}</span>
+                        </div>
+                        <div class="chat-preview ${chat.unread > 0 ? 'unread' : ''}">
+                            ${chat.lastMessage}
+                            ${chat.unread > 0 ? `<span class="unread-badge"></span>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                chatElement.addEventListener('click', () => selectChat(chat.id));
+                container.appendChild(chatElement);
+            });
+        }
+
+        // ========== ВЫБОР ЧАТА ==========
+        function selectChat(chatId) {
+            currentChatId = chatId;
+            const chat = chats.find(c => c.id === chatId);
+            
+            // Обновляем активный класс в списке
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.classList.remove('active');
+                if (parseInt(item.dataset.chatId) === chatId) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Показываем окно чата
+            welcomeScreen.style.display = 'none';
+            activeChat.style.display = 'flex';
+
+            // Обновляем информацию в шапке
+            document.getElementById('chatName').textContent = chat.name;
+            document.getElementById('chatStatus').textContent = chat.online ? 'В сети' : 'Был(а) недавно';
+            
+            const chatAvatar = document.getElementById('chatAvatar');
+            chatAvatar.textContent = chat.avatar;
+
+            // Отрисовываем сообщения
+            renderMessages(chat.messages);
+        }
+
+        // ========== ОТРИСОВКА СООБЩЕНИЙ ==========
+        function renderMessages(messages) {
+            messagesArea.innerHTML = '';
+
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.type}`;
+
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">${msg.text}</div>
+                    <span class="message-time">${msg.time}</span>
+                `;
+
+                messagesArea.appendChild(messageDiv);
+            });
+
+            // Скролл вниз
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        // ========== ОТПРАВКА СООБЩЕНИЯ ==========
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !currentChatId) return;
+
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const time = `${hours}:${minutes}`;
+
+            // Добавляем сообщение
+            const chat = chats.find(c => c.id === currentChatId);
+            chat.messages.push({
+                id: Date.now(),
+                text: text,
+                time: time,
+                type: 'outgoing'
+            });
+
+            // Обновляем последнее сообщение в списке чатов
+            chat.lastMessage = text;
+            chat.time = 'только что';
+
+            // Перерисовываем
+            renderMessages(chat.messages);
+            renderChats();
+
+            // Очищаем поле
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            // Эмулируем ответ через 1 секунду
+            setTimeout(() => {
+                chat.messages.push({
+                    id: Date.now() + 1,
+                    text: 'Сообщение доставлено. Скоро отвечу!',
+                    time: time,
+                    type: 'incoming'
+                });
+                chat.lastMessage = 'Сообщение доставлено. Скоро отвечу!';
+                renderMessages(chat.messages);
+                renderChats();
+            }, 1000);
+        }
+
+        // ========== АВТО-ВЫСОТА TEXTAREA ==========
+        if (messageInput) {
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                
+                // Активируем кнопку если есть текст
+                sendBtn.disabled = !this.value.trim();
+            });
+
+            // ========== ОТПРАВКА ПО ENTER ==========
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // ========== КНОПКА ОТПРАВКИ ==========
+        if (sendBtn) {
+            sendBtn.addEventListener('click', sendMessage);
+        }
+
+        // ========== НОВОЕ СООБЩЕНИЕ ==========
+        document.getElementById('newMessageBtn').addEventListener('click', function() {
+            showToast('Функция создания нового чата');
+        });
+
+        // ========== ПОИСК ПО ЧАТАМ ==========
+        document.getElementById('searchChats').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const filtered = chats.filter(chat => 
+                chat.name.toLowerCase().includes(query) || 
+                chat.handle.toLowerCase().includes(query)
+            );
+
+            const container = document.getElementById('chatsList');
+            container.innerHTML = '';
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">Ничего не найдено</div>';
+            } else {
+                filtered.forEach(chat => {
+                    const chatElement = document.createElement('div');
+                    chatElement.className = `chat-item ${currentChatId === chat.id ? 'active' : ''}`;
+                    chatElement.dataset.chatId = chat.id;
+                    chatElement.innerHTML = `
+                        <div class="chat-avatar ${chat.online ? 'online' : ''}">${chat.avatar}</div>
+                        <div class="chat-content">
+                            <div class="chat-header">
+                                <span class="chat-name">${chat.name}</span>
+                                <span class="chat-time">${chat.time}</span>
+                            </div>
+                            <div class="chat-preview">${chat.lastMessage}</div>
+                        </div>
+                    `;
+                    chatElement.addEventListener('click', () => selectChat(chat.id));
+                    container.appendChild(chatElement);
+                });
+            }
+        });
+
+        // ========== ГЛОБАЛЬНЫЙ ПОИСК ==========
+        document.getElementById('globalSearch').addEventListener('input', function(e) {
+            if (e.target.value.length > 2) {
+                showToast('Поиск: ' + e.target.value);
+            }
+        });
+
+        // ========== КНОПКИ В ЧАТЕ ==========
+        document.getElementById('emojiBtn').addEventListener('click', function() {
+            if (messageInput) {
+                messageInput.value += ' 😊';
+                messageInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        document.getElementById('attachBtn').addEventListener('click', function() {
+            showToast('Загрузка файлов');
+        });
+
+        document.getElementById('searchInChat').addEventListener('click', function() {
+            showToast('Поиск в чате');
+        });
+
+        document.getElementById('chatMenu').addEventListener('click', function() {
+            showToast('Меню чата');
+        });
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        renderChats();
+
+        // Выбираем первый чат по умолчанию
+        if (chats.length > 0) {
+            selectChat(chats[0].id);
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,889 @@
+/* ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ========== */
+:root {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --surface-light: #141414;
+    --accent: #6366f1;
+    --accent-dark: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.3);
+    --border: #1f1f1f;
+    --text-primary: #ffffff;
+    --text-secondary: #71717a;
+    --success: #10b981;
+    --danger: #ef4444;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ========== СБРОС ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text-primary);
+    overflow: hidden;
+}
+
+/* ========== ОСНОВНАЯ СЕТКА ========== */
+.layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background: var(--bg);
+}
+
+/* ========== ЛЕВАЯ ПАНЕЛЬ ========== */
+.sidebar-left {
+    padding: 20px 16px;
+    border-right: 1px solid var(--border);
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+}
+
+.logo {
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 32px;
+    padding-left: 12px;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    letter-spacing: -1.5px;
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 18px;
+    padding: 12px 16px;
+    border-radius: 30px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-weight: 500;
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+    background: var(--surface);
+}
+
+.nav-item.active {
+    color: var(--text-primary);
+    background: var(--surface);
+    font-weight: 600;
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+.nav-item.active svg {
+    stroke: var(--accent);
+}
+
+/* ========== ЦЕНТРАЛЬНАЯ КОЛОНКА ========== */
+.content {
+    border-right: 1px solid var(--border);
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--surface);
+}
+
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: var(--surface);
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ========== ШАПКА ПРОФИЛЯ ========== */
+.profile-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px; /* Уменьшен padding */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.profile-header .post-count {
+    color: var(--text-secondary);
+    font-size: 13px;
+    background: var(--surface);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+/* ========== ОБЛОЖКА ========== */
+.profile-cover {
+    height: 180px; /* Уменьшена высота обложки */
+    background: linear-gradient(135deg, #1a1a1a 0%, #000 50%, #1e1b4b 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.profile-cover::before {
+    content: "Y.com Cover";
+    opacity: 0.5;
+}
+
+.profile-cover img {
+    display: none;
+}
+
+/* ========== ИНФОРМАЦИЯ ПРОФИЛЯ ========== */
+.profile-info {
+    padding: 0 16px 12px 16px; /* Уменьшен нижний отступ */
+    position: relative;
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar-wrapper {
+    position: absolute;
+    top: -50px; /* Поднят аватар */
+    left: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    padding: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.profile-avatar {
+    width: 100px; /* Уменьшен размер аватара */
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #2e1065);
+    overflow: hidden;
+    border: 4px solid var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px; /* Уменьшен размер текста */
+    font-weight: 700;
+}
+
+.profile-avatar img {
+    display: none;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px; /* Уменьшен gap между кнопками */
+    margin-bottom: -25px; /* Уменьшен отступ снизу */
+    padding-right: 30px;
+}
+
+/* ========== КОМПАКТНЫЕ КНОПКИ ========== */
+.btn-primary {
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 6px 14px; /* Уменьшен padding */
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 13px; /* Уменьшен размер шрифта */
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Уменьшен gap */
+}
+
+.btn-primary:hover {
+    background: var(--accent-dark);
+}
+
+.btn-primary svg {
+    width: 14px; /* Уменьшен размер иконки */
+    height: 14px;
+    stroke: white;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: white;
+    padding: 6px 12px; /* Уменьшен padding */
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 13px; /* Уменьшен размер шрифта */
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Уменьшен gap */
+}
+
+.btn-secondary:hover {
+    background: var(--surface);
+    border-color: var(--accent);
+}
+
+.btn-secondary svg {
+    width: 14px; /* Уменьшен размер иконки */
+    height: 14px;
+    stroke: currentColor;
+}
+
+.profile-name-section {
+    margin-left: 120px; /* Уменьшен отступ из-за меньшего аватара */
+    margin-bottom: 8px; /* Уменьшен отступ */
+}
+
+.profile-name {
+    font-size: 20px; /* Немного уменьшен размер */
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; /* Немного уменьшен */
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    font-size: 10px;
+    color: white;
+}
+
+.profile-handle {
+    color: var(--text-secondary);
+    font-size: 14px; /* Уменьшен размер */
+    margin-top: 2px;
+}
+
+.profile-bio {
+    color: #e4e4e7;
+    font-size: 14px; /* Уменьшен размер */
+    line-height: 1.5;
+    margin: 12px 0; /* Уменьшен отступ */
+    margin-left: 120px; /* Уменьшен отступ */
+}
+
+.profile-meta {
+    display: flex;
+    gap: 16px; /* Уменьшен gap */
+    margin: 12px 0; /* Уменьшен отступ */
+    color: var(--text-secondary);
+    font-size: 13px; /* Уменьшен размер */
+    margin-left: 120px; /* Уменьшен отступ */
+}
+
+.profile-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Уменьшен gap */
+}
+
+.profile-meta-item svg {
+    width: 14px; /* Уменьшен размер иконки */
+    height: 14px;
+    stroke: currentColor;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 20px; /* Уменьшен gap */
+    margin-left: 120px; /* Уменьшен отступ */
+}
+
+.profile-stats span {
+    color: var(--text-secondary);
+    font-size: 13px; /* Уменьшен размер */
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.profile-stats strong {
+    color: var(--text-primary);
+    font-size: 16px; /* Уменьшен размер */
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.profile-stats span:hover {
+    color: var(--accent);
+}
+
+.profile-stats span:hover strong {
+    color: var(--accent);
+}
+
+/* ========== ТАБЫ ========== */
+.profile-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 53px; /* Изменен из-за меньшей шапки */
+    z-index: 25;
+}
+
+.profile-tab {
+    flex: 1;
+    text-align: center;
+    padding: 14px; /* Уменьшен padding */
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 14px; /* Уменьшен размер */
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+}
+
+.profile-tab:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.profile-tab.active {
+    color: var(--text-primary);
+}
+
+.profile-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px; /* Уменьшена ширина */
+    height: 3px; /* Уменьшена высота */
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+/* ========== ПОСТ ========== */
+.post {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: 0.15s;
+    cursor: pointer;
+    display: flex;
+}
+
+.post:hover {
+    background: #050505;
+}
+
+.post-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #2e1065);
+    margin-right: 12px;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.post-avatar img {
+    display: none;
+}
+
+.post-content {
+    flex: 1;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.post-author-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.post-author-handle {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.post-time {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.post-time::before {
+    content: "·";
+    margin: 0 4px;
+}
+
+.post-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #e4e4e7;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+}
+
+.post-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 12px 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.post-image {
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.post-image.single {
+    width: 100%;
+    height: 200px;
+}
+
+.post-image.single::before {
+    content: "📷 Изображение";
+}
+
+.post-image.multiple {
+    width: calc(50% - 2px);
+    aspect-ratio: 1;
+}
+
+.post-image.multiple::before {
+    content: "📷";
+    font-size: 24px;
+}
+
+.post-image img {
+    display: none;
+}
+
+.post-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.action-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent);
+}
+
+.action-btn.liked {
+    color: var(--danger);
+}
+
+.action-btn.liked svg {
+    fill: var(--danger);
+    stroke: var(--danger);
+}
+
+.action-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+}
+
+/* ========== КОММЕНТАРИИ ========== */
+.comments-section {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: none;
+}
+
+.comments-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #2e1065);
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.comment-avatar img {
+    display: none;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    align-items: center;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: white;
+    font-size: 13px;
+}
+
+.comment-time {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.comment-text {
+    color: #e4e4e7;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.comment-input-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.comment-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+}
+
+.comment-input:focus {
+    border-color: var(--accent);
+}
+
+.comment-submit {
+    background: var(--accent);
+    border: none;
+    border-radius: 30px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ========== МЕДИА СЕТКА ========== */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 2px;
+}
+
+.media-item {
+    aspect-ratio: 1;
+    background: var(--surface);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.media-item img {
+    display: none;
+}
+
+.media-item:hover {
+    background: var(--surface-light);
+}
+
+/* ========== ПРАВАЯ ПАНЕЛЬ ========== */
+.sidebar-right {
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+}
+
+.search-container input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 30px;
+    color: white;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-container input:focus {
+    border-color: var(--accent);
+}
+
+.panel {
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.panel h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.trend-row {
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.trend-tag {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.trend-title {
+    font-weight: 600;
+    margin-top: 2px;
+    color: white;
+    font-size: 14px;
+}
+
+.suggested-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.suggested-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #2e1065);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.suggested-avatar img {
+    display: none;
+}
+
+.suggested-info {
+    flex: 1;
+}
+
+.suggested-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+}
+
+.suggested-handle {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+/* ========== ПУСТЫЕ СОСТОЯНИЯ ========== */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state svg {
+    width: 50px;
+    height: 50px;
+    stroke: currentColor;
+    margin-bottom: 12px;
+    opacity: 0.3;
+}
+
+.empty-state h3 {
+    color: white;
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.empty-state p {
+    font-size: 14px;
+}
+
+/* ========== УВЕДОМЛЕНИЯ ========== */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    z-index: 9999;
+    animation: slideUp 0.3s;
+    font-size: 14px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* ========== АНИМАЦИИ ========== */
+.post-new {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== КОНТЕЙНЕРЫ ТАБОВ ========== */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}

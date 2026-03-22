@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход и регистрация | Y.com</title>
+    <link rel="stylesheet" href="design/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Левая часть с брендингом -->
+        <div class="auth-brand">
+            <div class="brand-content">
+                <div class="brand-logo">Y</div>
+                <h1 class="brand-title">Y.com</h1>
+                <p class="brand-subtitle">Знать обо всем</p>
+
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Только важные контакты</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <path d="M8 10h.01"/>
+                            <path d="M12 10h.01"/>
+                            <path d="M16 10h.01"/>
+                        </svg>
+                        <span>Чистый минимализм</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v8"/>
+                            <path d="M8 12h8"/>
+                            <path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>
+                        </svg>
+                        <span>AI-помощник Y-Core</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая часть с формами -->
+        <div class="auth-forms">
+            <div class="forms-container">
+                <div class="auth-toggle">
+                    <button class="auth-toggle-btn active" id="loginTabBtn">Вход</button>
+                    <button class="auth-toggle-btn" id="registerTabBtn">Регистрация</button>
+                </div>
+
+                <div class="auth-form-stack">
+                    <!-- Форма входа -->
+                    <div class="auth-form active" id="loginForm">
+                        <h2 class="form-title">Добро пожаловать!</h2>
+                        <p class="form-subtitle">Войдите в свой аккаунт Y.com</p>
+
+                        <form id="loginFormElement" novalidate>
+                            <div class="input-group">
+                                <label class="input-label" for="loginEmail">Email</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                                        <path d="M22 6L12 13 2 6"/>
+                                    </svg>
+                                    <input type="email" class="input-field" id="loginEmail" placeholder="your@email.com" autocomplete="email" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="loginPassword">Пароль</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    <input type="password" class="input-field" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+                                    <button class="toggle-password" type="button" aria-label="Показать пароль" aria-pressed="false">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="rememberMe">
+                                    <span class="checkbox-custom"></span>
+                                    <span>Запомнить меня</span>
+                                </label>
+
+                                <a href="#" class="forgot-link" id="forgotPassword">Забыли пароль?</a>
+                            </div>
+
+                            <button class="btn-submit" type="submit" id="loginBtn">
+                                <span>Войти</span>
+                                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Форма регистрации -->
+                    <div class="auth-form" id="registerForm">
+                        <h2 class="form-title">Создать аккаунт</h2>
+                        <p class="form-subtitle">Присоединяйтесь к Y.com</p>
+
+                        <form id="registerFormElement" novalidate>
+                            <div class="input-group">
+                                <label class="input-label" for="registerName">Имя</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    <input type="text" class="input-field" id="registerName" placeholder="Алексей Морозов" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="registerUsername">Username</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    <input type="text" class="input-field" id="registerUsername" placeholder="alex_morozov" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="registerEmail">Email</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                                        <path d="M22 6L12 13 2 6"/>
+                                    </svg>
+                                    <input type="email" class="input-field" id="registerEmail" placeholder="your@email.com" autocomplete="email" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="registerPassword">Пароль</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    <input type="password" class="input-field" id="registerPassword" placeholder="••••••••" autocomplete="new-password" required>
+                                    <button class="toggle-password" type="button" aria-label="Показать пароль" aria-pressed="false">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="registerConfirm">Подтвердите пароль</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    <input type="password" class="input-field" id="registerConfirm" placeholder="••••••••" autocomplete="new-password" required>
+                                    <button class="toggle-password" type="button" aria-label="Показать пароль" aria-pressed="false">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="termsCheck" required>
+                                    <span class="checkbox-custom"></span>
+                                    <span>Я принимаю условия</span>
+                                </label>
+                            </div>
+
+                            <button class="btn-submit" type="submit" id="registerBtn">
+                                <span>Зарегистрироваться</span>
+                                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы переключения форм
+            const loginTabBtn = document.getElementById('loginTabBtn');
+            const registerTabBtn = document.getElementById('registerTabBtn');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            // Иконки для показа/скрытия пароля
+            const openEyeIcon = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+            `;
+
+            const closedEyeIcon = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+            `;
+
+            // Функция переключения между формами
+            function switchForm(formToShow) {
+                if (formToShow === 'login') {
+                    loginForm.classList.add('active');
+                    registerForm.classList.remove('active');
+                    loginTabBtn.classList.add('active');
+                    registerTabBtn.classList.remove('active');
+                } else {
+                    registerForm.classList.add('active');
+                    loginForm.classList.remove('active');
+                    registerTabBtn.classList.add('active');
+                    loginTabBtn.classList.remove('active');
+                }
+            }
+
+            // Обработчики для кнопок переключения
+            loginTabBtn.addEventListener('click', function() {
+                switchForm('login');
+            });
+
+            registerTabBtn.addEventListener('click', function() {
+                switchForm('register');
+            });
+
+            // Обработчик для ссылки "Забыли пароль?"
+            document.getElementById('forgotPassword').addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('Функция восстановления пароля будет доступна скоро', 'info');
+            });
+
+            // Функционал показа/скрытия пароля для всех кнопок
+            document.querySelectorAll('.toggle-password').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    if (!input || !input.classList.contains('input-field')) return;
+
+                    const showing = input.type === 'password';
+                    input.type = showing ? 'text' : 'password';
+
+                    const svg = this.querySelector('svg');
+                    if (svg) {
+                        svg.innerHTML = showing ? closedEyeIcon : openEyeIcon;
+                    }
+
+                    this.setAttribute('aria-pressed', showing ? 'true' : 'false');
+                    this.setAttribute('aria-label', showing ? 'Скрыть пароль' : 'Показать пароль');
+                });
+            });
+
+            // Валидация формы входа
+            const loginFormElement = document.getElementById('loginFormElement');
+            loginFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showToast('Заполните все поля', 'error');
+                    return;
+                }
+                
+                if (!email.includes('@')) {
+                    showToast('Введите корректный email', 'error');
+                    return;
+                }
+                
+                showToast('Успешный вход!', 'success');
+                // Здесь можно добавить редирект или другие действия
+            });
+
+            // Валидация формы регистрации
+            const registerFormElement = document.getElementById('registerFormElement');
+            registerFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('registerName').value;
+                const username = document.getElementById('registerUsername').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirm = document.getElementById('registerConfirm').value;
+                const terms = document.getElementById('termsCheck').checked;
+                
+                if (!name || !username || !email || !password || !confirm) {
+                    showToast('Заполните все поля', 'error');
+                    return;
+                }
+                
+                if (!terms) {
+                    showToast('Необходимо принять условия', 'error');
+                    return;
+                }
+                
+                if (!email.includes('@')) {
+                    showToast('Введите корректный email', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showToast('Пароль должен быть не менее 6 символов', 'error');
+                    return;
+                }
+                
+                if (password !== confirm) {
+                    showToast('Пароли не совпадают', 'error');
+                    return;
+                }
+                
+                showToast('Регистрация успешна!', 'success');
+                // Здесь можно добавить редирект или другие действия
+            });
+
+            // Функция показа уведомлений
+            function showToast(message, type = 'success') {
+                // Удаляем предыдущие уведомления
+                const existingToasts = document.querySelectorAll('.toast');
+                existingToasts.forEach(toast => toast.remove());
+
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let iconSvg = '';
+                if (type === 'success') {
+                    iconSvg = '<path d="M20 6L9 17l-5-5"/>';
+                } else if (type === 'error') {
+                    iconSvg = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+                } else {
+                    iconSvg = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
+                }
+                
+                toast.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        ${iconSvg}
+                    </svg>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

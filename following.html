@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подписки | Y.com</title>
+    <link rel="stylesheet" href="design/style.css">
+    <style>
+        /* ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ========== */
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --surface-light: #141414;
+            --accent: #6366f1;
+            --accent-dark: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --border: #1f1f1f;
+            --text-primary: #ffffff;
+            --text-secondary: #71717a;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* ========== СБРОС ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        /* ========== ОСНОВНАЯ СЕТКА ========== */
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background: var(--bg);
+        }
+
+        /* ========== ЛЕВАЯ ПАНЕЛЬ ========== */
+        .sidebar-left {
+            padding: 20px 16px;
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--bg);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 32px;
+            padding-left: 12px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            letter-spacing: -1.5px;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 16px;
+            border-radius: 30px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--surface);
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            background: var(--surface);
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .nav-item.active svg {
+            stroke: var(--accent);
+        }
+
+        .btn-main {
+            margin-top: 32px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-main:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+
+        .btn-main svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        /* ========== ЦЕНТРАЛЬНАЯ КОЛОНКА ========== */
+        .content {
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--bg);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) var(--surface);
+        }
+
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* ========== ШАПКА ========== */
+        .page-header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+
+        .page-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* ========== ТАБЫ ПОДПИСОК ========== */
+        .following-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 73px;
+            z-index: 25;
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 16px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .tab-item:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-item.active {
+            color: var(--text-primary);
+        }
+
+        .tab-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* ========== ПОИСК ========== */
+        .search-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-secondary);
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 14px 20px 14px 48px;
+            color: white;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* ========== СПИСОК ПОЛЬЗОВАТЕЛЕЙ ========== */
+        .users-list {
+            padding: 0;
+        }
+
+        .user-card {
+            display: flex;
+            gap: 16px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            transition: 0.15s;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            background: #050505;
+        }
+
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #2e1065);
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-avatar.purple-grad {
+            background: linear-gradient(135deg, var(--accent), #1e1b4b);
+        }
+
+        .user-avatar.dark-grad {
+            background: linear-gradient(135deg, #333, #000);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar.online::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--success);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+        }
+
+        .user-handle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .user-bio {
+            font-size: 14px;
+            color: #e4e4e7;
+            margin: 8px 0 0 0;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            /* Стандартные свойства для line-clamp */
+            display: -moz-box;
+            -moz-box-orient: vertical;
+            display: box;
+            box-orient: vertical;
+            line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 42px; /* Запасной вариант */
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .user-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-stats svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+        }
+
+        .user-stats strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ========== КНОПКА ПОДПИСКИ ========== */
+        .btn-follow {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-follow:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
+
+        .btn-follow svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        .btn-follow.following {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-follow.following:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-follow.following:hover svg {
+            stroke: var(--danger);
+        }
+
+        /* ========== ПРАВАЯ ПАНЕЛЬ ========== */
+        .sidebar-right {
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--bg);
+        }
+
+        .search-container input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: white;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-container input:focus {
+            border-color: var(--accent);
+        }
+
+        .panel {
+            margin-top: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .panel h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        .trend-row {
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .trend-tag {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .trend-title {
+            font-weight: 600;
+            margin-top: 4px;
+            color: white;
+        }
+
+        .trend-row:hover .trend-title {
+            color: var(--accent);
+        }
+
+        .suggested-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .suggested-user:last-child {
+            border-bottom: none;
+        }
+
+        .suggested-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #2e1065);
+            flex-shrink: 0;
+        }
+
+        .suggested-info {
+            flex: 1;
+        }
+
+        .suggested-name {
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+        }
+
+        .suggested-handle {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .suggested-follow {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ========== ПУСТЫЕ СОСТОЯНИЯ ========== */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            stroke: currentColor;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* ========== УВЕДОМЛЕНИЯ ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            animation: slideUp 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* ========== АНИМАЦИИ ========== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-card {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- Левая панель с SVG-иконками -->
+    <aside class="sidebar-left">
+        <div class="logo">Y.com</div>
+        <nav class="nav-group">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Главная
+            </a>
+            <a href="profile.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Профиль
+            </a>
+            <a href="messages.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Сообщения
+            </a>
+            <a href="ai.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+                Y-Core
+            </a>
+            <a href="following.html" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Подписки
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
+                </svg>
+                Настройки
+            </a>
+        </nav>
+        <button class="btn-main" id="findFriendsBtn">
+            <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Найти друзей
+        </button>
+    </aside>
+
+    <!-- Центральная колонка -->
+    <main class="content">
+        <div class="page-header">
+            <h1>Александр Морозов</h1>
+        </div>
+
+        <!-- Табы -->
+        <div class="following-tabs">
+            <div class="tab-item active" data-tab="following">Подписки</div>
+            <div class="tab-item" data-tab="followers">Подписчики</div>
+            <div class="tab-item" data-tab="suggestions">Рекомендации</div>
+        </div>
+
+        <!-- Поиск -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" class="search-input" id="searchUsers" placeholder="Поиск по подпискам...">
+            </div>
+        </div>
+
+        <!-- Список пользователей -->
+        <section class="users-list" id="usersList">
+            <!-- Контент будет добавляться динамически -->
+        </section>
+    </main>
+
+    <!-- Правая панель -->
+    <aside class="sidebar-right">
+        <div class="search-container">
+            <input type="text" placeholder="Глобальный поиск" id="globalSearch">
+        </div>
+        <div class="panel">
+            <h3>Актуальное</h3>
+            <div class="trend-row">
+                <span class="trend-tag">#Ycom</span>
+                <div class="trend-title">Новая версия</div>
+            </div>
+            <div class="trend-row">
+                <span class="trend-tag">#Community</span>
+                <div class="trend-title">Рост сообщества</div>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Кого подписаться</h3>
+            <div class="suggested-user">
+                <div class="suggested-avatar"></div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Елена Владимирова</div>
+                    <div class="suggested-handle">@elena_design</div>
+                </div>
+                <div class="suggested-follow">+</div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar" style="background: linear-gradient(135deg, #333, #000);"></div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Дмитрий Волков</div>
+                    <div class="suggested-handle">@dmitry_dev</div>
+                </div>
+                <div class="suggested-follow">+</div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar" style="background: linear-gradient(135deg, #6366f1, #1e1b4b);"></div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Анна Смирнова</div>
+                    <div class="suggested-handle">@anna_ai</div>
+                </div>
+                <div class="suggested-follow">+</div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ========== ДАННЫЕ ==========
+        let currentTab = 'following';
+        
+        let following = [
+            {
+                id: 1,
+                name: 'Tech Analytics',
+                handle: '@tech_data',
+                bio: 'Анализ глобальных трендов и системной архитектуры. Только факты.',
+                avatar: 'TA',
+                verified: false,
+                followers: '12.5K',
+                posts: 1234,
+                online: true,
+                following: true
+            },
+            {
+                id: 2,
+                name: 'Y.com News',
+                handle: '@y_official',
+                bio: 'Официальные обновления и системные уведомления Y.com.',
+                avatar: 'YN',
+                verified: true,
+                followers: '1.2M',
+                posts: 567,
+                online: false,
+                following: true
+            },
+            {
+                id: 3,
+                name: 'Иван Иванов',
+                handle: '@ivanov_design',
+                bio: 'Инженер-проектировщик. Минимализм. Функциональность.',
+                avatar: 'II',
+                verified: false,
+                followers: '8.2K',
+                posts: 890,
+                online: true,
+                following: true
+            },
+            {
+                id: 4,
+                name: 'Екатерина Смирнова',
+                handle: '@katya_dev',
+                bio: 'Frontend-разработчик. Создаю красивые интерфейсы.',
+                avatar: 'KS',
+                verified: false,
+                followers: '5.1K',
+                posts: 456,
+                online: false,
+                following: true
+            },
+            {
+                id: 5,
+                name: 'Михаил Петров',
+                handle: '@mike_systems',
+                bio: 'Системный архитектор. Увлекаюсь AI и ML.',
+                avatar: 'MP',
+                verified: true,
+                followers: '25.3K',
+                posts: 2100,
+                online: true,
+                following: true
+            }
+        ];
+
+        let followers = [
+            {
+                id: 6,
+                name: 'Анна Попова',
+                handle: '@anna_popova',
+                bio: 'Дизайнер интерфейсов. Люблю минимализм.',
+                avatar: 'AP',
+                verified: false,
+                followers: '3.2K',
+                posts: 345,
+                online: true,
+                following: false
+            },
+            {
+                id: 7,
+                name: 'Сергей Козлов',
+                handle: '@sergey_ko',
+                bio: 'Backend-разработчик. Python, Go, Rust.',
+                avatar: 'SK',
+                verified: false,
+                followers: '4.5K',
+                posts: 678,
+                online: false,
+                following: true
+            }
+        ];
+
+        let suggestions = [
+            {
+                id: 8,
+                name: 'Елена Владимирова',
+                handle: '@elena_design',
+                bio: 'UI/UX дизайнер. Создаю удобные интерфейсы.',
+                avatar: 'EV',
+                verified: false,
+                followers: '15.2K',
+                posts: 890,
+                online: true,
+                following: false
+            },
+            {
+                id: 9,
+                name: 'Дмитрий Волков',
+                handle: '@dmitry_dev',
+                bio: 'Fullstack разработчик. React, Node.js, TypeScript.',
+                avatar: 'DV',
+                verified: false,
+                followers: '9.1K',
+                posts: 1234,
+                online: false,
+                following: false
+            },
+            {
+                id: 10,
+                name: 'Анна Смирнова',
+                handle: '@anna_ai',
+                bio: 'Исследователь AI. Работаю над языковыми моделями.',
+                avatar: 'AS',
+                verified: true,
+                followers: '45.6K',
+                posts: 2345,
+                online: true,
+                following: false
+            }
+        ];
+
+        // ========== УВЕДОМЛЕНИЯ ==========
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // ========== СОЗДАНИЕ КАРТОЧКИ ПОЛЬЗОВАТЕЛЯ ==========
+        function createUserCard(user) {
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            card.dataset.userId = user.id;
+
+            const avatarClass = user.id % 2 === 0 ? 'purple-grad' : 'dark-grad';
+            
+            card.innerHTML = `
+                <div class="user-avatar ${avatarClass} ${user.online ? 'online' : ''}">
+                    <img src="https://via.placeholder.com/56/6366f1/ffffff?text=${user.avatar}" alt="${user.name}">
+                </div>
+                <div class="user-details">
+                    <div class="user-header">
+                        <div class="user-name">
+                            ${user.name}
+                            ${user.verified ? '<span class="verified-badge">✓</span>' : ''}
+                        </div>
+                        <button class="btn-follow ${user.following ? 'following' : ''}" data-user-id="${user.id}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                                ${user.following ? '<line x1="18" y1="9" x2="18" y2="15"/><line x1="15" y1="12" x2="21" y2="12"/>' : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'}
+                            </svg>
+                            ${user.following ? 'Читаю' : 'Читать'}
+                        </button>
+                    </div>
+                    <span class="user-handle">${user.handle}</span>
+                    <p class="user-bio">${user.bio}</p>
+                    <div class="user-stats">
+                        <span>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <strong>${user.followers}</strong> подписчиков
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            <strong>${user.posts}</strong> постов
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // ========== ОТРИСОВКА СПИСКА ==========
+        function renderUsers() {
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+
+            let users = [];
+            let title = '';
+
+            if (currentTab === 'following') {
+                users = following;
+                title = 'Подписки';
+            } else if (currentTab === 'followers') {
+                users = followers;
+                title = 'Подписчики';
+            } else {
+                users = suggestions;
+                title = 'Рекомендации';
+            }
+
+            if (users.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <h3>Нет пользователей</h3>
+                        <p>В разделе "${title}" пока никого нет</p>
+                    </div>
+                `;
+                return;
+            }
+
+            users.forEach(user => {
+                container.appendChild(createUserCard(user));
+            });
+        }
+
+        // ========== ПЕРЕКЛЮЧЕНИЕ ТАБОВ ==========
+        const tabs = document.querySelectorAll('.tab-item');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentTab = this.dataset.tab;
+                renderUsers();
+            });
+        });
+
+        // ========== ПОДПИСКА/ОТПИСКА ==========
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-follow');
+            if (btn) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const userId = parseInt(btn.dataset.userId);
+                let user = null;
+                
+                // Ищем пользователя во всех списках
+                if (currentTab === 'following') {
+                    user = following.find(u => u.id === userId);
+                } else if (currentTab === 'followers') {
+                    user = followers.find(u => u.id === userId);
+                } else {
+                    user = suggestions.find(u => u.id === userId);
+                }
+                
+                if (user) {
+                    user.following = !user.following;
+                    
+                    // Обновляем кнопку
+                    btn.classList.toggle('following');
+                    btn.innerHTML = user.following ? 
+                        '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="15" y1="12" x2="21" y2="12"/></svg> Читаю' : 
+                        '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Читать';
+                    
+                    showToast(user.following ? `Вы подписались на ${user.name}` : `Вы отписались от ${user.name}`);
+                    
+                    // Если в рекомендациях и подписались - добавляем в подписки
+                    if (user.following && currentTab === 'suggestions') {
+                        following.push({...user});
+                    }
+                    
+                    // Если отписались в подписках - удаляем
+                    if (!user.following && currentTab === 'following') {
+                        following = following.filter(u => u.id !== userId);
+                    }
+                }
+            }
+        });
+
+        // ========== ПОИСК ==========
+        document.getElementById('searchUsers').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            
+            let users = [];
+            if (currentTab === 'following') users = following;
+            else if (currentTab === 'followers') users = followers;
+            else users = suggestions;
+            
+            if (query.length > 2) {
+                const filtered = users.filter(u => 
+                    u.name.toLowerCase().includes(query) || 
+                    u.handle.toLowerCase().includes(query) ||
+                    u.bio.toLowerCase().includes(query)
+                );
+                
+                const container = document.getElementById('usersList');
+                container.innerHTML = '';
+                
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <h3>Ничего не найдено</h3>
+                            <p>По запросу "${query}" ничего нет</p>
+                        </div>
+                    `;
+                } else {
+                    filtered.forEach(u => container.appendChild(createUserCard(u)));
+                }
+            } else if (query.length === 0) {
+                renderUsers();
+            }
+        });
+
+        // ========== ПЕРЕХОД В ПРОФИЛЬ ==========
+        document.addEventListener('click', function(e) {
+            const card = e.target.closest('.user-card');
+            if (card && !e.target.closest('.btn-follow')) {
+                showToast('Просмотр профиля');
+            }
+        });
+
+        // ========== КНОПКИ ==========
+        document.getElementById('findFriendsBtn').addEventListener('click', function() {
+            // Переключаемся на вкладку рекомендаций
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('[data-tab="suggestions"]').classList.add('active');
+            currentTab = 'suggestions';
+            renderUsers();
+            showToast('Рекомендации для вас');
+        });
+
+        document.getElementById('globalSearch').addEventListener('input', function(e) {
+            if (e.target.value.length > 2) {
+                showToast('Поиск: ' + e.target.value);
+            }
+        });
+
+        // Клик по рекомендациям в правой панели
+        document.querySelectorAll('.suggested-user').forEach((item, index) => {
+            item.addEventListener('click', function() {
+                const user = suggestions[index];
+                if (user) {
+                    user.following = !user.following;
+                    showToast(user.following ? `Вы подписались на ${user.name}` : `Вы отписались от ${user.name}`);
+                    
+                    if (user.following) {
+                        following.push({...user});
+                    }
+                    
+                    // Обновляем отображение
+                    this.querySelector('.suggested-follow').textContent = user.following ? '✓' : '+';
+                }
+            });
+        });
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        renderUsers();
+    });
+</script>
+
+</body>
+</html>

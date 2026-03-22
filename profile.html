@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль | Y.com</title>
+    <link rel="stylesheet" href="design/profile.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- Левая панель -->
+    <aside class="sidebar-left">
+        <div class="logo">Y.com</div>
+        <nav class="nav-group">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Главная
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Профиль
+            </a>
+            <a href="messages.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Сообщения
+            </a>
+            <a href="ai.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+                Y-Core
+            </a>
+            <a href="following.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Подписки
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
+                </svg>
+                Настройки
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Центральная колонка -->
+    <main class="content">
+        <!-- Шапка профиля -->
+        <div class="profile-header">
+            <h1>Александр Морозов</h1>
+            <span class="post-count" id="postCount">3 поста</span>
+        </div>
+
+        <!-- Обложка -->
+        <div class="profile-cover"></div>
+
+        <!-- Информация профиля -->
+        <div class="profile-info">
+            <!-- КНОПКИ ПОЛНОСТЬЮ УДАЛЕНЫ -->
+
+            <!-- Аватар -->
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar">AM</div>
+            </div>
+
+            <!-- Имя и информация -->
+            <div class="profile-name-section">
+                <div class="profile-name">
+                    Александр Морозов
+                    <span class="verified-badge">✓</span>
+                </div>
+                <div class="profile-handle">@morozov</div>
+            </div>
+
+            <!-- Био -->
+            <div class="profile-bio" id="profileBio">
+                Разработчик экосистемы Y.com. Исследую минимализм, AI и системную архитектуру. Создаю цифровое пространство без лишнего шума.
+            </div>
+
+            <!-- Мета информация -->
+            <div class="profile-meta">
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M5.5 20v-2a6.5 6.5 0 0 1 13 0v2"/>
+                    </svg>
+                    <span>С марта 2024</span>
+                </div>
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span>15 апреля 1995</span>
+                </div>
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 12h3l3-9 3 18 3-9h3"/>
+                    </svg>
+                    <span>y.com/morozov</span>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="profile-stats">
+                <span id="followingStat"><strong>128</strong> подписок</span>
+                <span id="followersStat"><strong>1.2K</strong> подписчиков</span>
+                <span id="postsStat"><strong>3</strong> поста</span>
+            </div>
+        </div>
+
+        <!-- Табы -->
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="posts">Посты</div>
+            <div class="profile-tab" data-tab="replies">Ответы</div>
+            <div class="profile-tab" data-tab="media">Медиа</div>
+            <div class="profile-tab" data-tab="likes">Лайки</div>
+        </div>
+
+        <!-- Контейнеры табов -->
+        <div id="posts-tab" class="tab-content active"></div>
+        <div id="replies-tab" class="tab-content"></div>
+        <div id="media-tab" class="tab-content"></div>
+        <div id="likes-tab" class="tab-content"></div>
+    </main>
+
+    <!-- Правая панель -->
+    <aside class="sidebar-right">
+        <div class="search-container">
+            <input type="text" placeholder="Поиск" id="searchInput">
+        </div>
+        <div class="panel">
+            <h3>Актуальное</h3>
+            <div class="trend-row">
+                <span class="trend-tag">#Ycom</span>
+                <div class="trend-title">Новая версия</div>
+            </div>
+            <div class="trend-row">
+                <span class="trend-tag">#Design</span>
+                <div class="trend-title">Минимализм</div>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Кого читать</h3>
+            <div class="suggested-user">
+                <div class="suggested-avatar">TA</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Tech Analytics</div>
+                    <div class="suggested-handle">@tech_data</div>
+                </div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar">YN</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Y.com News</div>
+                    <div class="suggested-handle">@y_official</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ========== ДАННЫЕ ==========
+        let posts = [
+            {
+                id: 1,
+                author: 'Александр Морозов',
+                handle: '@morozov',
+                time: '2ч',
+                text: 'Завершил работу над новой системой комментариев в Y.com. Теперь все взаимодействия выглядят чище и минималистичнее. Никаких лишних элементов — только суть.',
+                images: [],
+                likes: 42,
+                liked: false,
+                comments: [
+                    { author: '@ivanov', text: 'Отличная работа!', time: '1ч' },
+                    { author: '@petrova', text: 'Очень нравится подход', time: '45м' }
+                ],
+                reposts: 5
+            },
+            {
+                id: 2,
+                author: 'Александр Морозов',
+                handle: '@morozov',
+                time: '5ч',
+                text: 'Рабочий процесс разработки Y.com. Каждая деталь продумана до мелочей.',
+                images: ['work'],
+                likes: 89,
+                liked: true,
+                comments: [
+                    { author: '@anna', text: 'Красиво!', time: '4ч' }
+                ],
+                reposts: 12
+            },
+            {
+                id: 3,
+                author: 'Александр Морозов',
+                handle: '@morozov',
+                time: 'вчера',
+                text: 'Размышляю о будущем социальных сетей. Минимализм, функциональность и отсутствие лишнего шума — вот что действительно важно.',
+                images: [],
+                likes: 156,
+                liked: false,
+                comments: [],
+                reposts: 24
+            }
+        ];
+
+        let currentTab = 'posts';
+
+        // ========== УВЕДОМЛЕНИЯ ==========
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // ========== СОЗДАНИЕ ПОСТА ==========
+        function createPostElement(post) {
+            const article = document.createElement('article');
+            article.className = 'post';
+            article.dataset.id = post.id;
+
+            let imagesHTML = '';
+            if (post.images && post.images.length > 0) {
+                imagesHTML = '<div class="post-images">';
+                if (post.images.length === 1) {
+                    imagesHTML += '<div class="post-image single"></div>';
+                } else {
+                    for (let i = 0; i < post.images.length; i++) {
+                        imagesHTML += '<div class="post-image multiple"></div>';
+                    }
+                }
+                imagesHTML += '</div>';
+            }
+
+            let commentsHTML = '';
+            if (post.comments && post.comments.length > 0) {
+                commentsHTML = '<div class="comments-list">';
+                for (let i = 0; i < post.comments.length; i++) {
+                    const c = post.comments[i];
+                    const initial = c.author.charAt(1).toUpperCase() || 'U';
+                    commentsHTML += `
+                        <div class="comment">
+                            <div class="comment-avatar">${initial}</div>
+                            <div class="comment-content">
+                                <div class="comment-header">
+                                    <span class="comment-author">${c.author}</span>
+                                    <span class="comment-time">${c.time}</span>
+                                </div>
+                                <div class="comment-text">${c.text}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                commentsHTML += '</div>';
+            }
+
+            const authorInitial = post.author.charAt(0) || 'A';
+            
+            article.innerHTML = `
+                <div class="post-avatar">${authorInitial}</div>
+                <div class="post-content">
+                    <div class="post-header">
+                        <span class="post-author-name">
+                            ${post.author}
+                            <span class="verified-badge">✓</span>
+                        </span>
+                        <span class="post-author-handle">${post.handle}</span>
+                        <span class="post-time">${post.time}</span>
+                    </div>
+                    <div class="post-text">${post.text}</div>
+                    ${imagesHTML}
+                    <div class="post-actions">
+                        <button class="action-btn like-btn ${post.liked ? 'liked' : ''}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span>${post.likes}</span>
+                        </button>
+                        <button class="action-btn comment-toggle-btn">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            <span>${post.comments.length}</span>
+                        </button>
+                        <button class="action-btn repost-btn">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 2l4 4-4 4M7 22l-4-4 4-4"/>
+                                <path d="M3 12v-2a4 4 0 0 1 4-4h14M21 12v2a4 4 0 0 1-4 4H3"/>
+                            </svg>
+                            <span>${post.reposts}</span>
+                        </button>
+                    </div>
+                    <div class="comments-section" style="display: none;">
+                        ${commentsHTML}
+                        <div class="comment-input-area">
+                            <input type="text" class="comment-input" placeholder="Написать комментарий...">
+                            <button class="comment-submit">→</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return article;
+        }
+
+        // ========== ОТРИСОВКА ТАБОВ ==========
+        function renderPosts() {
+            const container = document.getElementById('posts-tab');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 0; i < posts.length; i++) {
+                container.appendChild(createPostElement(posts[i]));
+            }
+            const postCount = document.getElementById('postCount');
+            if (postCount) {
+                postCount.textContent = posts.length + ' поста';
+            }
+            const postsStat = document.querySelector('#postsStat strong');
+            if (postsStat) {
+                postsStat.textContent = posts.length;
+            }
+        }
+
+        function renderReplies() {
+            const container = document.getElementById('replies-tab');
+            if (!container) return;
+            const withComments = [];
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].comments.length > 0) {
+                    withComments.push(posts[i]);
+                }
+            }
+            if (withComments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        <h3>Нет ответов</h3>
+                        <p>Когда вы ответите на пост, он появится здесь</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+                for (let i = 0; i < withComments.length; i++) {
+                    container.appendChild(createPostElement(withComments[i]));
+                }
+            }
+        }
+
+        function renderMedia() {
+            const container = document.getElementById('media-tab');
+            if (!container) return;
+            const withImages = [];
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].images.length > 0) {
+                    withImages.push(posts[i]);
+                }
+            }
+            if (withImages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <h3>Нет медиа</h3>
+                        <p>Добавьте изображения к постам</p>
+                    </div>
+                `;
+            } else {
+                let html = '<div class="media-grid">';
+                for (let i = 0; i < 3; i++) {
+                    html += '<div class="media-item">📷</div>';
+                }
+                html += '</div>';
+                container.innerHTML = html;
+            }
+        }
+
+        function renderLikes() {
+            const container = document.getElementById('likes-tab');
+            if (!container) return;
+            const liked = [];
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].liked) {
+                    liked.push(posts[i]);
+                }
+            }
+            if (liked.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <h3>Нет лайков</h3>
+                        <p>Поставьте лайк посту</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+                for (let i = 0; i < liked.length; i++) {
+                    container.appendChild(createPostElement(liked[i]));
+                }
+            }
+        }
+
+        // ========== ПЕРЕКЛЮЧЕНИЕ ТАБОВ ==========
+        const tabs = document.querySelectorAll('.profile-tab');
+        const postsTab = document.getElementById('posts-tab');
+        const repliesTab = document.getElementById('replies-tab');
+        const mediaTab = document.getElementById('media-tab');
+        const likesTab = document.getElementById('likes-tab');
+
+        if (tabs.length) {
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].addEventListener('click', function() {
+                    for (let j = 0; j < tabs.length; j++) {
+                        tabs[j].classList.remove('active');
+                    }
+                    this.classList.add('active');
+                    
+                    const tabName = this.dataset.tab;
+                    currentTab = tabName;
+                    
+                    if (postsTab) postsTab.classList.remove('active');
+                    if (repliesTab) repliesTab.classList.remove('active');
+                    if (mediaTab) mediaTab.classList.remove('active');
+                    if (likesTab) likesTab.classList.remove('active');
+                    
+                    if (tabName === 'posts') {
+                        if (postsTab) {
+                            postsTab.classList.add('active');
+                            renderPosts();
+                        }
+                    } else if (tabName === 'replies') {
+                        if (repliesTab) {
+                            repliesTab.classList.add('active');
+                            renderReplies();
+                        }
+                    } else if (tabName === 'media') {
+                        if (mediaTab) {
+                            mediaTab.classList.add('active');
+                            renderMedia();
+                        }
+                    } else if (tabName === 'likes') {
+                        if (likesTab) {
+                            likesTab.classList.add('active');
+                            renderLikes();
+                        }
+                    }
+                });
+            }
+        }
+
+        // ========== ЛАЙКИ ==========
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.like-btn');
+            if (btn) {
+                e.preventDefault();
+                const countSpan = btn.querySelector('span:not(svg)');
+                if (!countSpan) return;
+                const num = parseInt(countSpan.textContent) || 0;
+                btn.classList.toggle('liked');
+                countSpan.textContent = btn.classList.contains('liked') ? num + 1 : num - 1;
+                
+                btn.style.transform = 'scale(1.2)';
+                setTimeout(function() {
+                    btn.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+
+        // ========== КОММЕНТАРИИ ==========
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.comment-toggle-btn');
+            if (btn) {
+                e.preventDefault();
+                const post = btn.closest('.post');
+                if (!post) return;
+                const section = post.querySelector('.comments-section');
+                if (section) {
+                    section.style.display = section.style.display === 'none' || !section.style.display ? 'block' : 'none';
+                }
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.comment-submit');
+            if (btn) {
+                e.preventDefault();
+                const input = btn.previousElementSibling;
+                if (!input) return;
+                const text = input.value.trim();
+                if (!text) return;
+                
+                const section = btn.closest('.comments-section');
+                if (!section) return;
+                let list = section.querySelector('.comments-list');
+                
+                if (!list) {
+                    list = document.createElement('div');
+                    list.className = 'comments-list';
+                    section.insertBefore(list, section.querySelector('.comment-input-area'));
+                }
+                
+                const comment = document.createElement('div');
+                comment.className = 'comment';
+                comment.innerHTML = `
+                    <div class="comment-avatar">M</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">@morozov</span>
+                            <span class="comment-time">только что</span>
+                        </div>
+                        <div class="comment-text">${text}</div>
+                    </div>
+                `;
+                list.appendChild(comment);
+                
+                const post = section.closest('.post');
+                if (post) {
+                    const countSpan = post.querySelector('.comment-toggle-btn span:last-child');
+                    if (countSpan) {
+                        countSpan.textContent = (parseInt(countSpan.textContent) || 0) + 1;
+                    }
+                }
+                
+                input.value = '';
+                list.scrollTop = list.scrollHeight;
+            }
+        });
+
+        // ========== РЕПОСТ ==========
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.repost-btn');
+            if (btn) {
+                e.preventDefault();
+                const countSpan = btn.querySelector('span:not(svg)');
+                if (countSpan) {
+                    countSpan.textContent = (parseInt(countSpan.textContent) || 0) + 1;
+                }
+                btn.style.transform = 'scale(1.2)';
+                setTimeout(function() {
+                    btn.style.transform = 'scale(1)';
+                }, 200);
+                showToast('Пост репостнут');
+            }
+        });
+
+        // ========== ПОИСК ==========
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                if (currentTab === 'posts' && query.length > 2) {
+                    const filtered = [];
+                    for (let i = 0; i < posts.length; i++) {
+                        if (posts[i].text.toLowerCase().includes(query) || posts[i].author.toLowerCase().includes(query)) {
+                            filtered.push(posts[i]);
+                        }
+                    }
+                    const container = document.getElementById('posts-tab');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    
+                    if (filtered.length === 0) {
+                        container.innerHTML = '<div class="empty-state">Ничего не найдено</div>';
+                    } else {
+                        for (let i = 0; i < filtered.length; i++) {
+                            container.appendChild(createPostElement(filtered[i]));
+                        }
+                    }
+                } else if (query.length === 0 && currentTab === 'posts') {
+                    renderPosts();
+                }
+            });
+        }
+
+        // ========== КНОПКИ ==========
+        // Кнопки shareBtn и editBtn удалены, так как их больше нет в HTML
+
+        const followingStat = document.getElementById('followingStat');
+        if (followingStat) {
+            followingStat.addEventListener('click', function() {
+                window.location.href = 'following.html';
+            });
+        }
+
+        const followersStat = document.getElementById('followersStat');
+        if (followersStat) {
+            followersStat.addEventListener('click', function() {
+                showToast('Список подписчиков');
+            });
+        }
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        renderPosts();
+        renderReplies();
+        renderMedia();
+        renderLikes();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<% content_for :styles do %>
+  <%= stylesheet_link_tag "ui/profile" %>
+<% end %>
+
+<%
+  profile_name = @user.name.presence || @user.username.presence || "Пользователь"
+  profile_handle = @user.username.present? ? "@#{@user.username}" : "@user"
+  profile_bio = @user.bio.presence || "Добавьте описание в настройках профиля."
+  profile_initials = profile_name.split.map { |part| part.first }.join[0, 2].to_s.upcase
+%>
+
+<div class="layout">
+    <!-- Левая панель -->
+    <aside class="sidebar-left">
+        <a href="/" class="logo">Y.com</a>
+        <nav class="nav-group">
+            <a href="/" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Главная
+            </a>
+            <a href="/profile" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Профиль
+            </a>
+            <a href="/messages" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Сообщения
+            </a>
+            <a href="/ai" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+                Y-Core
+            </a>
+            <a href="/following" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Подписки
+            </a>
+            <a href="/settings" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
+                </svg>
+                Настройки
+            </a>
+                </nav>
+        <% if user_signed_in? %>
+          <%= button_to destroy_user_session_path, method: :delete, class: "btn-main", form_class: "logout-form" do %>
+              <svg viewBox="0 0 24 24">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Выйти
+          <% end %>
+        <% end %>
+    </aside>
+
+    <!-- Центральная колонка -->
+    <main class="content">
+        <!-- Шапка профиля -->
+        <div class="profile-header">
+            <h1><%= profile_name %></h1>
+            <span class="post-count" id="postCount">3 поста</span>
+        </div>
+
+        <!-- Обложка -->
+        <div class="profile-cover"></div>
+
+        <!-- Информация профиля -->
+        <div class="profile-info">
+            <!-- КНОПКИ ПОЛНОСТЬЮ УДАЛЕНЫ -->
+
+            <!-- Аватар -->
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar"><%= profile_initials %></div>
+            </div>
+
+            <!-- Имя и информация -->
+            <div class="profile-name-section">
+                <div class="profile-name">
+                    <%= profile_name %>
+                    <span class="verified-badge">✓</span>
+                </div>
+                <div class="profile-handle"><%= profile_handle %></div>
+            </div>
+
+            <!-- Био -->
+            <div class="profile-bio" id="profileBio">
+                <%= profile_bio %>
+            </div>
+
+            <!-- Мета информация -->
+            <div class="profile-meta">
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M5.5 20v-2a6.5 6.5 0 0 1 13 0v2"/>
+                    </svg>
+                    <span>С <%= @user.created_at.strftime("%B %Y") %></span>
+                </div>
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span>15 апреля 1995</span>
+                </div>
+                <div class="profile-meta-item">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 12h3l3-9 3 18 3-9h3"/>
+                    </svg>
+                    <span>y.com/<%= @user.username.presence || "user" %></span>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="profile-stats">
+                <span id="followingStat"><strong>128</strong> подписок</span>
+                <span id="followersStat"><strong>1.2K</strong> подписчиков</span>
+                <span id="postsStat"><strong>3</strong> поста</span>
+            </div>
+        </div>
+
+        <!-- Табы -->
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="posts">Посты</div>
+            <div class="profile-tab" data-tab="replies">Ответы</div>
+            <div class="profile-tab" data-tab="media">Медиа</div>
+            <div class="profile-tab" data-tab="likes">Лайки</div>
+        </div>
+
+        <!-- Контейнеры табов -->
+        <div id="posts-tab" class="tab-content active"></div>
+        <div id="replies-tab" class="tab-content"></div>
+        <div id="media-tab" class="tab-content"></div>
+        <div id="likes-tab" class="tab-content"></div>
+    </main>
+
+    <!-- Правая панель -->
+    <aside class="sidebar-right">
+        <div class="search-container">
+            <input type="text" placeholder="Поиск" id="searchInput">
+        </div>
+        <div class="panel">
+            <h3>Актуальное</h3>
+            <div class="trend-row">
+                <span class="trend-tag">#Ycom</span>
+                <div class="trend-title">Новая версия</div>
+            </div>
+            <div class="trend-row">
+                <span class="trend-tag">#Design</span>
+                <div class="trend-title">Минимализм</div>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Кого читать</h3>
+            <div class="suggested-user">
+                <div class="suggested-avatar">TA</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Tech Analytics</div>
+                    <div class="suggested-handle">@tech_data</div>
+                </div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar">YN</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Y.com News</div>
+                    <div class="suggested-handle">@y_official</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+
+
+

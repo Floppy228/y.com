@@ -1,0 +1,748 @@
+/* ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ========== */
+:root {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --surface-light: #141414;
+    --accent: #6366f1;
+    --accent-dark: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.3);
+    --border: #1f1f1f;
+    --text-primary: #ffffff;
+    --text-secondary: #71717a;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ========== СБРОС ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
+.auth-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ========== ЛЕВАЯ ЧАСТЬ - БРЕНДИНГ ========== */
+.auth-brand {
+    flex: 1;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+}
+
+.auth-brand::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle at 30% 50%, var(--accent-glow) 0%, transparent 50%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px;
+}
+
+.brand-logo {
+    font-size: 120px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 20px;
+    animation: float 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px var(--accent-glow));
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.brand-title {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff, #a5b4fc);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    letter-spacing: -1px;
+}
+
+.brand-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.brand-features {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.feature-item:hover {
+    transform: translateX(10px);
+    color: white;
+}
+
+.feature-item:hover svg {
+    stroke: var(--accent);
+    transform: scale(1.1);
+}
+
+.feature-item svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    transition: 0.3s;
+}
+
+/* ========== ПРАВАЯ ЧАСТЬ - ФОРМЫ ========== */
+.auth-forms {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.forms-container {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    margin: auto;
+    height: 760px;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(52px);
+}
+
+/* ========== ПЕРЕКЛЮЧАТЕЛЬ ФОРМ ========== */
+.auth-toggle {
+    display: flex;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 60px;
+    padding: 3px;
+    position: relative;
+}
+
+.auth-toggle-btn {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 60px;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-toggle-btn.active {
+    color: white;
+}
+
+.auth-toggle-btn.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent);
+    border-radius: 60px;
+    z-index: -1;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ========== ФОРМЫ ========== */
+.auth-form-stack {
+    position: relative;
+    flex: 1;
+    height: 680px;
+}
+
+.auth-form {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+
+.auth-form.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: white;
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* ========== ПОЛЯ ВВОДА ========== */
+.input-group {
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.input-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-secondary);
+    transition: 0.2s;
+    fill: none;
+}
+
+.input-field {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 12px 12px 42px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.input-field:focus + .input-icon {
+    stroke: var(--accent);
+    transform: scale(1.1);
+}
+
+.input-field::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.toggle-password svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    transition: 0.2s;
+}
+
+.toggle-password:hover {
+    color: var(--accent);
+}
+
+.toggle-password:hover svg {
+    transform: scale(1.1);
+}
+
+/* ========== ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ ========== */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.checkbox-label:hover {
+    color: white;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.checkbox-label:hover .checkbox-custom {
+    border-color: var(--accent);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--accent);
+    border-color: var(--accent);
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.forgot-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+    position: relative;
+}
+
+.forgot-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: 0.2s;
+}
+
+.forgot-link:hover {
+    color: var(--accent-dark);
+}
+
+.forgot-link:hover::after {
+    width: 100%;
+}
+
+/* ========== КНОПКИ ========== */
+.btn-submit {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-submit:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-submit:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px var(--accent-glow);
+}
+
+.btn-submit svg {
+    width: 18px;
+    height: 18px;
+    stroke: white;
+    fill: none;
+    transition: 0.3s;
+}
+
+.btn-submit:hover svg {
+    transform: translateX(4px) rotate(0deg);
+}
+
+/* ========== РАЗДЕЛИТЕЛЬ ========== */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    z-index: 1;
+}
+
+.divider span {
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+    padding: 0 12px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+/* ========== СОЦИАЛЬНЫЕ КНОПКИ ========== */
+.social-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.social-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.social-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.social-btn:hover {
+    background: var(--surface-light);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--accent-glow);
+}
+
+.social-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    transition: 0.3s;
+}
+
+.social-btn:hover svg {
+    transform: scale(1.1);
+}
+
+/* ========== УВЕДОМЛЕНИЯ ========== */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 40px;
+    z-index: 9999;
+    animation: slideUp 0.3s, fadeOut 0.3s 2.7s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+}
+
+.toast.success {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.toast.error {
+    border-color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.toast svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}
+
+/* ========== ИНДИКАТОР ЗАГРУЗКИ ========== */
+.loading {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========== АНИМАЦИИ ДЛЯ СТРЕЛОК ========== */
+.arrow-icon {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+}
+
+.arrow-icon:hover {
+    animation: arrowPulse 1s infinite;
+}
+
+@keyframes arrowPulse {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
+/* ========== АДАПТИВНОСТЬ ========== */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+    }
+    
+    .auth-brand {
+        padding: 20px;
+    }
+    
+    .brand-logo {
+        font-size: 60px;
+    }
+    
+    .brand-title {
+        font-size: 24px;
+    }
+    
+    .brand-subtitle {
+        font-size: 14px;
+    }
+    
+    .brand-features {
+        margin-top: 20px;
+        gap: 12px;
+    }
+    
+    .auth-forms {
+        padding: 16px;
+        overflow-y: auto;
+    }
+
+    .forms-container {
+        height: auto;
+        transform: none;
+    }
+
+    .auth-form-stack {
+        height: auto;
+    }
+
+    .auth-form {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        overflow: visible;
+        display: none;
+    }
+
+    .auth-form.active {
+        display: block;
+    }
+}

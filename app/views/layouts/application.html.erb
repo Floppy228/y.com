@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Y Com" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Y Com">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+    <%= stylesheet_link_tag :application %>
+    <%= yield :styles %>
+  </head>
+
+  <body>
+    <% if flash.any? %>
+      <div class="system-toast-stack" aria-live="polite" aria-atomic="true">
+        <% flash.each do |type, message| %>
+          <% tone = case type.to_s
+                   when "notice" then "success"
+                   when "alert", "error" then "error"
+                   else "info"
+                   end %>
+          <div class="system-toast system-toast-<%= tone %>" data-system-toast>
+            <span><%= message %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <%= yield %>
+  </body>
+</html>

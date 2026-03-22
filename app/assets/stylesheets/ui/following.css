@@ -1,0 +1,110 @@
+/* Стили раздела подписок для Y.com */
+
+.following-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 16px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tab-item.active {
+    color: white;
+    position: relative;
+}
+
+.tab-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.tab-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Карточка пользователя в списке */
+.user-card {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    transition: 0.15s;
+}
+
+.user-card:hover {
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.user-avatar-sm {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    flex-shrink: 0;
+}
+
+.purple-grad { background: linear-gradient(135deg, var(--accent), #1e1b4b); }
+.dark-grad { background: linear-gradient(135deg, #333, #000); }
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.u-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: white;
+}
+
+.u-handle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: block;
+    margin-top: -2px;
+}
+
+.u-bio {
+    font-size: 14px;
+    color: #e4e4e7;
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+/* Кнопка отписки (солидный стиль) */
+.btn-unfollow {
+    background: transparent;
+    border: 1px solid #3f3f46;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-unfollow:hover {
+    background: rgba(255, 0, 0, 0.05);
+    border-color: #ef4444;
+    color: #ef4444;
+}

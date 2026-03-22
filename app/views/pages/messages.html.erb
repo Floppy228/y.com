@@ -1,0 +1,247 @@
+
+<% content_for :title, "Сообщения | Y.com" %>
+
+<% content_for :styles do %>
+  <%= stylesheet_link_tag "ui/messages" %>
+<% end %>
+
+<div class="layout">
+    <!-- Левая панель с SVG-иконками -->
+    <aside class="sidebar-left">
+        <a href="/" class="logo">Y.com</a>
+        <nav class="nav-group">
+            <a href="/" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Главная
+            </a>
+            <a href="/profile" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Профиль
+            </a>
+            <a href="/messages" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Сообщения
+            </a>
+            <a href="/ai" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v8M8 12h8"/>
+                </svg>
+                Y-Core
+            </a>
+            <a href="/following" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Подписки
+            </a>
+            <a href="/settings" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
+                </svg>
+                Настройки
+            </a>
+                </nav>
+        <% if user_signed_in? %>
+          <%= button_to destroy_user_session_path, method: :delete, class: "btn-main", form_class: "logout-form" do %>
+              <svg viewBox="0 0 24 24">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Выйти
+          <% end %>
+        <% end %>
+        <button class="btn-main" id="newMessageBtn">
+            <svg viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Новое сообщение
+        </button>
+    </aside>
+
+    <!-- Центральная колонка -->
+    <main class="content">
+        <div class="page-header">
+            <h1>Сообщения</h1>
+        </div>
+        
+        <div class="messages-container">
+            <!-- Левая колонка - список чатов -->
+            <div class="chats-sidebar">
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск в сообщениях" id="searchChats">
+                </div>
+                
+                <div class="chats-list" id="chatsList">
+                    <div class="chat-item active">
+                        <div class="chat-avatar online">TA</div>
+                        <div class="chat-content">
+                            <div class="chat-header">
+                                <div class="chat-name">Tech Analytics</div>
+                                <div class="chat-time">12:30</div>
+                            </div>
+                            <div class="chat-preview unread">Сделал разбор трендов за сегодня <span class="unread-badge"></span></div>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-avatar">АП</div>
+                        <div class="chat-content">
+                            <div class="chat-header">
+                                <div class="chat-name">Анна Петрова</div>
+                                <div class="chat-time">11:08</div>
+                            </div>
+                            <div class="chat-preview">Давай созвонимся вечером</div>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-avatar">МС</div>
+                        <div class="chat-content">
+                            <div class="chat-header">
+                                <div class="chat-name">Михаил Сидоров</div>
+                                <div class="chat-time">Вчера</div>
+                            </div>
+                            <div class="chat-preview">Отправил тебе материалы по проекту</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Правая колонка - окно чата -->
+            <div class="chat-main" id="chatMain">
+                <!-- Приветственный экран (пока чат не выбран) -->
+                <div class="welcome-message" id="welcomeScreen" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <h3>Выберите чат</h3>
+                    <p>Начните общение с другом</p>
+                </div>
+
+                <!-- Активный чат (изначально скрыт) -->
+                <div id="activeChat" style="display: flex; height: 100%; flex-direction: column;">
+                    <!-- Шапка чата -->
+                    <div class="chat-main-header">
+                        <div class="chat-main-avatar online" id="chatAvatar">TA</div>
+                        <div class="chat-main-info">
+                            <div class="chat-main-name" id="chatName">Tech Analytics</div>
+                            <div class="chat-main-status" id="chatStatus">В сети</div>
+                        </div>
+                        <div class="chat-main-actions">
+                            <button class="chat-action-btn" id="searchInChat">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </button>
+                            <button class="chat-action-btn" id="chatMenu">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="1"/>
+                                    <circle cx="12" cy="5" r="1"/>
+                                    <circle cx="12" cy="19" r="1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Сообщения -->
+                    <div class="messages-area" id="messagesArea">
+                        <div class="message incoming">
+                            <div class="message-bubble">Привет! Готова сводка по рынку и AI-новостям.</div>
+                            <div class="message-time">12:18</div>
+                        </div>
+                        <div class="message outgoing">
+                            <div class="message-bubble">Отлично, пришли ключевые пункты.</div>
+                            <div class="message-time">12:21</div>
+                        </div>
+                        <div class="message incoming">
+                            <div class="message-bubble">Топ-3 темы дня: LLM-обновления, безопасность и оптимизация инфры.</div>
+                            <div class="message-time">12:30</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Поле ввода -->
+                    <div class="message-input-area">
+                        <div class="message-input-wrapper">
+                            <textarea class="message-input" id="messageInput" placeholder="Написать сообщение..." rows="1"></textarea>
+                            <div class="input-tools">
+                                <button class="input-tool-btn" id="emojiBtn">
+                                    <svg viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+                                        <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
+                                        <path d="M8 14a4 4 0 0 0 8 0"/>
+                                    </svg>
+                                </button>
+                                <button class="input-tool-btn" id="attachBtn">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn-send" id="sendBtn" type="button">
+                            <svg viewBox="0 0 24 24">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Правая панель -->
+    <aside class="sidebar-right">
+        <div class="search-container">
+            <input type="text" placeholder="Поиск" id="globalSearch">
+        </div>
+        <div class="panel">
+            <h3>Актуальное</h3>
+            <div class="trend-row">
+                <span class="trend-tag">#Ycom</span>
+                <div class="trend-title">Новые функции чата</div>
+            </div>
+            <div class="trend-row">
+                <span class="trend-tag">#Update</span>
+                <div class="trend-title">Шифрование данных</div>
+            </div>
+        </div>
+        <div class="panel">
+            <h3>Кого добавить</h3>
+            <div class="suggested-user">
+                <div class="suggested-avatar">АП</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Анна Петрова</div>
+                    <div class="suggested-handle">@anna_dev</div>
+                </div>
+            </div>
+            <div class="suggested-user">
+                <div class="suggested-avatar dark-grad">МС</div>
+                <div class="suggested-info">
+                    <div class="suggested-name">Михаил Сидоров</div>
+                    <div class="suggested-handle">@mike_design</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+
+

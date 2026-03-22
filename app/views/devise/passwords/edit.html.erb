@@ -1,0 +1,102 @@
+<% content_for :title, "Смена пароля | Y.com" %>
+
+<% content_for :styles do %>
+  <%= stylesheet_link_tag "ui/auth" %>
+<% end %>
+
+<div class="auth-container">
+  <div class="auth-brand">
+    <div class="brand-content">
+      <div class="brand-logo">Y</div>
+      <h1 class="brand-title">Y.com</h1>
+      <p class="brand-subtitle">Создайте новый пароль для входа в аккаунт</p>
+
+      <div class="brand-features">
+        <div class="feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Используйте надежный пароль</span>
+        </div>
+
+        <div class="feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Токен сброса действует ограниченное время</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-forms">
+    <div class="forms-container password-forms-container">
+      <div class="auth-form-stack password-form-stack">
+        <div class="auth-form active password-form">
+          <h2 class="form-title">Новый пароль</h2>
+          <p class="form-subtitle">Введите новый пароль и подтвердите его.</p>
+
+          <% if resource.errors.any? %>
+            <div class="password-errors">
+              <% resource.errors.full_messages.each do |message| %>
+                <p><%= message %></p>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, novalidate: true }) do |f| %>
+            <%= f.hidden_field :reset_password_token %>
+
+            <div class="input-group">
+              <label class="input-label">Новый пароль</label>
+              <% if @minimum_password_length %>
+                <p class="password-hint">Минимум <%= @minimum_password_length %> символов</p>
+              <% end %>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <%= f.password_field :password,
+                      class: "input-field",
+                      autofocus: true,
+                      autocomplete: "new-password",
+                      placeholder: "••••••••",
+                      required: true %>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">Подтверждение пароля</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <%= f.password_field :password_confirmation,
+                      class: "input-field",
+                      autocomplete: "new-password",
+                      placeholder: "••••••••",
+                      required: true %>
+              </div>
+            </div>
+
+            <button class="btn-submit" type="submit">
+              <span>Сохранить пароль</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14"/>
+                <path d="M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          <% end %>
+
+          <div class="form-options form-options-single">
+            <%= link_to "Вернуться ко входу", new_user_session_path, class: "forgot-link" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

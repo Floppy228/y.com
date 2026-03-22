@@ -1,0 +1,16 @@
+one:
+  email: one@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  username: one_user
+  name: One User
+  bio: Test bio
+  role: 0
+
+two:
+  email: two@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  username: two_user
+  name: Two User
+  bio: Another bio
+  role: 0
+# column: value

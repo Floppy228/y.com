@@ -1,0 +1,6 @@
+<% if defined?(resource) && resource.respond_to?(:errors) && resource.errors.any? %>
+  <% flash.now[:alert] = resource.errors.full_messages.to_sentence %>
+<% end %>
+
+<% @auth_mode = "register" %>
+<%= render template: "pages/auth" %>

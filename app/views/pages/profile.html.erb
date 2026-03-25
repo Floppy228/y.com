@@ -77,7 +77,7 @@
         <!-- Шапка профиля -->
         <div class="profile-header">
             <h1><%= profile_name %></h1>
-            <span class="post-count" id="postCount">3 поста</span>
+            <span class="post-count" id="postCount"><%= @user.posts_count %> постов</span>
         </div>
 
         <!-- Обложка -->
@@ -131,10 +131,10 @@
             </div>
 
             <!-- Статистика -->
-            <div class="profile-stats">
-                <span id="followingStat"><strong>128</strong> подписок</span>
-                <span id="followersStat"><strong>1.2K</strong> подписчиков</span>
-                <span id="postsStat"><strong>3</strong> поста</span>
+           <div class="profile-stats">
+                <span id="followingStat"><strong><%= @user.following_count %></strong> подписок</span>
+                <span id="followersStat"><strong><%= @user.followers_count %></strong> подписчиков</span>
+                <span id="postsStat"><strong><%= @user.posts_count %></strong> постов</span>
             </div>
         </div>
 

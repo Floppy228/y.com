@@ -17,6 +17,19 @@ class User < ApplicationRecord
 
   before_validation :normalize_username
   before_validation :normalize_email
+  before_validation :set_default_profile_values, on: :create
+
+  def posts_count
+    0
+  end
+
+  def followers_count
+    0
+  end
+
+  def following_count
+    0
+  end
 
   private
 
@@ -26,5 +39,9 @@ class User < ApplicationRecord
 
   def normalize_email
     self.email = email.to_s.strip.downcase.presence
+  end
+
+  def set_default_profile_values
+    self.bio = nil if bio.blank?
   end
 end

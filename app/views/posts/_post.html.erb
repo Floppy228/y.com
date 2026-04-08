@@ -43,13 +43,15 @@
       <% end %>
     </div>
 
-    <div class="comments-section" style="margin-top:16px;">
+    <div class="comments-section" style="margin-top:16px; padding:12px; border:1px solid rgba(255,255,255,0.08); border-radius:14px;">
+      <div style="margin-bottom:10px; color:#fff;">Комментарии</div>
+
       <%= form_with url: post_comments_path(post), scope: :comment, local: true do %>
-        <div style="display:flex; gap:10px; align-items:flex-start;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
           <%= text_area_tag "comment[content]", nil,
-                            rows: 2,
+                            rows: 3,
                             placeholder: "Напиши комментарий...",
-                            style: "width:100%; padding:10px; border-radius:12px;" %>
+                            style: "width:100%; padding:10px; border-radius:12px; background:#111; color:#fff; border:1px solid rgba(255,255,255,0.12);" %>
 
           <%= submit_tag "Ответить", class: "action-btn" %>
         </div>

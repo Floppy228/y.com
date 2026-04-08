@@ -531,7 +531,7 @@ body {
     background: var(--surface);
     border-radius: 12px;
     border: 1px solid var(--border);
-    display: none;
+    display: block;
 }
 
 .comments-list {
@@ -831,4 +831,24 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.comments-section textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+}
+
+.comments-section textarea:focus {
+    border-color: var(--accent);
+}
+
+.comments-section form {
+    margin-bottom: 14px;
 }

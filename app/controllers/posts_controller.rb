@@ -3,7 +3,6 @@ class PostsController < ApplicationController
   before_action :set_post, only: :destroy
 
   def create
-    Rails.logger.debug "POST PARAMS: #{params.inspect}"
     @post = current_user.posts.build(post_params)
 
     if @post.save

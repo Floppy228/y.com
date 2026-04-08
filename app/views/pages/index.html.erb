@@ -2,138 +2,147 @@
   <%= stylesheet_link_tag "ui/index" %>
 <% end %>
 
-<!-- Модальное окно -->
 <div class="modal" id="imageModal">
-    <div class="modal-close">&times;</div>
-    <img id="modalImage" src="" alt="">
+  <div class="modal-close">&times;</div>
+  <img id="modalImage" src="" alt="">
 </div>
 
 <div class="layout">
-    <!-- Левая панель с SVG-иконками -->
-    <aside class="sidebar-left">
-        <a href="/" class="logo">Y.com</a>
-        <nav class="nav-group">
-            <a href="/" class="nav-item active">
-                <svg viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                Главная
-            </a>
-            <a href="/profile" class="nav-item">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Профиль
-            </a>
-            <a href="/messages" class="nav-item">
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                Сообщения
-            </a>
-            <a href="/ai" class="nav-item">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 8v8M8 12h8"/>
-                </svg>
-                Y-Core
-            </a>
-            <a href="/following" class="nav-item">
-                <svg viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                Подписки
-            </a>
-            <a href="/settings" class="nav-item">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
-                    <path d="M16.5 6.5L19 9l-2.5 2.5"/>
-                    <path d="M7.5 6.5L5 9l2.5 2.5"/>
-                </svg>
-                Настройки
-            </a>
-                </nav>
-        <% if user_signed_in? %>
-          <%= button_to destroy_user_session_path, method: :delete, class: "btn-main", form_class: "logout-form" do %>
+  <aside class="sidebar-left">
+    <a href="/" class="logo">Y.com</a>
+
+    <nav class="nav-group">
+      <a href="/" class="nav-item active">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Главная
+      </a>
+
+      <a href="/profile" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Профиль
+      </a>
+
+      <a href="/messages" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Сообщения
+      </a>
+
+      <a href="/ai" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v8M8 12h8"/>
+        </svg>
+        Y-Core
+      </a>
+
+      <a href="/following" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Подписки
+      </a>
+
+      <a href="/settings" class="nav-item">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+          <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+          <path d="M7.5 6.5L5 9l2.5 2.5"/>
+        </svg>
+        Настройки
+      </a>
+    </nav>
+
+    <% if user_signed_in? %>
+      <%= button_to destroy_user_session_path, method: :delete, class: "btn-main", form_class: "logout-form" do %>
+        <svg viewBox="0 0 24 24">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Выйти
+      <% end %>
+    <% end %>
+
+    <button class="btn-main" id="quickPostBtn" type="button">
+      <svg viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Новый пост
+    </button>
+  </aside>
+
+  <main class="content">
+    <div class="page-header">
+      <h1>Главная</h1>
+    </div>
+
+    <div class="editor">
+      <%= form_with model: @post, url: posts_path, class: "editor-wrapper", local: true do |form| %>
+        <%= form.text_area :content, class: "editor-textarea", placeholder: "Что нового?", rows: 3 %>
+
+        <div class="editor-footer">
+          <div class="editor-tools">
+            <span class="tool-btn" title="Загрузка изображений пока не подключена">
               <svg viewBox="0 0 24 24">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                  <polyline points="16 17 21 12 16 7"/>
-                  <line x1="21" y1="12" x2="9" y2="12"/>
+                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
               </svg>
-              Выйти
-          <% end %>
-        <% end %>
-        <button class="btn-main" id="quickPostBtn">
-            <svg viewBox="0 0 24 24">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            Новый пост
-        </button>
-    </aside>
+            </span>
+          </div>
 
-    <!-- Центральная колонка -->
-    <main class="content">
-        <div class="page-header">
-            <h1>Главная</h1>
+          <%= form.submit "Опубликовать", class: "editor-submit" %>
         </div>
+      <% end %>
+    </div>
 
-        <!-- Редактор -->
-        <div class="editor">
-            <div class="editor-wrapper">
-                <textarea class="editor-textarea" id="postContent" placeholder="Что нового?" rows="3"></textarea>
-                
-                <div id="imagePreviewContainer" class="image-preview-container" style="display: none;"></div>
-                
-                <div class="editor-footer">
-                    <div class="editor-tools">
-                        <label class="tool-btn">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <polyline points="21 15 16 10 5 21"/>
-                            </svg>
-                            <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">
-                        </label>
-                    </div>
-                    <button class="editor-submit" id="submitPost">Опубликовать</button>
-                </div>
-            </div>
+    <section class="feed" id="feed">
+      <% if @posts.any? %>
+        <%= render @posts %>
+      <% else %>
+        <div class="empty-feed">
+          <h3>Пока нет постов</h3>
+          <p>Создай первый пост через форму выше — он появится здесь.</p>
         </div>
+      <% end %>
+    </section>
+  </main>
 
-        <!-- Лента -->
-        <section class="feed" id="feed"></section>
-    </main>
+  <aside class="sidebar-right">
+    <div class="search-container">
+      <input type="text" placeholder="Поиск" id="searchInput">
+    </div>
 
-    <!-- Правая панель -->
-    <aside class="sidebar-right">
-        <div class="search-container">
-            <input type="text" placeholder="Поиск" id="searchInput">
-        </div>
-        <div class="panel">
-            <h3>Актуальное</h3>
-            <div class="trend-row">
-                <span class="trend-tag">#Ycom</span>
-                <div class="trend-title">Новая версия</div>
-            </div>
-            <div class="trend-row">
-                <span class="trend-tag">#Design</span>
-                <div class="trend-title">Минимализм</div>
-            </div>
-            <div class="trend-row">
-                <span class="trend-tag">#AI</span>
-                <div class="trend-title">Y-Core</div>
-            </div>
-        </div>
-    </aside>
+    <div class="panel">
+      <h3>Актуальное</h3>
+
+      <div class="trend-row">
+        <span class="trend-tag">#Ycom</span>
+        <div class="trend-title">Новая версия</div>
+      </div>
+
+      <div class="trend-row">
+        <span class="trend-tag">#Design</span>
+        <div class="trend-title">Минимализм</div>
+      </div>
+
+      <div class="trend-row">
+        <span class="trend-tag">#AI</span>
+        <div class="trend-title">Y-Core</div>
+      </div>
+    </div>
+  </aside>
 </div>
-
-
-
-

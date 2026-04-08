@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   enum :role, { member: 0, admin: 1 }, default: :member
 
+  has_many :posts, dependent: :destroy
+
   validates :name, presence: true, length: { minimum: 2, maximum: 80 }
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :username,
@@ -20,7 +22,7 @@ class User < ApplicationRecord
   before_validation :set_default_profile_values, on: :create
 
   def posts_count
-    0
+    posts.count
   end
 
   def followers_count

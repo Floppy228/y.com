@@ -1,0 +1,30 @@
+<%
+  author = post.user
+  author_name = author.name.presence || author.username.presence || "Пользователь"
+  author_handle = author.username.present? ? "@#{author.username}" : "@user"
+  initials = author_name.split.map { |part| part.first }.join[0, 2].to_s.upcase
+%>
+
+<article class="post">
+  <div class="post-avatar"><%= initials %></div>
+
+  <div class="post-content">
+    <div class="post-header">
+      <div class="post-author-name">
+        <%= author_name %>
+      </div>
+      <div class="post-author-handle"><%= author_handle %></div>
+      <div class="post-time"><%= time_ago_in_words(post.created_at) %> назад</div>
+    </div>
+
+    <div class="post-text">
+      <%= simple_format(h(post.content), {}, wrapper_tag: "div") %>
+    </div>
+
+    <% if post.user == current_user %>
+      <div class="post-actions">
+        <%= button_to "Удалить", post_path(post), method: :delete, class: "action-btn", form: { data: { turbo_confirm: "Удалить этот пост?" } } %>
+      </div>
+    <% end %>
+  </div>
+</article>

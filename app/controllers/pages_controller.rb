@@ -3,9 +3,12 @@ class PagesController < ApplicationController
   before_action :set_user, only: [:profile, :settings, :update_account, :update_profile]
 
   def index
+    @post = Post.new
+    @posts = Post.recent
   end
 
   def profile
+    @posts = @user.posts.recent
   end
 
   def messages

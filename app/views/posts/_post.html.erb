@@ -10,9 +10,7 @@
 
   <div class="post-content">
     <div class="post-header">
-      <div class="post-author-name">
-        <%= author_name %>
-      </div>
+      <div class="post-author-name"><%= author_name %></div>
       <div class="post-author-handle"><%= author_handle %></div>
       <div class="post-time"><%= time_ago_in_words(post.created_at) %> назад</div>
     </div>
@@ -21,10 +19,70 @@
       <%= simple_format(h(post.content), {}, wrapper_tag: "div") %>
     </div>
 
-    <% if post.user == current_user %>
-      <div class="post-actions">
-        <%= button_to "Удалить", post_path(post), method: :delete, class: "action-btn", form: { data: { turbo_confirm: "Удалить этот пост?" } } %>
-      </div>
-    <% end %>
+    <div class="post-actions" style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+      <% if post.liked_by?(current_user) %>
+        <%= button_to "💜 Убрать лайк (#{post.likes_count})",
+                      post_like_path(post),
+                      method: :delete,
+                      class: "action-btn" %>
+      <% else %>
+        <%= button_to "🤍 Лайк (#{post.likes_count})",
+                      post_like_path(post),
+                      method: :post,
+                      class: "action-btn" %>
+      <% end %>
+
+      <span>💬 <%= post.comments_count %></span>
+
+      <% if post.user == current_user %>
+        <%= button_to "Удалить пост",
+                      post_path(post),
+                      method: :delete,
+                      class: "action-btn",
+                      form: { data: { turbo_confirm: "Удалить этот пост?" } } %>
+      <% end %>
+    </div>
+
+    <div class="comments-section" style="margin-top:16px;">
+      <%= form_with url: post_comments_path(post), scope: :comment, local: true do %>
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <%= text_area_tag "comment[content]", nil,
+                            rows: 2,
+                            placeholder: "Напиши комментарий...",
+                            style: "width:100%; padding:10px; border-radius:12px;" %>
+
+          <%= submit_tag "Ответить", class: "action-btn" %>
+        </div>
+      <% end %>
+
+      <% if post.comments.any? %>
+        <div style="margin-top:14px; display:flex; flex-direction:column; gap:12px;">
+          <% post.comments.recent.each do |comment| %>
+            <div style="padding:10px 12px; border:1px solid rgba(255,255,255,0.08); border-radius:14px;">
+              <div style="font-weight:600;">
+                <%= comment.user.name.presence || comment.user.username %>
+                <span style="font-weight:400; opacity:0.7;">
+                  @<%= comment.user.username %> · <%= time_ago_in_words(comment.created_at) %> назад
+                </span>
+              </div>
+
+              <div style="margin-top:6px;">
+                <%= simple_format(h(comment.content), {}, wrapper_tag: "div") %>
+              </div>
+
+              <% if comment.user == current_user %>
+                <div style="margin-top:8px;">
+                  <%= button_to "Удалить комментарий",
+                                post_comment_path(post, comment),
+                                method: :delete,
+                                class: "action-btn",
+                                form: { data: { turbo_confirm: "Удалить комментарий?" } } %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </article>

@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users, skip: [:sessions, :registrations, :passwords]
-  resources :posts, only: [:create, :destroy]
+  resources :posts, only: [:create, :destroy] do
+    resource :like, only: [:create, :destroy]
+    resources :comments, only: [:create, :destroy]
+  end
+
   as :user do
     get "auth", to: "devise/sessions#new", as: :new_user_session
     post "auth", to: "devise/sessions#create", as: :user_session

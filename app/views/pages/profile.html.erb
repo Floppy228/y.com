@@ -147,7 +147,18 @@
         </div>
 
         <!-- Контейнеры табов -->
-        <div id="posts-tab" class="tab-content active"></div>
+        <div id="posts-tab" class="tab-content active">
+        <% if @posts.any? %>
+            <section class="feed">
+            <%= render @posts %>
+            </section>
+        <% else %>
+            <div class="empty-feed">
+            <h3>Нет постов</h3>
+            <p>Здесь появятся твои публикации.</p>
+            </div>
+        <% end %>
+        </div>       
         <div id="replies-tab" class="tab-content"></div>
         <div id="media-tab" class="tab-content"></div>
         <div id="likes-tab" class="tab-content"></div>

@@ -90,8 +90,8 @@
     </div>
 
     <div class="editor">
-      <%= form_with model: @post, url: posts_path, class: "editor-wrapper", local: true do |form| %>
-        <%= form.text_area :content, class: "editor-textarea", placeholder: "Что нового?", rows: 3 %>
+      <%= form_with url: posts_path, scope: :post, method: :post, local: true, class: "editor-wrapper" do %>
+        <%= text_area_tag "post[content]", nil, class: "editor-textarea", placeholder: "Что нового?", rows: 3, required: true %>
 
         <div class="editor-footer">
           <div class="editor-tools">
@@ -104,7 +104,7 @@
             </span>
           </div>
 
-          <%= form.submit "Опубликовать", class: "editor-submit" %>
+          <%= submit_tag "Опубликовать", class: "editor-submit" %>
         </div>
       <% end %>
     </div>

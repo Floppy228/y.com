@@ -83,3 +83,29 @@
     visibility: hidden;
   }
 }
+
+.empty-feed {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary, #71717a);
+}
+.empty-feed h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+.empty-feed p  { font-size: 14px; opacity: 0.7; }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border, #1f1f1f);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.08);
+}

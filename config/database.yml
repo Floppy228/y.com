@@ -23,6 +23,13 @@ default: &default
 development:
   <<: *default
   database: y_com_development
+<<<<<<< Updated upstream
+=======
+  username: postgres
+  password: <%= ENV["Y_COM_DB_PASSWORD"] %>
+  host: localhost
+  port: 5432
+>>>>>>> Stashed changes
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -57,6 +64,7 @@ development:
 test:
   <<: *default
   database: y_com_test
+<<<<<<< Updated upstream
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -83,13 +91,23 @@ test:
 #
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
+=======
+  username: postgres
+  password: <%= ENV["Y_COM_DB_PASSWORD"] %>
+  host: localhost
+  port: 5432
+>>>>>>> Stashed changes
 #
 production:
   primary: &primary_production
     <<: *default
     database: y_com_production
     username: y_com
+<<<<<<< Updated upstream
     password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
+=======
+    password: <%= ENV["Y_COM_DB_PASSWORD"] %>
+>>>>>>> Stashed changes
   cache:
     <<: *primary_production
     database: y_com_production_cache

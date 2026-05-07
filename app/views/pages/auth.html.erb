@@ -1,4 +1,4 @@
-<% requested_mode = params[:auth_mode].presence || "login" %>
+<% requested_mode = params[:auth_mode].presence || @auth_mode.presence || "login" %>
 <% auth_mode = requested_mode.to_s == "register" ? "register" : "login" %>
 <% login_active = auth_mode == "login" %>
 <% register_active = auth_mode == "register" %>

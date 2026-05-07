@@ -1,0 +1,128 @@
+<div id="imageModal" class="invisible fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 opacity-0 transition">
+  <button class="absolute right-8 top-8 flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 text-2xl text-white transition hover:bg-red-500">
+    &times;
+  </button>
+  <img id="modalImage" src="" alt="" class="max-h-[90%] max-w-[90%] rounded-lg border border-zinc-800">
+</div>
+
+<div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] grid-cols-[280px_1fr_320px] overflow-hidden bg-black text-white">
+  <aside class="h-screen overflow-y-auto border-r border-zinc-900 bg-black px-4 py-5">
+    <%= link_to "Y.com", root_path, class: "mb-8 inline-block bg-gradient-to-br from-white to-indigo-500 bg-clip-text pl-3 text-[42px] font-black tracking-[-1.5px] text-transparent" %>
+
+    <nav class="flex flex-col gap-1">
+      <%= link_to root_path, class: "flex items-center gap-4 rounded-full bg-zinc-950 px-4 py-3 text-lg font-semibold text-white transition hover:bg-zinc-950" do %>
+        <svg class="h-6 w-6 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Главная
+      <% end %>
+
+      <% [
+        ["/profile", "Профиль", "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2", true],
+        ["/messages", "Сообщения", "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", false],
+        ["/ai", "Y-Core", nil, false],
+        ["/following", "Подписки", nil, false],
+        ["/settings", "Настройки", nil, false]
+      ].each do |path, title, icon_path, circle| %>
+        <%= link_to path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <% if title == "Профиль" %>
+              <path d="<%= icon_path %>"/>
+              <circle cx="12" cy="7" r="4"/>
+            <% elsif title == "Сообщения" %>
+              <path d="<%= icon_path %>"/>
+            <% elsif title == "Y-Core" %>
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v8M8 12h8"/>
+            <% elsif title == "Подписки" %>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <% else %>
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
+              <path d="M16.5 6.5L19 9l-2.5 2.5"/>
+              <path d="M7.5 6.5L5 9l2.5 2.5"/>
+            <% end %>
+          </svg>
+          <%= title %>
+        <% end %>
+      <% end %>
+    </nav>
+
+    <% if user_signed_in? %>
+      <%= button_to destroy_user_session_path, method: :delete, class: "mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" do %>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Выйти
+      <% end %>
+    <% end %>
+
+    <button id="quickPostBtn" type="button" class="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Новый пост
+    </button>
+  </aside>
+
+  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+    <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
+      <h1 class="text-[22px] font-bold text-white">Главная</h1>
+    </div>
+
+    <div class="border-b border-zinc-900 px-6 py-5">
+      <%= form_with url: posts_path, scope: :post, method: :post, local: true, class: "rounded-[20px] border border-zinc-900 bg-zinc-950 p-4 transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/20" do %>
+        <%= text_area_tag "post[content]", nil, class: "min-h-20 w-full resize-none bg-transparent text-[17px] leading-relaxed text-white outline-none placeholder:text-zinc-500", placeholder: "Что нового?", rows: 3, required: true %>
+
+        <div class="mt-3 flex items-center justify-between border-t border-zinc-900 pt-3">
+          <div class="flex gap-2">
+            <span class="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-zinc-900 text-zinc-500 transition hover:border-indigo-500 hover:bg-zinc-900 hover:text-indigo-500" title="Загрузка изображений пока не подключена">
+              <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </span>
+          </div>
+
+          <%= submit_tag "Опубликовать", class: "cursor-pointer rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600" %>
+        </div>
+      <% end %>
+    </div>
+
+    <section id="feed">
+      <% if @posts.any? %>
+        <%= render @posts %>
+      <% else %>
+        <div class="px-5 py-16 text-center text-zinc-500">
+          <h3 class="mb-2 text-lg font-semibold text-white">Пока нет постов</h3>
+          <p>Создай первый пост через форму выше — он появится здесь.</p>
+        </div>
+      <% end %>
+    </section>
+  </main>
+
+  <aside class="h-screen overflow-y-auto bg-black p-5">
+    <div>
+      <input id="searchInput" type="text" placeholder="Поиск" class="w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none transition placeholder:text-zinc-500 focus:border-indigo-500">
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
+      <h3 class="mb-4 text-lg font-semibold text-white">Актуальное</h3>
+
+      <% [["#Ycom", "Новая версия"], ["#Design", "Минимализм"], ["#AI", "Y-Core"]].each do |tag, title| %>
+        <div class="mt-4 cursor-pointer group">
+          <span class="text-sm text-zinc-500"><%= tag %></span>
+          <div class="mt-1 font-semibold text-white transition group-hover:text-indigo-500"><%= title %></div>
+        </div>
+      <% end %>
+    </div>
+  </aside>
+</div>

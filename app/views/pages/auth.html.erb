@@ -1,0 +1,257 @@
+<% requested_mode = params[:auth_mode].presence || @auth_mode.presence %>
+<% auth_mode = requested_mode.to_s == "register" ? "register" : "login" %>
+<% login_active = auth_mode != "register" %>
+<% register_active = auth_mode == "register" %>
+
+<% content_for :title, "#{register_active ? 'Регистрация' : 'Вход'} | Y.com" %>
+
+<div class="min-h-screen w-screen overflow-hidden bg-black text-white md:flex">
+  <section class="relative flex min-h-[34vh] flex-1 items-center justify-center overflow-hidden border-b border-zinc-900 bg-gradient-to-br from-zinc-950 to-zinc-900 md:min-h-screen md:border-b-0 md:border-r">
+    <div class="absolute h-[150%] w-[150%] animate-spin rounded-full bg-[radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.3)_0%,transparent_50%)] [animation-duration:20s]"></div>
+
+    <div class="relative z-10 px-10 text-center">
+      <div class="mb-5 animate-bounce bg-gradient-to-br from-white to-indigo-500 bg-clip-text text-7xl font-black text-transparent drop-shadow-[0_0_30px_rgba(99,102,241,0.3)] md:text-[120px]">
+        Y
+      </div>
+
+      <h1 class="mb-4 bg-gradient-to-br from-white to-indigo-300 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent md:text-5xl">
+        Y.com
+      </h1>
+
+      <p class="mx-auto max-w-md text-sm leading-relaxed text-zinc-500 md:text-lg">
+        Знать обо всем
+      </p>
+
+      <div class="mt-8 flex flex-col gap-4 text-left md:mt-10 md:gap-5">
+        <div class="group flex items-center gap-3 text-sm text-zinc-500 transition hover:translate-x-2 hover:text-white md:text-base">
+          <svg class="h-6 w-6 transition group-hover:scale-110 group-hover:text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Только важные контакты</span>
+        </div>
+
+        <div class="group flex items-center gap-3 text-sm text-zinc-500 transition hover:translate-x-2 hover:text-white md:text-base">
+          <svg class="h-6 w-6 transition group-hover:scale-110 group-hover:text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M8 10h.01"/>
+            <path d="M12 10h.01"/>
+            <path d="M16 10h.01"/>
+          </svg>
+          <span>Чистый минимализм</span>
+        </div>
+
+        <div class="group flex items-center gap-3 text-sm text-zinc-500 transition hover:translate-x-2 hover:text-white md:text-base">
+          <svg class="h-6 w-6 transition group-hover:scale-110 group-hover:text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v8"/>
+            <path d="M8 12h8"/>
+            <path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>
+          </svg>
+          <span>AI-помощник Y-Core</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flex flex-1 items-center justify-center overflow-y-auto bg-black p-4 md:p-5">
+    <div class="mx-auto w-full max-w-[400px]">
+      <div class="mx-auto mb-6 flex w-fit rounded-full border border-zinc-800 bg-zinc-950 p-1">
+        <%= link_to "Вход",
+              auth_path,
+              class: "min-w-32 rounded-full px-5 py-2.5 text-center text-sm font-semibold transition #{login_active ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-zinc-500 hover:text-white'}" %>
+
+        <%= link_to "Регистрация",
+              auth_path(auth_mode: "register"),
+              class: "min-w-32 rounded-full px-5 py-2.5 text-center text-sm font-semibold transition #{register_active ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-zinc-500 hover:text-white'}" %>
+      </div>
+
+      <% if login_active %>
+        <div>
+          <h2 class="mb-1 text-3xl font-bold tracking-tight">Добро пожаловать!</h2>
+          <p class="mb-5 text-sm text-zinc-500">Войдите в свой аккаунт Y.com</p>
+
+          <%= form_for(User.new, as: :user, url: user_session_path, html: { novalidate: true }) do |f| %>
+            <%= hidden_field_tag :auth_mode, "login" %>
+
+            <div class="mb-4">
+              <%= f.label :email, "Email", class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
+              <div class="relative flex items-center">
+                <svg class="pointer-events-none absolute left-3 h-[18px] w-[18px] text-zinc-500 transition peer-focus:text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                  <path d="M22 6L12 13 2 6"/>
+                </svg>
+                <%= f.email_field :email,
+                      class: "peer w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
+                      placeholder: "your@email.com",
+                      autocomplete: "email",
+                      required: true %>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :password, "Пароль", class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
+              <div class="relative flex items-center">
+                <svg class="pointer-events-none absolute left-3 h-[18px] w-[18px] text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <%= f.password_field :password,
+                      class: "w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
+                      id: "loginPassword",
+                      placeholder: "••••••••",
+                      autocomplete: "current-password",
+                      required: true %>
+                <button class="absolute right-3 text-zinc-500 transition hover:scale-110 hover:text-indigo-500" type="button" data-password-toggle="loginPassword" aria-label="Показать пароль" aria-pressed="false">
+                  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="my-4 flex items-center justify-between">
+              <label class="flex cursor-pointer items-center gap-2 text-sm text-zinc-500 transition hover:text-white">
+                <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-zinc-800 bg-zinc-950 text-indigo-500 focus:ring-indigo-500" %>
+                <span>Запомнить меня</span>
+              </label>
+
+              <%= link_to "Забыли пароль?", new_user_password_path, class: "text-sm font-semibold text-indigo-500 transition hover:text-indigo-400" %>
+            </div>
+
+            <button class="group mb-4 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 p-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" type="submit">
+              <span>Войти</span>
+              <svg class="h-[18px] w-[18px] transition group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14"/>
+                <path d="M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if register_active %>
+        <div>
+          <h2 class="mb-1 text-3xl font-bold tracking-tight">Создать аккаунт</h2>
+          <p class="mb-5 text-sm text-zinc-500">Присоединяйтесь к Y.com</p>
+
+          <%= form_for(User.new, as: :user, url: user_registration_path, html: { novalidate: true }) do |f| %>
+            <%= hidden_field_tag :auth_mode, "register" %>
+
+            <% [
+              [:name, "Имя", "Алексей Морозов", "text", "registerName"],
+              [:username, "Username", "alex_morozov", "text", "registerUsername"],
+              [:email, "Email", "your@email.com", "email", "registerEmail"]
+            ].each do |field, label, placeholder, type, id| %>
+              <div class="mb-4">
+                <%= f.label field, label, class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
+                <div class="relative flex items-center">
+                  <svg class="pointer-events-none absolute left-3 h-[18px] w-[18px] text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <% if field == :email %>
+                      <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                      <path d="M22 6L12 13 2 6"/>
+                    <% else %>
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    <% end %>
+                  </svg>
+
+                  <% if type == "email" %>
+                    <%= f.email_field field,
+                          class: "w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
+                          id: id,
+                          placeholder: placeholder,
+                          autocomplete: "email",
+                          required: true %>
+                  <% else %>
+                    <%= f.text_field field,
+                          class: "w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
+                          id: id,
+                          placeholder: placeholder,
+                          required: true %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <% [
+              [:password, "Пароль", "registerPassword", "new-password"],
+              [:password_confirmation, "Подтвердите пароль", "registerConfirm", "new-password"]
+            ].each do |field, label, id, autocomplete| %>
+              <div class="mb-4">
+                <%= f.label field, label, class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
+                <div class="relative flex items-center">
+                  <svg class="pointer-events-none absolute left-3 h-[18px] w-[18px] text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+
+                  <%= f.password_field field,
+                        class: "w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-11 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
+                        id: id,
+                        placeholder: "••••••••",
+                        autocomplete: autocomplete,
+                        required: true %>
+
+                  <button class="absolute right-3 text-zinc-500 transition hover:scale-110 hover:text-indigo-500" type="button" data-password-toggle="<%= id %>" aria-label="Показать пароль" aria-pressed="false">
+                    <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            <% end %>
+
+            <div class="my-4">
+              <label class="flex cursor-pointer items-center gap-2 text-sm text-zinc-500 transition hover:text-white">
+                <%= check_box_tag :terms_check, "1", false, id: "termsCheck", required: true, class: "h-4 w-4 rounded border-zinc-800 bg-zinc-950 text-indigo-500 focus:ring-indigo-500" %>
+                <span>Я принимаю условия</span>
+              </label>
+            </div>
+
+            <button class="group mb-4 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 p-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" type="submit">
+              <span>Зарегистрироваться</span>
+              <svg class="h-[18px] w-[18px] transition group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14"/>
+                <path d="M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const openEyeIcon = `
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    `;
+
+    const closedEyeIcon = `
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    `;
+
+    document.querySelectorAll("[data-password-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const input = document.getElementById(btn.dataset.passwordToggle);
+        if (!input) return;
+
+        const showing = input.type === "password";
+        input.type = showing ? "text" : "password";
+
+        const svg = btn.querySelector("svg");
+        if (svg) svg.innerHTML = showing ? closedEyeIcon : openEyeIcon;
+
+        btn.setAttribute("aria-pressed", showing ? "true" : "false");
+        btn.setAttribute("aria-label", showing ? "Скрыть пароль" : "Показать пароль");
+      });
+    });
+  });
+</script>

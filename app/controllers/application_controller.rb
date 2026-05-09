@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :require_login, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   allow_browser versions: :modern
@@ -7,12 +7,20 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def authenticate_user!
+  def require_login
     redirect_to auth_path unless user_signed_in?
   end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :username])
     devise_parameter_sanitizer.permit(:account_update, keys: [:name, :username])
+  end
+
+  def after_sign_in_path_for(_resource)
+    root_path
+  end
+
+  def after_sign_up_path_for(_resource)
+    root_path
   end
 end

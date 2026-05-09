@@ -2,9 +2,15 @@
 
 <% unless flashes.empty? %>
   <div class="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex flex-col items-center gap-3 px-4 sm:bottom-6">
-    <% flashes.each do |_type, message| %>
+    <% flashes.each do |type, message| %>
       <% next if message.blank? %>
-      <div class="pointer-events-auto w-full max-w-xl rounded-2xl border border-red-400/30 bg-gradient-to-br from-red-600/35 to-red-700/30 px-4 py-3 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(239,68,68,0.14)] backdrop-blur-md">
+      <% positive_flash = type.to_s == "notice" %>
+      <% container_classes = if positive_flash
+        "border-emerald-400/30 bg-gradient-to-br from-emerald-600/35 to-emerald-700/30 shadow-[0_12px_32px_rgba(16,185,129,0.14)]"
+      else
+        "border-red-400/30 bg-gradient-to-br from-red-600/35 to-red-700/30 shadow-[0_12px_32px_rgba(239,68,68,0.14)]"
+      end %>
+      <div class="pointer-events-auto w-full max-w-xl rounded-2xl border px-4 py-3 text-sm font-semibold text-white backdrop-blur-md <%= container_classes %>">
         <div class="flex items-start gap-2">
           <span class="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-white/85"></span>
           <span><%= message %></span>

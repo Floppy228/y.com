@@ -75,16 +75,16 @@
             <%= hidden_field_tag :auth_mode, "login" %>
 
             <div class="mb-4">
-              <%= f.label :email, "Email", class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
+              <%= f.label :username, "Username", class: "mb-1 block text-xs font-semibold tracking-wide text-zinc-500" %>
               <div class="relative flex items-center">
                 <svg class="pointer-events-none absolute left-3 h-[18px] w-[18px] text-zinc-500 transition peer-focus:text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
-                  <path d="M22 6L12 13 2 6"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <%= f.email_field :email,
+                <%= f.text_field :username,
                       class: "peer w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-11 pr-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20",
-                      placeholder: "your@email.com",
-                      autocomplete: "email",
+                      placeholder: "your_username",
+                      autocomplete: "username",
                       required: true %>
               </div>
             </div>

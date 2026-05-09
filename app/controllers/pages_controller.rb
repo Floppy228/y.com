@@ -1,15 +1,26 @@
-class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:auth]
+﻿class PagesController < ApplicationController
+  skip_before_action :require_login, only: [:auth]
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index
-    return if user_signed_in?
-
-    redirect_to auth_path
+    @posts = []
   end
 
   def auth
     @auth_mode = normalized_auth_mode
+  end
+
+  def profile
+    @user = current_user
+    @posts = []
+  end
+
+  def messages
+    
+  end
+
+  def create_post
+    redirect_to root_path, notice: "Post publishing will be added soon."
   end
 
   private

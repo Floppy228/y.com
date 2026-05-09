@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/profile", to: "pages#profile", as: :profile
   get "/messages", to: "pages#messages", as: :messages
   get "/ai", to: "pages#ai", as: :ai
+  get "/following", to: "pages#following", as: :following
 
   devise_scope :user do
     get "/account_restore", to: "devise/passwords#new", as: :account_restore

@@ -23,6 +23,10 @@
 
   end
 
+  def following
+
+  end
+
   def create_post
     redirect_to root_path, notice: "Post publishing will be added soon."
   end

@@ -1,0 +1,78 @@
+<% active_tab = local_assigns[:active_tab]&.to_sym %>
+<% show_quick_post = local_assigns[:show_quick_post] == true %>
+
+<aside class="h-screen overflow-y-auto border-r border-zinc-900 bg-black px-4 py-5">
+  <%= link_to "Y.com", root_path, class: "mb-8 inline-block bg-gradient-to-br from-white to-indigo-500 bg-clip-text pl-3 text-[42px] font-black tracking-[-1.5px] text-transparent" %>
+
+  <nav class="flex flex-col gap-1">
+    <%= link_to root_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :index ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :index ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Главная
+    <% end %>
+
+    <%= link_to profile_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :profile ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :profile ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      Профиль
+    <% end %>
+
+    <%= link_to messages_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :messages ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :messages ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Сообщения
+    <% end %>
+
+    <%= link_to ai_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :ai ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :ai ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v8M8 12h8"/>
+      </svg>
+      Y-Core
+    <% end %>
+
+    <%= link_to following_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :following ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :following ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      Подписки
+    <% end %>
+
+    <%= link_to settings_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :settings ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :settings ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.7l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.7-.3 1.6 1.6 0 0 0-1 1.5V23a2 2 0 1 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.7.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.7 1.6 1.6 0 0 0-1.5-1H1a2 2 0 1 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.7.3h.1a1.6 1.6 0 0 0 1-1.5V1a2 2 0 1 1 4 0v.2a1.6 1.6 0 0 0 1 1.5h.1a1.6 1.6 0 0 0 1.7-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.7v.1a1.6 1.6 0 0 0 1.5 1H23a2 2 0 1 1 0 4h-.2a1.6 1.6 0 0 0-1.5 1v.1z"/>
+      </svg>
+      Настройки
+    <% end %>
+  </nav>
+
+  <% if user_signed_in? %>
+    <%= button_to destroy_user_session_path, method: :delete, class: "mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" do %>
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Выйти
+    <% end %>
+  <% end %>
+
+  <% if show_quick_post %>
+    <button id="quickPostBtn" type="button" class="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Новый пост
+    </button>
+  <% end %>
+</aside>

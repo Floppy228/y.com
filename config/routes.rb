@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   get "/messages", to: "pages#messages", as: :messages
   get "/ai", to: "pages#ai", as: :ai
   get "/following", to: "pages#following", as: :following
+  get "/settings", to: "pages#settings", as: :settings
+  patch "/settings/account", to: "pages#update_settings_account", as: :settings_account
+  patch "/settings/profile", to: "pages#update_settings_profile", as: :settings_profile
 
   devise_scope :user do
     get "/account_restore", to: "devise/passwords#new", as: :account_restore

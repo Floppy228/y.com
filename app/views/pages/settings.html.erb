@@ -1,0 +1,132 @@
+﻿<% content_for :title, "Настройки | Y.com" %>
+
+<div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] overflow-hidden bg-black text-white" style="grid-template-columns: 280px minmax(0, 1fr) 320px;">
+  <aside class="h-screen overflow-y-auto border-r border-zinc-900 bg-black px-4 py-5">
+    <%= link_to "Y.com", root_path, class: "mb-8 inline-block bg-gradient-to-br from-white to-indigo-500 bg-clip-text pl-3 text-[42px] font-black tracking-[-1.5px] text-transparent" %>
+
+    <nav class="flex flex-col gap-1">
+      <%= link_to root_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Главная
+      <% end %>
+
+      <%= link_to "/profile", class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Профиль
+      <% end %>
+
+      <%= link_to "/messages", class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Сообщения
+      <% end %>
+
+      <%= link_to "/ai", class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        Y-Core
+      <% end %>
+
+      <%= link_to "/following", class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Подписки
+      <% end %>
+
+      <%= link_to "/settings", class: "flex items-center gap-4 rounded-full bg-zinc-950 px-4 py-3 text-lg font-semibold text-white" do %>
+        <svg class="h-6 w-6 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/></svg>
+        Настройки
+      <% end %>
+    </nav>
+
+    <% if user_signed_in? %>
+      <%= button_to destroy_user_session_path, method: :delete, class: "mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" do %>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Выйти
+      <% end %>
+    <% end %>
+  </aside>
+
+  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+    <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
+      <h1 class="text-[22px] font-bold text-white">Настройки</h1>
+    </div>
+
+    <section class="grid min-h-[calc(100vh-61px)] grid-cols-[260px_minmax(0,1fr)]">
+      <aside class="border-r border-zinc-900 bg-black p-5">
+        <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-3">
+          <a href="#account" class="mb-2 flex items-center gap-3 rounded-xl bg-indigo-500/10 px-3 py-2.5 text-sm font-semibold text-white">
+            <span class="h-2 w-2 rounded-full bg-indigo-500"></span> Аккаунт
+          </a>
+          <a href="#profile" class="mb-2 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-white">
+            <span class="h-2 w-2 rounded-full bg-zinc-600"></span> Профиль
+          </a>
+          <a href="#security" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-white">
+            <span class="h-2 w-2 rounded-full bg-zinc-600"></span> Безопасность
+          </a>
+        </div>
+      </aside>
+
+      <div class="space-y-8 p-8">
+        <section id="account" class="rounded-2xl border border-zinc-900 bg-zinc-950">
+          <div class="border-b border-zinc-900 px-6 py-4">
+            <h2 class="text-lg font-bold text-white">Аккаунт</h2>
+          </div>
+
+          <%= form_with model: @user, url: settings_account_path, method: :patch, local: true, class: "space-y-5 px-6 py-5" do |f| %>
+            <div>
+              <label class="mb-2 block text-sm font-medium text-zinc-400">Username</label>
+              <%= f.text_field :username, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
+            </div>
+
+            <div>
+              <label class="mb-2 block text-sm font-medium text-zinc-400">Имя</label>
+              <%= f.text_field :name, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
+            </div>
+
+            <div>
+              <label class="mb-2 block text-sm font-medium text-zinc-400">Email</label>
+              <%= f.email_field :email, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
+            </div>
+
+            <button type="submit" class="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600">Сохранить аккаунт</button>
+          <% end %>
+        </section>
+
+        <section id="profile" class="rounded-2xl border border-zinc-900 bg-zinc-950">
+          <div class="border-b border-zinc-900 px-6 py-4">
+            <h2 class="text-lg font-bold text-white">Профиль</h2>
+          </div>
+
+          <%= form_with model: @user, url: settings_profile_path, method: :patch, local: true, class: "space-y-5 px-6 py-5" do |f| %>
+            <div>
+              <label class="mb-2 block text-sm font-medium text-zinc-400">Отображаемое имя</label>
+              <%= f.text_field :name, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
+            </div>
+
+            <% if @user.respond_to?(:bio) %>
+              <div>
+                <label class="mb-2 block text-sm font-medium text-zinc-400">Bio</label>
+                <%= f.text_area :bio, rows: 4, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
+              </div>
+            <% end %>
+
+            <button type="submit" class="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600">Сохранить профиль</button>
+          <% end %>
+        </section>
+
+        <section id="security" class="rounded-2xl border border-zinc-900 bg-zinc-950 px-6 py-5">
+          <h2 class="text-lg font-bold text-white">Безопасность</h2>
+          <p class="mt-2 text-sm text-zinc-500">Смену пароля можно сделать через восстановление доступа.</p>
+          <div class="mt-4">
+            <%= link_to "Перейти к смене пароля", account_restore_path, class: "inline-flex rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-indigo-500 hover:text-white" %>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <aside class="h-screen overflow-y-auto bg-black p-5">
+    <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
+      <h3 class="mb-3 text-base font-semibold text-white">Подсказка</h3>
+      <p class="text-sm text-zinc-500">Внутренний сайдбар слева помогает быстро переключаться между разделами настроек.</p>
+    </div>
+  </aside>
+</div>

@@ -1,10 +1,13 @@
 ﻿<% content_for :title, "Сообщения | Y.com" %>
 
 <div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] overflow-hidden bg-black text-white" style="grid-template-columns: 280px minmax(0, 1fr) 320px;">
+
+  <!-- LEFT SIDEBAR -->
   <aside class="h-screen overflow-y-auto border-r border-zinc-900 bg-black px-4 py-5">
     <%= link_to "Y.com", root_path, class: "mb-8 inline-block bg-gradient-to-br from-white to-indigo-500 bg-clip-text pl-3 text-[42px] font-black tracking-[-1.5px] text-transparent" %>
 
     <nav class="flex flex-col gap-1">
+
       <%= link_to root_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
@@ -21,7 +24,7 @@
         Профиль
       <% end %>
 
-      <%= link_to "/messages", class: "flex items-center gap-4 rounded-full bg-zinc-950 px-4 py-3 text-lg font-semibold text-white transition hover:bg-zinc-950" do %>
+      <%= link_to "/messages", class: "flex items-center gap-4 rounded-full bg-zinc-950 px-4 py-3 text-lg font-semibold text-white" do %>
         <svg class="h-6 w-6 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
@@ -49,85 +52,164 @@
       <%= link_to "/settings", class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg font-medium text-zinc-500 transition hover:bg-zinc-950 hover:text-white" do %>
         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.07.08A10 10 0 0 0 12 17.66a10 10 0 0 0 6.26-2.58z"/>
-          <path d="M16.5 6.5L19 9l-2.5 2.5"/>
-          <path d="M7.5 6.5L5 9l2.5 2.5"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82"/>
         </svg>
         Настройки
       <% end %>
+
     </nav>
 
     <% if user_signed_in? %>
-      <%= button_to destroy_user_session_path, method: :delete, class: "mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30" do %>
+      <%= button_to destroy_user_session_path,
+            method: :delete,
+            class: "mt-8 flex w-full items-center justify-center rounded-full bg-indigo-500 px-6 py-3.5 text-base font-bold text-white transition hover:bg-indigo-600" do %>
         Выйти
       <% end %>
     <% end %>
   </aside>
 
-  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+  <!-- CENTER -->
+  <main class="flex h-screen flex-col overflow-hidden border-r border-zinc-900 bg-black">
+
+    <!-- HEADER -->
     <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
-      <h1 class="text-[22px] font-bold text-white">Сообщения</h1>
+      <h1 class="text-[22px] font-bold text-white">
+        Сообщения
+      </h1>
     </div>
 
-    <section class="flex min-h-0 flex-1 flex-col" style="height: calc(100vh - 73px);">
-      <div class="border-b border-zinc-900 p-4">
-        <input type="text" placeholder="Поиск в сообщениях" class="w-full rounded-full border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500">
+    <!-- CHAT HEADER -->
+    <div class="border-b border-zinc-900 px-5 py-3">
+      <div class="text-sm font-semibold text-white">
+        Tech Analytics
       </div>
 
-      <div class="border-b border-zinc-900 px-5 py-3">
-        <div class="text-sm font-semibold text-white">Tech Analytics</div>
-        <div class="text-xs text-zinc-500">В сети</div>
+      <div class="text-xs text-zinc-500">
+        В сети
       </div>
+    </div>
 
-      <div class="flex-1 space-y-4 overflow-y-auto px-5 py-4">
-        <div class="flex justify-start">
-          <div class="w-fit rounded-2xl rounded-bl-sm bg-zinc-900 px-4 py-2 text-sm text-zinc-100" style="max-width: 72%;">Привет! Готова сводка по рынку и AI-новостям.</div>
-        </div>
-        <div class="flex justify-end">
-          <div class="w-fit rounded-2xl rounded-br-sm bg-indigo-500 px-4 py-2 text-sm text-white" style="max-width: 72%;">Отлично, пришли ключевые пункты.</div>
-        </div>
-        <div class="flex justify-start">
-          <div class="w-fit rounded-2xl rounded-bl-sm bg-zinc-900 px-4 py-2 text-sm text-zinc-100" style="max-width: 72%;">Топ-3 темы дня: LLM-обновления, безопасность и оптимизация.</div>
+    <!-- MESSAGES -->
+    <div class="flex-1 space-y-4 overflow-y-auto px-5 py-5">
+
+      <div class="flex justify-start">
+        <div class="w-fit max-w-[72%] rounded-2xl rounded-bl-sm bg-zinc-900 px-4 py-2 text-sm text-zinc-100">
+          Привет! Готова сводка по рынку и AI-новостям.
         </div>
       </div>
 
-      <div class="border-t border-zinc-900 p-4">
-        <div class="flex items-end gap-3">
-          <textarea rows="1" placeholder="Написать сообщение..." class="max-h-40 min-h-11 w-full resize-y rounded-2xl border border-zinc-900 bg-zinc-950 px-4 py-3 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500"></textarea>
-          <button class="rounded-full bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600">Отправить</button>
+      <div class="flex justify-end">
+        <div class="w-fit max-w-[72%] rounded-2xl rounded-br-sm bg-indigo-500 px-4 py-2 text-sm text-white">
+          Отлично, пришли ключевые пункты.
         </div>
       </div>
-    </section>
+
+      <div class="flex justify-start">
+        <div class="w-fit max-w-[72%] rounded-2xl rounded-bl-sm bg-zinc-900 px-4 py-2 text-sm text-zinc-100">
+          Топ-3 темы дня: LLM-обновления, безопасность и оптимизация.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="border-t border-zinc-900 p-4">
+      <div class="flex items-end gap-3">
+
+        <textarea
+          rows="1"
+          placeholder="Написать сообщение..."
+          class="min-h-11 w-full resize-none rounded-2xl border border-zinc-900 bg-zinc-950 px-4 py-3 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500"
+        ></textarea>
+
+        <button class="rounded-full bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600">
+          Отправить
+        </button>
+
+      </div>
+    </div>
+
   </main>
 
-  <aside class="h-screen overflow-y-auto bg-black p-4">
-    <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-white">Чаты</h3>
+  <!-- RIGHT SIDEBAR -->
+  <aside class="h-screen overflow-y-auto bg-black p-5">
+
+    <!-- SEARCH -->
+    <input
+      type="text"
+      placeholder="Поиск"
+      class="w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500"
+    >
+
+    <!-- CHATS -->
+    <div class="mt-6 rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
+
+      <h3 class="mb-4 text-lg font-semibold text-white">
+        Чаты
+      </h3>
 
       <div class="space-y-3">
-        <% [["Tech Analytics", "Сделал разбор трендов", "12:30", true], ["Анна Петрова", "Давай созвонимся вечером", "11:08", false], ["Михаил Сидоров", "Отправил материалы", "вчера", false], ["Y.com News", "Новый релиз профилей", "вчера", false]].each do |name, text, time, active| %>
+
+        <% [
+          ["Tech Analytics", "Сделал разбор трендов", "12:30", true],
+          ["Анна Петрова", "Давай созвонимся вечером", "11:08", false],
+          ["Михаил Сидоров", "Отправил материалы", "вчера", false],
+          ["Y.com News", "Новый релиз профилей", "вчера", false]
+        ].each do |name, text, time, active| %>
+
           <button class="w-full rounded-xl border px-3 py-3 text-left transition <%= active ? 'border-indigo-500/40 bg-zinc-900' : 'border-zinc-800 bg-zinc-950 hover:bg-zinc-900' %>">
+
             <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold text-white"><%= name %></div>
-                <div class="mt-1 text-xs text-zinc-500"><%= text %></div>
+
+              <div class="min-w-0">
+                <div class="truncate text-sm font-semibold text-white">
+                  <%= name %>
+                </div>
+
+                <div class="mt-1 truncate text-xs text-zinc-500">
+                  <%= text %>
+                </div>
               </div>
-              <div class="shrink-0 text-xs text-zinc-500"><%= time %></div>
+
+              <div class="shrink-0 text-xs text-zinc-500">
+                <%= time %>
+              </div>
+
             </div>
+
           </button>
+
         <% end %>
+
       </div>
     </div>
 
+    <!-- SUGGEST -->
     <div class="mt-5 rounded-2xl border border-zinc-900 bg-zinc-950 p-4">
-      <h3 class="mb-3 text-base font-semibold text-white">Кого добавить</h3>
+
+      <h3 class="mb-3 text-base font-semibold text-white">
+        Кого добавить
+      </h3>
+
       <div class="mt-3 flex items-center gap-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-semibold text-white">АП</div>
-        <div>
-          <div class="text-sm font-semibold text-white">Анна Петрова</div>
-          <div class="text-xs text-zinc-500">@anna_dev</div>
+
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-semibold text-white">
+          АП
         </div>
+
+        <div>
+          <div class="text-sm font-semibold text-white">
+            Анна Петрова
+          </div>
+
+          <div class="text-xs text-zinc-500">
+            @anna_dev
+          </div>
+        </div>
+
       </div>
     </div>
+
   </aside>
+
 </div>

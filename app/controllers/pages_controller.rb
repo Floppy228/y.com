@@ -16,7 +16,11 @@
   end
 
   def messages
-    
+
+  end
+
+  def ai
+
   end
 
   def create_post

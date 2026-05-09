@@ -6,7 +6,8 @@ Rails.application.routes.draw do
 
   get "/auth", to: "pages#auth", as: :auth
   get "/profile", to: "pages#profile", as: :profile
-  get "messages", to: "pages#messages", as: :messages
+  get "/messages", to: "pages#messages", as: :messages
+  get "/ai", to: "pages#ai", as: :ai
 
   devise_scope :user do
     get "/account_restore", to: "devise/passwords#new", as: :account_restore

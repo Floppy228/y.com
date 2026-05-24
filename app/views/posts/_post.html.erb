@@ -1,0 +1,23 @@
+<article class="border-b border-zinc-900 px-6 py-5 hover:bg-zinc-950 transition">
+  <div class="flex gap-3">
+
+    <div class="h-10 w-10 shrink-0 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white">
+      <%= post.user.name.first.upcase %>
+    </div>
+
+    <div class="flex-1 min-w-0">
+  
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-white"><%= post.user.name %></span>
+        <span class="text-zinc-500 text-sm">@<%= post.user.username %></span>
+        <span class="text-zinc-600 text-sm">·</span>
+        <span class="text-zinc-500 text-sm"><%= time_ago_in_words(post.created_at) %> назад</span>
+      </div>
+
+ 
+      <p class="mt-1 text-[15px] leading-relaxed text-zinc-100 whitespace-pre-wrap">
+        <%= post.content %>
+      </p>
+    </div>
+  </div>
+</article>

@@ -55,13 +55,17 @@
             <span>С <%= @user.created_at.strftime("%B %Y") %></span>
           </div>
 
-          <div class="flex items-center gap-1">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
-            </svg>
-            <span>15 апреля 1995</span>
-          </div>
+          <% if @user.birthday.present? %>
+            <div class="flex items-center gap-1">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              <span>
+                <%= I18n.l(@user.birthday, format: "%-d %B %Y") %>
+              </span>
+            </div>
+          <% end %>
 
           <div class="flex items-center gap-1">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">

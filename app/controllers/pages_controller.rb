@@ -3,7 +3,7 @@
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index
-    @posts = []
+    @posts = Post.includes(:user).order(created_at: :desc)
   end
 
   def auth
@@ -12,19 +12,16 @@
 
   def profile
     @user = current_user
-    @posts = []
+    @posts = current_user.posts.order(created_at: :desc)
   end
 
   def messages
-
   end
 
   def ai
-
   end
 
   def following
-
   end
 
   def settings
@@ -45,7 +42,7 @@
   def update_settings_profile
     @user = current_user
 
-    if @user.update(filtered_user_params(:name, :bio))
+    if @user.update(filtered_user_params(:name, :bio, :birthday))
       redirect_to settings_path, notice: "Профиль сохранен."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
@@ -54,7 +51,13 @@
   end
 
   def create_post
-    redirect_to root_path, notice: "Post publishing will be added soon."
+    post = current_user.posts.new(content: params[:post][:content])
+
+    if post.save
+      redirect_to root_path, notice: "Пост опубликован!"
+    else
+      redirect_to root_path, alert: post.errors.full_messages.to_sentence
+    end
   end
 
   private

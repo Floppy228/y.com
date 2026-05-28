@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   get "/profile", to: "pages#profile", as: :profile
   get "/messages", to: "pages#messages", as: :messages
   get "/ai", to: "pages#ai", as: :ai
+  post "/ai/ask", to: "pages#ai_ask", as: :ai_ask
+  delete "/ai/clear", to: "pages#clear_ai_chat", as: :clear_ai_chat
   get "/following", to: "pages#following", as: :following
+  delete "/messages/clear", to: "pages#clear_messages_chat", as: :clear_messages_chat
   get "/settings", to: "pages#settings", as: :settings
   patch "/settings/account", to: "pages#update_settings_account", as: :settings_account
   patch "/settings/profile", to: "pages#update_settings_profile", as: :settings_profile

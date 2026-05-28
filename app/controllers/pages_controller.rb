@@ -16,9 +16,36 @@
   end
 
   def messages
+    @messages_cleared = session[:messages_cleared] == true
   end
 
   def ai
+    @ai_messages = current_user.ai_messages.order(:created_at)
+  end
+
+  def ai_ask
+    prompt = params[:prompt].to_s.strip
+    if prompt.blank?
+      redirect_to ai_path, alert: "Введите вопрос для Y-Core."
+      return
+    end
+
+    current_user.ai_messages.create!(role: "user", content: prompt)
+    answer = DeepseekClient.chat(prompt: prompt)
+    current_user.ai_messages.create!(role: "assistant", content: answer)
+    redirect_to ai_path
+  rescue StandardError => e
+    redirect_to ai_path, alert: "Y-Core: #{e.message}"
+  end
+
+  def clear_ai_chat
+    current_user.ai_messages.delete_all
+    redirect_to ai_path, notice: "История Y-Core очищена."
+  end
+
+  def clear_messages_chat
+    session[:messages_cleared] = true
+    redirect_to messages_path, notice: "Чат в сообщениях очищен."
   end
 
   def following

@@ -3,7 +3,7 @@
 <div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] overflow-hidden bg-black text-white" style="grid-template-columns: 280px minmax(0, 1fr) 320px;">
   <%= render "layouts/main_sidebar", active_tab: :settings %>
 
-  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black" data-controller="settings-nav" data-settings-nav-offset-value="88" data-action="scroll->settings-nav#updateActiveLink">
     <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
       <h1 class="text-[22px] font-bold text-white">Настройки</h1>
     </div>
@@ -11,20 +11,20 @@
     <section class="grid min-h-[calc(100vh-61px)] grid-cols-[260px_minmax(0,1fr)]">
       <aside class="border-r border-zinc-900 bg-black p-5">
         <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-3">
-          <a href="#account" class="mb-2 flex items-center gap-3 rounded-xl bg-indigo-500/10 px-3 py-2.5 text-sm font-semibold text-white">
-            <span class="h-2 w-2 rounded-full bg-indigo-500"></span> Аккаунт
+          <a href="#account" data-settings-nav-target="link" data-section-id="account" data-action="click->settings-nav#scrollToSection" class="mb-2 flex items-center gap-3 rounded-xl bg-indigo-500/10 px-3 py-2.5 text-sm font-semibold text-white">
+            <span data-settings-nav-dot class="h-2 w-2 rounded-full bg-indigo-500"></span> Аккаунт
           </a>
-          <a href="#profile" class="mb-2 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-white">
-            <span class="h-2 w-2 rounded-full bg-zinc-600"></span> Профиль
+          <a href="#profile" data-settings-nav-target="link" data-section-id="profile" data-action="click->settings-nav#scrollToSection" class="mb-2 flex items-center gap-3 rounded-xl bg-zinc-900 px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">
+            <span data-settings-nav-dot class="h-2 w-2 rounded-full bg-zinc-600"></span> Профиль
           </a>
-          <a href="#security" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-white">
-            <span class="h-2 w-2 rounded-full bg-zinc-600"></span> Безопасность
+          <a href="#security" data-settings-nav-target="link" data-section-id="security" data-action="click->settings-nav#scrollToSection" class="flex items-center gap-3 rounded-xl bg-zinc-900 px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">
+            <span data-settings-nav-dot class="h-2 w-2 rounded-full bg-zinc-600"></span> Безопасность
           </a>
         </div>
       </aside>
 
       <div class="space-y-8 p-8">
-        <section id="account" class="rounded-2xl border border-zinc-900 bg-zinc-950">
+        <section id="account" data-settings-nav-target="section" class="rounded-2xl border border-zinc-900 bg-zinc-950">
           <div class="border-b border-zinc-900 px-6 py-4">
             <h2 class="text-lg font-bold text-white">Аккаунт</h2>
           </div>
@@ -36,11 +36,6 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-zinc-400">Имя</label>
-              <%= f.text_field :name, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
-            </div>
-
-            <div>
               <label class="mb-2 block text-sm font-medium text-zinc-400">Email</label>
               <%= f.email_field :email, class: "w-full max-w-md rounded-xl border border-zinc-800 bg-black px-4 py-3 text-sm text-white outline-none focus:border-indigo-500" %>
             </div>
@@ -49,7 +44,7 @@
           <% end %>
         </section>
 
-        <section id="profile" class="rounded-2xl border border-zinc-900 bg-zinc-950">
+        <section id="profile" data-settings-nav-target="section" class="rounded-2xl border border-zinc-900 bg-zinc-950">
           <div class="border-b border-zinc-900 px-6 py-4">
             <h2 class="text-lg font-bold text-white">Профиль</h2>
           </div>
@@ -93,7 +88,7 @@
           <% end %>
         </section>
 
-        <section id="security" class="rounded-2xl border border-zinc-900 bg-zinc-950 px-6 py-5">
+        <section id="security" data-settings-nav-target="section" class="rounded-2xl border border-zinc-900 bg-zinc-950 px-6 py-5">
           <h2 class="text-lg font-bold text-white">Безопасность</h2>
           <p class="mt-2 text-sm text-zinc-500">Смену пароля можно сделать через восстановление доступа.</p>
           <div class="mt-4">

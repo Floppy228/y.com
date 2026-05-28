@@ -104,7 +104,7 @@ class PagesController < ApplicationController
   def update_settings_account
     @user = current_user
 
-    if @user.update(filtered_user_params(:username, :name, :email))
+    if @user.update(filtered_user_params(:username, :email))
       redirect_to settings_path, notice: "Настройки аккаунта сохранены."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence

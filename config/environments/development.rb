@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../env_file"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -31,14 +32,24 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Surface SMTP errors so we can show a toast instead of pretending the mail was sent.
+  config.action_mailer.raise_delivery_errors = true
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: EnvFile.fetch("SMTP_ADDRESS"),
+    port: EnvFile.fetch("SMTP_PORT").presence || 587,
+    domain: EnvFile.fetch("SMTP_DOMAIN"),
+    user_name: EnvFile.fetch("SMTP_USERNAME"),
+    password: EnvFile.fetch("SMTP_PASSWORD"),
+    authentication: EnvFile.fetch("SMTP_AUTHENTICATION").presence&.to_sym || :plain,
+    enable_starttls_auto: EnvFile.fetch("SMTP_ENABLE_STARTTLS_AUTO") != "false"
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

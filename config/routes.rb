@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     sessions: "users/sessions",
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    passwords: "users/passwords"
   }
 
   get "/auth", to: "pages#auth", as: :auth
@@ -13,11 +14,15 @@ Rails.application.routes.draw do
   get "/following", to: "pages#following", as: :following
   delete "/messages/clear", to: "pages#clear_messages_chat", as: :clear_messages_chat
   get "/settings", to: "pages#settings", as: :settings
+  get "/settings/password_reset", to: "pages#password_reset", as: :settings_password_reset
+  post "/settings/password_reset/send_code", to: "pages#send_password_change_code", as: :settings_password_reset_send_code
+  patch "/settings/password_reset", to: "pages#update_password_from_settings", as: :settings_password_reset_update
   patch "/settings/account", to: "pages#update_settings_account", as: :settings_account
   patch "/settings/profile", to: "pages#update_settings_profile", as: :settings_profile
 
   devise_scope :user do
-    get "/account_restore", to: "devise/passwords#new", as: :account_restore
+    get "/account_restore", to: "users/passwords#new", as: :account_restore
+    post "/account_restore", to: "pages#send_password_reset_instructions", as: :account_restore_send
   end
 
   post "/posts", to: "pages#create_post", as: :posts

@@ -2,6 +2,7 @@
 
 require "json"
 require "net/http"
+require Rails.root.join("config/env_file").to_s
 
 class DeepseekClient
   API_URL = URI("https://api.deepseek.com/v1/chat/completions")
@@ -36,20 +37,7 @@ class DeepseekClient
   end
 
   def self.deepseek_api_key
-    env_file = Rails.root.join(".env")
-    return "" unless File.exist?(env_file)
-
-    File.foreach(env_file) do |line|
-      next if line.strip.empty? || line.strip.start_with?("#")
-
-      name, value = line.split("=", 2)
-      normalized_name = name.to_s.delete_prefix("\uFEFF").strip
-      next unless normalized_name == "DEEPSEEK_API_KEY"
-
-      return value.to_s.strip.gsub(/\A['"]|['"]\z/, "")
-    end
-
-    ""
+    EnvFile.fetch("DEEPSEEK_API_KEY")
   end
 
   def self.require_api_key!

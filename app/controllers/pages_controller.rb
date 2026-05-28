@@ -1,4 +1,6 @@
-﻿class PagesController < ApplicationController
+require Rails.root.join("config/env_file").to_s
+
+class PagesController < ApplicationController
   skip_before_action :require_login, only: [:auth]
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
@@ -55,6 +57,50 @@
     @user = current_user
   end
 
+  def password_reset
+    @user = current_user
+  end
+
+  def send_password_change_code
+    unless mailer_configured?
+      redirect_to settings_password_reset_path, alert: "Почта не настроена. Заполните SMTP-поля в .env."
+      return
+    end
+
+    code = format("%06d", rand(0..999_999))
+    session[:password_change_code] = code
+    session[:password_change_code_sent_at] = Time.current.to_i
+
+    PasswordCodeMailer.change_password_code(current_user, code).deliver_now
+    redirect_to settings_password_reset_path, notice: "Код отправлен на #{current_user.email}."
+  rescue StandardError
+    redirect_to settings_password_reset_path, alert: "Не удалось отправить письмо. Проверьте настройки почты в .env."
+  end
+
+  def update_password_from_settings
+    code = params[:code].to_s.strip
+    password = params[:password].to_s
+    password_confirmation = params[:password_confirmation].to_s
+
+    if code.blank? || password.blank? || password_confirmation.blank?
+      redirect_to settings_password_reset_path, alert: "Заполните код и оба поля пароля."
+      return
+    end
+
+    unless valid_password_change_code?(code)
+      redirect_to settings_password_reset_path, alert: "Код неверный или устарел."
+      return
+    end
+
+    if current_user.update(password: password, password_confirmation: password_confirmation)
+      clear_password_change_code!
+      bypass_sign_in current_user
+      redirect_to settings_password_reset_path, notice: "Пароль успешно изменен."
+    else
+      redirect_to settings_password_reset_path, alert: current_user.errors.full_messages.to_sentence
+    end
+  end
+
   def update_settings_account
     @user = current_user
 
@@ -69,7 +115,8 @@
   def update_settings_profile
     @user = current_user
 
-    if @user.update(filtered_user_params(:name, :bio, :birthday))
+    if @user.update(filtered_user_params(:name, :bio, :status, :birthday))
+      attach_profile_images(@user)
       redirect_to settings_path, notice: "Профиль сохранен."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
@@ -100,5 +147,34 @@
   def filtered_user_params(*keys)
     allowed = keys.map(&:to_s) & User.attribute_names
     params.fetch(:user, {}).permit(*allowed)
+  end
+
+  def attach_profile_images(user)
+    avatar = params.dig(:user, :avatar)
+    cover_image = params.dig(:user, :cover_image)
+
+    user.avatar.attach(avatar) if avatar.present?
+    user.cover_image.attach(cover_image) if cover_image.present?
+  end
+
+  def mailer_configured?
+    %w[SMTP_ADDRESS SMTP_PORT SMTP_DOMAIN SMTP_USERNAME SMTP_PASSWORD MAILER_FROM_EMAIL].all? do |key|
+      EnvFile.fetch(key).present?
+    end
+  end
+
+  def valid_password_change_code?(code)
+    sent_code = session[:password_change_code].to_s
+    sent_at = session[:password_change_code_sent_at].to_i
+
+    sent_code.present? &&
+      sent_code == code &&
+      sent_at.positive? &&
+      Time.at(sent_at) >= 15.minutes.ago
+  end
+
+  def clear_password_change_code!
+    session.delete(:password_change_code)
+    session.delete(:password_change_code_sent_at)
   end
 end

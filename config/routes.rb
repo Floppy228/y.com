@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   get "/auth", to: "pages#auth", as: :auth
   get "/profile", to: "pages#profile", as: :profile
   get "/messages", to: "pages#messages", as: :messages
+  post "/messages", to: "pages#create_message", as: :create_message
+  patch "/messages/:id", to: "pages#update_message", as: :update_message
+  delete "/messages/:id", to: "pages#destroy_message", as: :destroy_message
   get "/ai", to: "pages#ai", as: :ai
   post "/ai/ask", to: "pages#ai_ask", as: :ai_ask
   delete "/ai/clear", to: "pages#clear_ai_chat", as: :clear_ai_chat
@@ -19,6 +22,7 @@ Rails.application.routes.draw do
   patch "/settings/password_reset", to: "pages#update_password_from_settings", as: :settings_password_reset_update
   patch "/settings/account", to: "pages#update_settings_account", as: :settings_account
   patch "/settings/profile", to: "pages#update_settings_profile", as: :settings_profile
+  patch "/settings/chats", to: "pages#update_settings_chats", as: :settings_chats
 
   devise_scope :user do
     get "/account_restore", to: "users/passwords#new", as: :account_restore

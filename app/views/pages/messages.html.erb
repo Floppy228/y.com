@@ -99,7 +99,7 @@
         </section>
 
         <div class="border-t border-zinc-900 bg-black px-6 py-5">
-          <%= form_with url: create_message_path, method: :post, local: true, data: { turbo: false, controller: "message-compose", message_compose_shortcut_value: current_user.message_send_shortcut }, class: "rounded-[20px] border border-zinc-900 bg-zinc-950 p-4 transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/20" do %>
+          <%= form_with url: create_message_path, method: :post, data: { controller: "message-compose", message_compose_shortcut_value: current_user.message_send_shortcut }, class: "rounded-[20px] border border-zinc-900 bg-zinc-950 p-4 transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/20" do %>
             <%= hidden_field_tag :recipient_id, @selected_user.id %>
             <%= text_area_tag :content, nil, rows: 2, placeholder: "Написать сообщение...", data: { message_compose_target: "input", action: "keydown->message-compose#submitOnShortcut" }, class: "min-h-[54px] w-full resize-none bg-transparent text-[17px] leading-relaxed text-white outline-none placeholder:text-zinc-500" %>
 

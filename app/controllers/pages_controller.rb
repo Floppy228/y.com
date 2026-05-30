@@ -282,10 +282,21 @@ class PagesController < ApplicationController
 
   def build_chat_row(user)
     last_message = DirectMessage.between(current_user, user).last
+    preview = if last_message
+      if last_message.image.attached? && last_message.content.blank?
+        "Изображение"
+      elsif last_message.image.attached?
+        "#{last_message.content}"
+      else
+        last_message.content
+      end
+    else
+      "Чат ещё не начат"
+    end
 
     {
       user: user,
-      preview: last_message&.content.presence || "Р§Р°С‚ РµС‰Рµ РЅРµ РЅР°С‡Р°С‚",
+      preview: preview,
       time: last_message&.created_at,
       active: @selected_user&.id == user.id,
       unread_count: DirectMessage.unread_for(current_user).where(sender: user).count

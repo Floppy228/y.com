@@ -15,9 +15,18 @@ test:
   <<: *default
   database: y_com_test
 
-production:
+production: &production
   <<: *default
   database: y_com_production
   username: y_com
   password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
   host: <%= ENV.fetch("DB_HOST", "localhost") %>
+
+cable:
+  <<: *production
+
+queue:
+  <<: *production
+
+cache:
+  <<: *production

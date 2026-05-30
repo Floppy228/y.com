@@ -47,7 +47,9 @@ class PagesController < ApplicationController
     end
 
     @direct_messages = if @selected_user
-      DirectMessage.between(current_user, @selected_user)
+      msgs = DirectMessage.between(current_user, @selected_user)
+      DirectMessage.unread_for(current_user).where(sender: @selected_user).update_all(read_at: Time.current)
+      msgs
     else
       DirectMessage.none
     end
@@ -282,7 +284,8 @@ class PagesController < ApplicationController
       user: user,
       preview: last_message&.content.presence || "Р§Р°С‚ РµС‰Рµ РЅРµ РЅР°С‡Р°С‚",
       time: last_message&.created_at,
-      active: @selected_user&.id == user.id
+      active: @selected_user&.id == user.id,
+      unread_count: DirectMessage.unread_for(current_user).where(sender: user).count
     }
   end
 

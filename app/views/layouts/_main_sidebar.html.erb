@@ -26,6 +26,9 @@
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
       Сообщения
+      <% if @total_unread_count.to_i > 0 %>
+        <span class="ml-auto flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white"><%= @total_unread_count %></span>
+      <% end %>
     <% end %>
 
     <%= link_to ai_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :ai ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>

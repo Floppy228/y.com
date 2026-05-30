@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :require_login, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_unread_counts
 
   allow_browser versions: :modern
   stale_when_importmap_changes
@@ -9,6 +10,12 @@ class ApplicationController < ActionController::Base
 
   def require_login
     redirect_to auth_path unless user_signed_in?
+  end
+
+  def set_unread_counts
+    return unless user_signed_in?
+
+    @total_unread_count = DirectMessage.unread_for(current_user).count
   end
 
   def configure_permitted_parameters

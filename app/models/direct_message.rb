@@ -9,4 +9,8 @@ class DirectMessage < ApplicationRecord
       .or(where(sender: second_user, recipient: first_user))
       .order(:created_at)
   }
+
+  scope :unread, -> { where(read_at: nil) }
+
+  scope :unread_for, ->(user) { where(recipient: user, read_at: nil) }
 end

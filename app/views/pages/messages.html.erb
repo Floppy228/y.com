@@ -190,7 +190,12 @@
                     <div class="truncate text-sm font-semibold text-white"><%= display_name %></div>
                     <div class="shrink-0 text-xs text-zinc-500"><%= row[:time] ? l(row[:time], format: "%H:%M") : "" %></div>
                   </div>
-                  <div class="mt-1 truncate text-xs text-zinc-500"><%= row[:preview] %></div>
+                  <div class="mt-1 flex items-center gap-2">
+                    <span class="truncate text-xs text-zinc-500"><%= row[:preview] %></span>
+                    <% if row[:unread_count].to_i > 0 %>
+                      <span class="shrink-0 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-indigo-500 px-1 text-[10px] font-bold text-white"><%= row[:unread_count] %></span>
+                    <% end %>
+                  </div>
                 </div>
               </div>
             <% end %>

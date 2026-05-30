@@ -23,5 +23,9 @@ production:
   host: <%= ENV.fetch("DB_HOST", "localhost") %>
 
 cable:
-  <<: *production
+  <<: *default
   database: y_com_production
+  username: y_com
+  password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  migrations_paths: db/migrate

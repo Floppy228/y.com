@@ -21,11 +21,23 @@ class DirectMessage < ApplicationRecord
   def broadcast_new_message
     recipient_stream = "messages_user_#{recipient_id}"
 
+    Rails.logger.info "=== Broadcasting to #{recipient_stream} (message #{id}) ==="
+
     broadcast_append_to recipient_stream,
       target: "messages",
       partial: "direct_messages/message",
       locals: { message: self, current_user: recipient }
+
+    Rails.logger.info "=== Broadcast to #{recipient_stream} sent ==="
+
+    # Also broadcast to sender so their message appears immediately
+    sender_stream = "messages_user_#{sender_id}"
+    broadcast_append_to sender_stream,
+      target: "messages",
+      partial: "direct_messages/message",
+      locals: { message: self, current_user: sender }
   rescue StandardError => e
-    Rails.logger.error "Broadcast failed: #{e.message}"
+    Rails.logger.error "=== Broadcast failed: #{e.message} ==="
+    Rails.logger.error e.backtrace.first(5).join("\n")
   end
 end

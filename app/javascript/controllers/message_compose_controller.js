@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input"]
+  static targets = ["input", "imagePreview", "imageInput"]
   static values = { shortcut: String }
 
   submitOnShortcut(event) {
@@ -14,9 +14,34 @@ export default class extends Controller {
     if (!this.shouldSubmit(event)) return
 
     event.preventDefault()
-    if (this.inputTarget.value.trim() === "") return
 
     this.element.requestSubmit()
+  }
+
+  previewImage(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (this.hasImagePreviewTarget) {
+        this.imagePreviewTarget.innerHTML = `
+          <div class="relative mb-3 inline-block">
+            <img src="${e.target.result}" class="max-h-48 max-w-full rounded-xl object-cover" />
+            <button type="button" data-action="message-compose#removeImage" class="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-zinc-800 text-xs text-white hover:bg-red-500">&times;</button>
+          </div>`
+        this.imagePreviewTarget.classList.remove("hidden")
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  removeImage() {
+    if (this.hasImageInputTarget) this.imageInputTarget.value = ""
+    if (this.hasImagePreviewTarget) {
+      this.imagePreviewTarget.innerHTML = ""
+      this.imagePreviewTarget.classList.add("hidden")
+    }
   }
 
   shouldSubmit(event) {

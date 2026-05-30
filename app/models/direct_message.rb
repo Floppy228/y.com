@@ -2,7 +2,9 @@ class DirectMessage < ApplicationRecord
   belongs_to :sender, class_name: "User"
   belongs_to :recipient, class_name: "User"
 
-  validates :content, presence: true
+  has_one_attached :image
+
+  validates :content, presence: true, unless: -> { image.attached? }
 
   scope :between, lambda { |first_user, second_user|
     where(sender: first_user, recipient: second_user)

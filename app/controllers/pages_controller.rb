@@ -96,18 +96,21 @@ class PagesController < ApplicationController
   def create_message
     recipient = User.where.not(id: current_user.id).find_by(id: params[:recipient_id])
     content = params[:content].to_s.strip
+    has_image = params[:image].present?
 
     unless recipient
       redirect_to messages_path, alert: "Выберите пользователя для чата."
       return
     end
 
-    if content.blank?
-      redirect_to messages_path(user_id: recipient.id), alert: "Введите сообщение."
+    if content.blank? && !has_image
+      redirect_to messages_path(user_id: recipient.id), alert: "Введите сообщение или прикрепите изображение."
       return
     end
 
-    current_user.sent_direct_messages.create!(recipient: recipient, content: content)
+    message = current_user.sent_direct_messages.build(recipient: recipient, content: content)
+    message.image.attach(params[:image]) if has_image
+    message.save!
     redirect_to messages_path(user_id: recipient.id), notice: "Сообщение отправлено."
   rescue StandardError
     redirect_to messages_path(user_id: recipient&.id), alert: "Не удалось отправить сообщение."

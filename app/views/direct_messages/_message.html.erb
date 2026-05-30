@@ -33,7 +33,14 @@
       </details>
     <% end %>
 
-    <div class="whitespace-pre-wrap break-words"><%= message.content %></div>
+    <% if message.image.attached? %>
+      <div class="-mx-4 -mt-2.5 mb-2 overflow-hidden rounded-t-2xl">
+        <%= image_tag message.image, class: "max-h-96 w-full object-cover" %>
+      </div>
+    <% end %>
+    <% if message.content.present? %>
+      <div class="whitespace-pre-wrap break-words"><%= message.content %></div>
+    <% end %>
     <div class="mt-1.5 text-[10px] <%= own_message ? 'text-indigo-100/80' : 'text-zinc-500' %>">
       <%= l(message.created_at, format: "%H:%M") %>
     </div>

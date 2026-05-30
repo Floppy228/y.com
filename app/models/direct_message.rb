@@ -20,24 +20,25 @@ class DirectMessage < ApplicationRecord
 
   def broadcast_new_message
     recipient_stream = "messages_user_#{recipient_id}"
+    sender_stream = "messages_user_#{sender_id}"
 
-    Rails.logger.info "=== Broadcasting to #{recipient_stream} (message #{id}) ==="
-
+    # Append message to recipient's chat
     broadcast_append_to recipient_stream,
       target: "messages",
       partial: "direct_messages/message",
       locals: { message: self, current_user: recipient }
 
-    Rails.logger.info "=== Broadcast to #{recipient_stream} sent ==="
-
-    # Also broadcast to sender so their message appears immediately
-    sender_stream = "messages_user_#{sender_id}"
+    # Append message to sender's chat too
     broadcast_append_to sender_stream,
       target: "messages",
       partial: "direct_messages/message",
       locals: { message: self, current_user: sender }
+
+    # Update unread badge for recipient
+    unread_count = DirectMessage.unread_for(recipient).count
+    badge_html = ApplicationController.render(partial: "layouts/unread_badge", locals: { count: unread_count })
+    broadcast_replace_to recipient_stream, target: "unread-badge", html: badge_html
   rescue StandardError => e
     Rails.logger.error "=== Broadcast failed: #{e.message} ==="
-    Rails.logger.error e.backtrace.first(5).join("\n")
   end
 end

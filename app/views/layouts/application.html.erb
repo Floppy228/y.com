@@ -26,5 +26,8 @@
   <body class="bg-black text-white">
     <%= yield %>
     <%= render "layouts/flash" %>
+    <% if user_signed_in? %>
+      <%= turbo_stream_from "messages_user_#{current_user.id}" %>
+    <% end %>
   </body>
 </html>

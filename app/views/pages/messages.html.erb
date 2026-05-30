@@ -33,7 +33,6 @@
 
         <section data-controller="chat-scroll" class="flex-1 overflow-y-auto px-6 py-6">
           <div id="messages" class="space-y-5">
-            <%= turbo_stream_from "messages_user_#{current_user.id}" %>
             <% if @direct_messages.any? %>
               <%= render partial: "direct_messages/message", collection: @direct_messages, as: :message %>
             <% else %>

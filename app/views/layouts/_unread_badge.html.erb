@@ -1,0 +1,5 @@
+<span id="unread-badge" class="ml-auto">
+  <% if local_assigns[:count].to_i > 0 %>
+    <span class="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white"><%= count %></span>
+  <% end %>
+</span>

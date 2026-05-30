@@ -25,5 +25,7 @@ class DirectMessage < ApplicationRecord
       target: "messages",
       partial: "direct_messages/message",
       locals: { message: self, current_user: recipient }
+  rescue StandardError => e
+    Rails.logger.error "Broadcast failed: #{e.message}"
   end
 end

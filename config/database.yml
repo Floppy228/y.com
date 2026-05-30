@@ -28,7 +28,6 @@ cable:
   username: y_com
   password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
   host: <%= ENV.fetch("DB_HOST", "localhost") %>
-  migrations_paths: db/migrate
 
 queue:
   <<: *default
@@ -36,7 +35,6 @@ queue:
   username: y_com
   password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
   host: <%= ENV.fetch("DB_HOST", "localhost") %>
-  migrations_paths: db/migrate
 
 cache:
   <<: *default
@@ -44,4 +42,3 @@ cache:
   username: y_com
   password: <%= ENV["Y_COM_DATABASE_PASSWORD"] %>
   host: <%= ENV.fetch("DB_HOST", "localhost") %>
-  migrations_paths: db/migrate

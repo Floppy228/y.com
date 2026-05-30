@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get "/auth", to: "pages#auth", as: :auth
   get "/profile", to: "pages#profile", as: :profile
+  get "/users/:id", to: "pages#user_profile", as: :user
   get "/messages", to: "pages#messages", as: :messages
   post "/messages", to: "pages#create_message", as: :create_message
   patch "/messages/:id", to: "pages#update_message", as: :update_message

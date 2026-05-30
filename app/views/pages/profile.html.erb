@@ -11,7 +11,7 @@
 %>
 
 <div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] grid-cols-[280px_1fr_320px] overflow-hidden bg-black text-white">
-  <%= render "layouts/main_sidebar", active_tab: :profile %>
+  <%= render "layouts/main_sidebar", active_tab: @user == current_user ? :profile : nil %>
 
   <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
     <div class="sticky top-0 z-30 flex items-center gap-5 border-b border-zinc-900 bg-black/95 px-6 py-2 backdrop-blur">

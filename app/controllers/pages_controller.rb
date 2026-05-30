@@ -17,6 +17,12 @@ class PagesController < ApplicationController
     @posts = current_user.posts.order(created_at: :desc)
   end
 
+  def user_profile
+    @user = User.find(params[:id])
+    @posts = @user.posts.order(created_at: :desc)
+    render :profile
+  end
+
   def messages
     @query = params[:q].to_s.strip
     users_scope = User.where.not(id: current_user.id)
@@ -54,7 +60,7 @@ class PagesController < ApplicationController
   def ai_ask
     prompt = params[:prompt].to_s.strip
     if prompt.blank?
-      redirect_to ai_path, alert: "Enter a question for Y-Core."
+      redirect_to ai_path, alert: "Введите вопрос для Y-Core."
       return
     end
 
@@ -68,18 +74,18 @@ class PagesController < ApplicationController
 
   def clear_ai_chat
     current_user.ai_messages.delete_all
-    redirect_to ai_path, notice: "Y-Core chat was cleared."
+    redirect_to ai_path, notice: "Чат Y-Core очищен."
   end
 
   def clear_messages_chat
     selected_user = User.where.not(id: current_user.id).find_by(id: params[:user_id])
     unless selected_user
-      redirect_to messages_path, alert: "Select a chat first."
+      redirect_to messages_path, alert: "Сначала выберите чат."
       return
     end
 
     DirectMessage.between(current_user, selected_user).delete_all
-    redirect_to messages_path(user_id: selected_user.id), notice: "Chat was cleared."
+    redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
   end
 
   def following
@@ -90,34 +96,34 @@ class PagesController < ApplicationController
     content = params[:content].to_s.strip
 
     unless recipient
-      redirect_to messages_path, alert: "Select a user to start chat."
+      redirect_to messages_path, alert: "Выберите пользователя для чата."
       return
     end
 
     if content.blank?
-      redirect_to messages_path(user_id: recipient.id), alert: "Enter a message."
+      redirect_to messages_path(user_id: recipient.id), alert: "Введите сообщение."
       return
     end
 
     current_user.sent_direct_messages.create!(recipient: recipient, content: content)
-    redirect_to messages_path(user_id: recipient.id), notice: "Message sent."
+    redirect_to messages_path(user_id: recipient.id), notice: "Сообщение отправлено."
   rescue StandardError
-    redirect_to messages_path(user_id: recipient&.id), alert: "Failed to send message."
+    redirect_to messages_path(user_id: recipient&.id), alert: "Не удалось отправить сообщение."
   end
 
   def update_message
     message = current_user.sent_direct_messages.find_by(id: params[:id])
     unless message
-      redirect_to messages_path, alert: "Message not found."
+      redirect_to messages_path, alert: "Сообщение не найдено."
       return
     end
     content = params[:content].to_s.strip
     if content.blank?
-      redirect_to messages_path(user_id: direct_message_partner(message).id), alert: "Message text cannot be empty."
+      redirect_to messages_path(user_id: direct_message_partner(message).id), alert: "Текст сообщения не может быть пустым."
       return
     end
     if message.update(content: content)
-      redirect_to messages_path(user_id: direct_message_partner(message).id), notice: "Message updated."
+      redirect_to messages_path(user_id: direct_message_partner(message).id), notice: "Сообщение изменено."
     else
       redirect_to messages_path(user_id: direct_message_partner(message).id), alert: message.errors.full_messages.to_sentence
     end
@@ -125,12 +131,12 @@ class PagesController < ApplicationController
   def destroy_message
     message = current_user.sent_direct_messages.find_by(id: params[:id])
     unless message
-      redirect_to messages_path, alert: "Message not found."
+      redirect_to messages_path, alert: "Сообщение не найдено."
       return
     end
     chat_user = direct_message_partner(message)
     message.destroy
-    redirect_to messages_path(user_id: chat_user.id), notice: "Message deleted."
+    redirect_to messages_path(user_id: chat_user.id), notice: "Сообщение удалено."
   end
 
   def settings
@@ -143,7 +149,7 @@ class PagesController < ApplicationController
 
   def send_password_change_code
     unless mailer_configured?
-      redirect_to settings_password_reset_path, alert: "Email is not configured. Fill SMTP fields in .env."
+      redirect_to settings_password_reset_path, alert: "Почта не настроена. Заполните SMTP-поля в .env."
       return
     end
 
@@ -152,9 +158,9 @@ class PagesController < ApplicationController
     session[:password_change_code_sent_at] = Time.current.to_i
 
     PasswordCodeMailer.change_password_code(current_user, code).deliver_now
-    redirect_to settings_password_reset_path, notice: "Code sent to #{current_user.email}."
+    redirect_to settings_password_reset_path, notice: "Код отправлен на #{current_user.email}."
   rescue StandardError
-    redirect_to settings_password_reset_path, alert: "Failed to send email. Check SMTP settings in .env."
+    redirect_to settings_password_reset_path, alert: "Не удалось отправить письмо. Проверьте SMTP-настройки в .env."
   end
 
   def update_password_from_settings
@@ -163,19 +169,19 @@ class PagesController < ApplicationController
     password_confirmation = params[:password_confirmation].to_s
 
     if code.blank? || password.blank? || password_confirmation.blank?
-      redirect_to settings_password_reset_path, alert: "Fill in code and both password fields."
+      redirect_to settings_password_reset_path, alert: "Заполните код и оба поля пароля."
       return
     end
 
     unless valid_password_change_code?(code)
-      redirect_to settings_password_reset_path, alert: "Code is invalid or expired."
+      redirect_to settings_password_reset_path, alert: "Код неверный или устарел."
       return
     end
 
     if current_user.update(password: password, password_confirmation: password_confirmation)
       clear_password_change_code!
       bypass_sign_in current_user
-      redirect_to settings_password_reset_path, notice: "Password was changed."
+      redirect_to settings_password_reset_path, notice: "Пароль изменен."
     else
       redirect_to settings_password_reset_path, alert: current_user.errors.full_messages.to_sentence
     end
@@ -185,7 +191,7 @@ class PagesController < ApplicationController
     @user = current_user
 
     if @user.update(filtered_user_params(:username, :email))
-      redirect_to settings_path, notice: "Account settings saved."
+      redirect_to settings_path, notice: "Настройки аккаунта сохранены."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
       render :settings, status: :unprocessable_entity
@@ -197,7 +203,7 @@ class PagesController < ApplicationController
 
     if @user.update(filtered_user_params(:name, :bio, :status, :birthday))
       attach_profile_images(@user)
-      redirect_to settings_path, notice: "Profile saved."
+      redirect_to settings_path, notice: "Профиль сохранен."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
       render :settings, status: :unprocessable_entity
@@ -208,7 +214,7 @@ class PagesController < ApplicationController
     @user = current_user
 
     if @user.update(filtered_user_params(:message_send_shortcut))
-      redirect_to settings_path, notice: "Chat settings saved."
+      redirect_to settings_path, notice: "Настройки чатов сохранены."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
       render :settings, status: :unprocessable_entity
@@ -219,7 +225,7 @@ class PagesController < ApplicationController
     post = current_user.posts.new(content: params[:post][:content])
 
     if post.save
-      redirect_to root_path, notice: "Post published."
+      redirect_to root_path, notice: "Пост опубликован."
     else
       redirect_to root_path, alert: post.errors.full_messages.to_sentence
     end

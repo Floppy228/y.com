@@ -1,0 +1,51 @@
+<% own_message = message.sender_id == current_user.id %>
+<% sender = own_message ? current_user : message.sender %>
+<div class="flex items-end <%= own_message ? 'justify-end' : '' %> gap-3">
+  <% unless own_message %>
+    <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-bold text-white">
+      <% if sender.avatar.attached? %>
+        <%= image_tag sender.avatar, class: "h-full w-full object-cover" %>
+      <% else %>
+        <%= (sender.name.presence || sender.username).split.map { |part| part.first }.join[0, 2].to_s.upcase.presence || sender.username.to_s.first(2).upcase %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="<%= own_message ? 'border border-indigo-500/30 bg-indigo-500/10 text-zinc-100' : 'border border-zinc-900 bg-zinc-950 text-zinc-200' %> relative inline-flex h-auto w-fit max-w-[75%] shrink-0 flex-col rounded-2xl px-4 py-2.5 pr-10 text-sm leading-6">
+    <% if own_message %>
+      <details class="absolute right-1 top-1 z-20 h-6 w-6">
+        <summary class="block h-6 w-6 list-none cursor-pointer rounded-full text-zinc-300 outline-none ring-0 focus:outline-none focus:ring-0 [&::-webkit-details-marker]:hidden hover:bg-zinc-900 hover:text-white">
+          <span class="flex h-6 w-6 items-center justify-center text-xs leading-none">...</span>
+        </summary>
+        <div class="absolute right-0 top-7 min-w-[170px] rounded-xl border border-zinc-800 bg-zinc-950 p-2 shadow-xl">
+          <details class="group">
+            <summary class="list-none cursor-pointer rounded-lg px-2 py-1.5 text-xs text-zinc-200 hover:bg-zinc-900 hover:text-white">Изменить</summary>
+            <div class="pt-2">
+              <%= form_with url: update_message_path(message), method: :patch, local: true, data: { turbo: false }, class: "space-y-2" do %>
+                <%= text_area_tag :content, message.content, rows: 2, class: "w-full min-w-[220px] rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-white outline-none focus:border-indigo-500" %>
+                <button type="submit" class="rounded-full border border-zinc-700 px-3 py-1 text-[11px] font-semibold text-zinc-200 hover:border-indigo-500 hover:text-white">Сохранить</button>
+              <% end %>
+            </div>
+          </details>
+
+          <%= button_to "Удалить", destroy_message_path(message), method: :delete, form: { data: { turbo: false } }, class: "mt-2 w-full rounded-lg px-3 py-1.5 text-left text-xs font-semibold text-zinc-300 hover:bg-zinc-900 hover:text-red-300" %>
+        </div>
+      </details>
+    <% end %>
+
+    <div class="whitespace-pre-wrap break-words"><%= message.content %></div>
+    <div class="mt-1.5 text-[10px] <%= own_message ? 'text-indigo-100/80' : 'text-zinc-500' %>">
+      <%= l(message.created_at, format: "%H:%M") %>
+    </div>
+  </div>
+
+  <% if own_message %>
+    <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-900 text-sm font-bold text-white">
+      <% if current_user.avatar.attached? %>
+        <%= image_tag current_user.avatar, class: "h-full w-full object-cover" %>
+      <% else %>
+        Я
+      <% end %>
+    </div>
+  <% end %>
+</div>

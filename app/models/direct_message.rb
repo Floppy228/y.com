@@ -13,4 +13,17 @@ class DirectMessage < ApplicationRecord
   scope :unread, -> { where(read_at: nil) }
 
   scope :unread_for, ->(user) { where(recipient: user, read_at: nil) }
+
+  after_create_commit :broadcast_new_message
+
+  private
+
+  def broadcast_new_message
+    recipient_stream = "messages_user_#{recipient_id}"
+
+    broadcast_append_to recipient_stream,
+      target: "messages",
+      partial: "direct_messages/message",
+      locals: { message: self, current_user: recipient }
+  end
 end

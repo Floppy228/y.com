@@ -44,8 +44,22 @@
       User.none
     end
 
+    @search_dms = if @query.present?
+      DirectMessage
+        .where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
+        .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
+        .includes(:sender, :recipient)
+        .order(created_at: :desc)
+        .limit(20)
+    else
+      DirectMessage.none
+    end
+
     @direct_messages = if @selected_user
       msgs = DirectMessage.between(current_user, @selected_user)
+      if @query.present?
+        msgs = msgs.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
+      end
       DirectMessage.unread_for(current_user).where(sender: @selected_user).update_all(read_at: Time.current)
       msgs
     else

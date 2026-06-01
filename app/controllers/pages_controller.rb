@@ -302,14 +302,17 @@
 
   def like_post
     post = Post.find(params[:id])
-    liked = current_user.likes.find_or_create_by!(post: post)
-    if liked.previous_new_record? && post.user != current_user
-      Notification.create!(
-        user: post.user,
-        actor: current_user,
-        notifiable: post,
-        action: "like"
-      )
+    already_liked = current_user.likes.exists?(post: post)
+    unless already_liked
+      current_user.likes.create!(post: post)
+      if post.user != current_user
+        Notification.create!(
+          user: post.user,
+          actor: current_user,
+          notifiable: post,
+          action: "like"
+        )
+      end
     end
     redirect_back fallback_location: root_path
   end

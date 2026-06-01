@@ -310,6 +310,11 @@
     render json: users
   end
 
+  def show_post
+    @posts = Post.where(id: params[:id]).includes(:user, :likes, comments: :user)
+    render :index
+  end
+
   def share_post
     post = Post.find_by(id: params[:post_id])
     unless post

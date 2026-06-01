@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     post "/account_restore", to: "pages#send_password_reset_instructions", as: :account_restore_send
   end
 
+  get "/posts/:id", to: "pages#show_post", as: :post
   post "/posts", to: "pages#create_post", as: :posts
   post "/posts/:id/like", to: "pages#like_post", as: :like_post
   delete "/posts/:id/like", to: "pages#unlike_post", as: :unlike_post

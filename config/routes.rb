@@ -33,6 +33,10 @@ Rails.application.routes.draw do
   end
 
   post "/posts", to: "pages#create_post", as: :posts
+  post "/posts/:id/like", to: "pages#like_post", as: :like_post
+  delete "/posts/:id/like", to: "pages#unlike_post", as: :unlike_post
+  post "/posts/:id/comments", to: "pages#create_comment", as: :post_comments
+  post "/posts/:id/share", to: "pages#share_post", as: :share_post
 
   root "pages#index"
 end

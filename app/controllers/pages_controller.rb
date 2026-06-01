@@ -3,7 +3,7 @@
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index
-    @posts = Post.includes(:user).order(created_at: :desc)
+    @posts = Post.includes(:user, comments: :user, :likes).order(created_at: :desc)
   end
 
   def auth
@@ -12,12 +12,12 @@
 
   def profile
     @user = current_user
-    @posts = current_user.posts.order(created_at: :desc)
+    @posts = current_user.posts.includes(comments: :user, :likes).order(created_at: :desc)
   end
 
   def user_profile
     @user = User.find(params[:id])
-    @posts = @user.posts.order(created_at: :desc)
+    @posts = @user.posts.includes(comments: :user, :likes).order(created_at: :desc)
     render :profile
   end
 
@@ -273,6 +273,39 @@
     else
       redirect_to root_path, alert: post.errors.full_messages.to_sentence
     end
+  end
+
+  def like_post
+    post = Post.find(params[:id])
+    current_user.likes.find_or_create_by!(post: post)
+    redirect_back fallback_location: root_path
+  end
+
+  def unlike_post
+    post = Post.find(params[:id])
+    current_user.likes.find_by(post: post)&.destroy
+    redirect_back fallback_location: root_path
+  end
+
+  def create_comment
+    post = Post.find(params[:id])
+    comment = post.comments.new(user: current_user, content: params[:comment][:content])
+    if comment.save
+      redirect_back fallback_location: root_path, notice: "Комментарий добавлен."
+    else
+      redirect_back fallback_location: root_path, alert: comment.errors.full_messages.to_sentence
+    end
+  end
+
+  def share_post
+    post = Post.find(params[:id])
+    recipient = User.find(params[:recipient_id])
+    link = "#{request.base_url}/users/#{post.user_id}"
+    share_text = post.content.present? ? "#{post.content} — #{link}" : link
+    current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
+    redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
+  rescue ActiveRecord::RecordNotFound
+    redirect_back fallback_location: root_path, alert: "Пользователь не найден."
   end
 
   private

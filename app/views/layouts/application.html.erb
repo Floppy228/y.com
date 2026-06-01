@@ -31,27 +31,102 @@
     <% end %>
 
     <div id="imageModal" class="invisible fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 opacity-0 transition">
-      <button class="absolute right-8 top-8 flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 text-2xl text-white transition hover:bg-red-500" onclick="closeImageModal()">&times;</button>
+      <button class="absolute right-8 top-8 flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 text-2xl text-white transition hover:bg-red-500" onclick="closeModal('imageModal')">&times;</button>
       <img id="modalImage" src="" alt="" class="max-h-[90%] max-w-[90%] rounded-lg border border-zinc-800">
+    </div>
+
+    <div id="shareModal" class="invisible fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 opacity-0 transition">
+      <div class="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl">
+        <div class="mb-4 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-white">Переслать пост</h3>
+          <button class="text-zinc-500 hover:text-white transition" onclick="closeModal('shareModal')">&times;</button>
+        </div>
+        <div id="shareUserList" class="max-h-64 space-y-2 overflow-y-auto"></div>
+        <div id="shareEmpty" class="hidden py-8 text-center text-sm text-zinc-500">Нет чатов для пересылки.</div>
+      </div>
     </div>
 
     <script>
     function openImageModal(src) {
-      const modal = document.getElementById("imageModal")
       document.getElementById("modalImage").src = src
-      modal.classList.remove("invisible", "opacity-0")
+      document.getElementById("imageModal").classList.remove("invisible", "opacity-0")
     }
-    function closeImageModal() {
-      const modal = document.getElementById("imageModal")
-      modal.classList.add("invisible", "opacity-0")
-      document.getElementById("modalImage").src = ""
+    function closeModal(id) {
+      document.getElementById(id).classList.add("invisible", "opacity-0")
     }
     document.addEventListener("click", function(e) {
-      if (e.target.id === "imageModal") closeImageModal()
+      if (e.target.id === "imageModal") closeModal("imageModal")
+      if (e.target.id === "shareModal") closeModal("shareModal")
     })
     document.addEventListener("keydown", function(e) {
-      if (e.key === "Escape") closeImageModal()
+      if (e.key === "Escape") { closeModal("imageModal"); closeModal("shareModal") }
     })
+
+    function toggleComments(btn, postId) {
+      const container = document.querySelector(`[data-comments-container="${postId}"]`)
+      if (!container) return
+      container.classList.toggle("hidden")
+    }
+
+    function openShareModal(btn, postId) {
+      const modal = document.getElementById("shareModal")
+      const list = document.getElementById("shareUserList")
+      const empty = document.getElementById("shareEmpty")
+      list.innerHTML = "<div class='py-4 text-center text-sm text-zinc-500'>Загрузка...</div>"
+      empty.classList.add("hidden")
+      modal.classList.remove("invisible", "opacity-0")
+
+      fetch("/messages?q=")
+        .then(r => r.text())
+        .then(html => {
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(html, "text/html")
+          const chatLinks = doc.querySelectorAll("[data-chat-user-id]")
+          list.innerHTML = ""
+          if (chatLinks.length === 0) {
+            empty.classList.remove("hidden")
+            return
+          }
+          chatLinks.forEach(el => {
+            const userId = el.dataset.chatUserId
+            const name = el.dataset.chatName || "Пользователь"
+            const username = el.dataset.chatUsername || ""
+            const div = document.createElement("div")
+            div.className = "flex items-center gap-3 rounded-xl border border-zinc-800 bg-black px-4 py-3 cursor-pointer transition hover:border-indigo-500"
+            div.innerHTML = `
+              <div class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 flex items-center justify-center text-sm font-bold text-white">${name.charAt(0).toUpperCase()}</div>
+              <div class="min-w-0 flex-1">
+                <div class="truncate text-sm font-semibold text-white">${name}</div>
+                <div class="truncate text-xs text-zinc-500">${username}</div>
+              </div>
+            `
+            div.onclick = function() {
+              const form = document.createElement("form")
+              form.method = "POST"
+              form.action = "/posts/${postId}/share"
+              const csrf = document.querySelector("[name='csrf-token']")
+              if (csrf) {
+                const input = document.createElement("input")
+                input.type = "hidden"
+                input.name = "authenticity_token"
+                input.value = csrf.content
+                form.appendChild(input)
+              }
+              const input = document.createElement("input")
+              input.type = "hidden"
+              input.name = "recipient_id"
+              input.value = userId
+              form.appendChild(input)
+              document.body.appendChild(form)
+              form.submit()
+            }
+            list.appendChild(div)
+          })
+        })
+        .catch(() => {
+          list.innerHTML = "<div class='py-4 text-center text-sm text-red-500'>Ошибка загрузки</div>"
+        })
+    }
     </script>
   </body>
 </html>

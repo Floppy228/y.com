@@ -106,17 +106,32 @@
   end
 
   def clear_messages_chat
+    clear_or_delete_messages(:clear)
+  end
+
+  def delete_messages_chat
+    clear_or_delete_messages(:delete)
+  end
+
+  def clear_or_delete_messages(action)
     selected_user = User.where.not(id: current_user.id).find_by(id: params[:user_id])
     unless selected_user
       redirect_to messages_path, alert: "Сначала выберите чат."
       return
     end
 
-    if params[:type] == "clear"
-      DirectMessage.between(current_user, selected_user).update_all(content: nil, read_at: Time.current)
+    messages = DirectMessage.where(sender: current_user, recipient: selected_user)
+    messages2 = DirectMessage.where(sender: selected_user, recipient: current_user)
+
+    if action == :clear
+      messages.update_all(content: nil, read_at: Time.current)
+      messages2.update_all(content: nil, read_at: Time.current)
       redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
     else
-      DirectMessage.between(current_user, selected_user).delete_all
+      DirectMessage.transaction do
+        messages.delete_all
+        messages2.delete_all
+      end
       redirect_to messages_path, notice: "Чат удалён."
     end
   end

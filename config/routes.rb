@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "/messages", to: "pages#messages", as: :messages
   post "/messages", to: "pages#create_message", as: :create_message
   post "/messages/read", to: "pages#mark_messages_read", as: :mark_messages_read
+  delete "/messages/delete_chat", to: "pages#delete_messages_chat", as: :delete_messages_chat
   delete "/messages/clear", to: "pages#clear_messages_chat", as: :clear_messages_chat
   patch "/messages/:id", to: "pages#update_message", as: :update_message
   delete "/messages/:id", to: "pages#destroy_message", as: :destroy_message

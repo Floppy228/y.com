@@ -112,8 +112,16 @@
       return
     end
 
-    DirectMessage.between(current_user, selected_user).delete_all
-    redirect_to messages_path, notice: "Чат удалён."
+    if params[:type] == "clear"
+      DirectMessage.between(current_user, selected_user).find_each do |m|
+        m.image.purge if m.image.attached?
+        m.update_columns(content: nil, read_at: Time.current)
+      end
+      redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
+    else
+      DirectMessage.between(current_user, selected_user).delete_all
+      redirect_to messages_path, notice: "Чат удалён."
+    end
   end
 
   def mark_messages_read

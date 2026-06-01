@@ -21,6 +21,8 @@ export default class extends Controller {
     const containerRect = this.element.getBoundingClientRect()
     const sectionRect = section.getBoundingClientRect()
     this.element.scrollTop = this.element.scrollTop + sectionRect.top - containerRect.top - offset
+
+    setTimeout(() => this.setActiveLink(sectionId), 50)
   }
 
   updateActiveLink() {

@@ -5,6 +5,10 @@
   def index
     @query = params[:q].to_s.strip
     @posts = Post.includes(:user, :likes, comments: :user)
+    if user_signed_in?
+      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
+      @posts = @posts.where.not(user_id: blocked_ids)
+    end
     if @query.present?
       @posts = @posts.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
     end
@@ -22,7 +26,12 @@
 
   def user_profile
     @user = User.find(params[:id])
-    @posts = @user.posts.includes(:likes, comments: :user).order(created_at: :desc)
+    @blocked_by_them = current_user.blocked_by?(@user)
+    unless @blocked_by_them
+      @posts = @user.posts.includes(:likes, comments: :user).order(created_at: :desc)
+    else
+      @posts = Post.none
+    end
     render :profile
   end
 
@@ -31,12 +40,16 @@
     users_scope = User.where.not(id: current_user.id)
     @selected_user = users_scope.find_by(id: params[:user_id])
 
+    blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
     chat_user_ids = DirectMessage
       .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
       .pluck(:sender_id, :recipient_id)
       .flatten
       .uniq
-      .reject { |id| id == current_user.id }
+      .reject { |id| id == current_user.id || blocked_ids.include?(id) }
+
+    blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
+    chat_user_ids.reject! { |id| blocked_by_ids.include?(id) }
 
     @chat_users = users_scope.where(id: chat_user_ids).order(:name, :username)
     @chat_rows = @chat_users.map { |user| build_chat_row(user) }
@@ -123,6 +136,9 @@
 
     if @searching
       @users = User.where.not(id: current_user.id)
+      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
+      blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
+      @users = @users.where.not(id: [blocked_ids, blocked_by_ids].flatten)
       if @query.present?
         @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
       end
@@ -138,7 +154,10 @@
     else
       friend_ids = current_user.friendships.where(status: "accepted").pluck(:friend_id) +
                    current_user.inverse_friendships.where(status: "accepted").pluck(:user_id)
-      @users = User.where(id: friend_ids).order(:name, :username)
+      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
+      blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
+      excluded_ids = [blocked_ids, blocked_by_ids].flatten
+      @users = User.where(id: friend_ids).where.not(id: excluded_ids).order(:name, :username)
     end
   end
 
@@ -149,6 +168,11 @@
 
     unless recipient
       redirect_to messages_path, alert: "Выберите пользователя для чата."
+      return
+    end
+
+    if current_user.blocked?(recipient) || current_user.blocked_by?(recipient)
+      redirect_to messages_path, alert: "Невозможно отправить сообщение этому пользователю."
       return
     end
 
@@ -379,6 +403,11 @@
       return
     end
 
+    if current_user.blocked?(recipient) || current_user.blocked_by?(recipient)
+      redirect_back fallback_location: root_path, alert: "Невозможно отправить пост этому пользователю."
+      return
+    end
+
     link = "#{request.base_url}/posts/#{post.id}"
     share_text = post.content.present? ? "#{post.content} — #{link}" : link
     current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
@@ -463,6 +492,24 @@
   def mark_notifications_read
     current_user.notifications.unread.update_all(read_at: Time.current)
     head :ok
+  end
+
+  # Blocks
+
+  def block_user
+    user = User.find(params[:id])
+    if current_user == user
+      redirect_back fallback_location: root_path, alert: "Нельзя заблокировать самого себя."
+      return
+    end
+    current_user.block(user)
+    redirect_back fallback_location: root_path, notice: "Пользователь заблокирован."
+  end
+
+  def unblock_user
+    user = User.find(params[:id])
+    current_user.unblock(user)
+    redirect_back fallback_location: root_path, notice: "Пользователь разблокирован."
   end
 
   private

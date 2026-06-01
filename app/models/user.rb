@@ -23,6 +23,32 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :acted_notifications, class_name: "Notification", foreign_key: :actor_id, dependent: :destroy
 
+  # Blocks
+  has_many :blocks_as_blocker, class_name: "Block", foreign_key: :blocker_id, dependent: :destroy
+  has_many :blocks_as_blocked, class_name: "Block", foreign_key: :blocked_id, dependent: :destroy
+
+  def blocked?(user)
+    blocks_as_blocker.exists?(blocked: user)
+  end
+
+  def blocked_by?(user)
+    blocks_as_blocked.exists?(blocker: user)
+  end
+
+  def blocked_users
+    User.where(id: blocks_as_blocker.select(:blocked_id))
+  end
+
+  def block(user)
+    blocks_as_blocker.create(blocked: user)
+  rescue ActiveRecord::RecordNotUnique
+    false
+  end
+
+  def unblock(user)
+    blocks_as_blocker.find_by(blocked: user)&.destroy
+  end
+
   validates :name, presence: true
   validates :username, presence: true, uniqueness: true
   validates :message_send_shortcut, presence: true, inclusion: { in: MESSAGE_SEND_SHORTCUTS }

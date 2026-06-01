@@ -51,5 +51,9 @@ Rails.application.routes.draw do
   get "/notifications", to: "pages#notifications", as: :notifications
   post "/notifications/read", to: "pages#mark_notifications_read", as: :mark_notifications_read
 
+  # Blocks
+  post "/users/:id/block", to: "pages#block_user", as: :block_user
+  delete "/users/:id/unblock", to: "pages#unblock_user", as: :unblock_user
+
   root "pages#index"
 end

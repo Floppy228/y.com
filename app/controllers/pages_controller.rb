@@ -433,6 +433,12 @@
 
   def notifications
     @notifications = current_user.notifications.recent.includes(:actor, :notifiable)
+    if current_user.notifications.unread.any?
+      current_user.notifications.unread.update_all(read_at: Time.current)
+      count = Notification.unread.where(user: current_user).count
+      badge_html = count > 0 ? "<span class=\"flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white\">#{count}</span>" : ""
+      Turbo::StreamsChannel.broadcast_replace_to "notifications_user_#{current_user.id}", target: "notification-badge", html: badge_html
+    end
   end
 
   def mark_notifications_read

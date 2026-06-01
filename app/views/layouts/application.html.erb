@@ -28,6 +28,7 @@
     <%= render "layouts/flash" %>
     <% if user_signed_in? %>
       <%= turbo_stream_from "messages_user_#{current_user.id}" %>
+  <%= turbo_stream_from "notifications_user_#{current_user.id}" %>
     <% end %>
 
     <div id="imageModal" class="invisible fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 opacity-0 transition">

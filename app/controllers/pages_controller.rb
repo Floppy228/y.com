@@ -127,7 +127,8 @@
       DirectMessage.transaction do
         messages.delete_all
         messages2.delete_all
-        DirectMessage.insert!(sender_id: current_user.id, recipient_id: selected_user.id, content: "", created_at: Time.current, updated_at: Time.current)
+        dm = current_user.sent_direct_messages.build(recipient: selected_user, content: "")
+        dm.save!(validate: false)
       end
       redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
     else

@@ -152,6 +152,19 @@ class PagesController < ApplicationController
     @user = current_user
   end
 
+  def send_password_reset_instructions
+    unless mailer_configured?
+      redirect_to account_restore_path, alert: "Почта не настроена. Заполните SMTP-поля в .env."
+      return
+    end
+
+    email = params.dig(:user, :email).to_s.strip
+    user = User.find_by(email: email)
+    user&.send_reset_password_instructions
+
+    redirect_to account_restore_path, notice: "Инструкции по сбросу пароля отправлены на ваш email."
+  end
+
   def send_password_change_code
     unless mailer_configured?
       redirect_to settings_password_reset_path, alert: "Почта не настроена. Заполните SMTP-поля в .env."

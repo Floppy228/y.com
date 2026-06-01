@@ -16,12 +16,13 @@ export default class extends Controller {
     if (!section) return
 
     const offset = this.offsetValue || 24
+    this.setActiveLink(sectionId)
+
     const containerRect = this.element.getBoundingClientRect()
     const sectionRect = section.getBoundingClientRect()
     const top = this.element.scrollTop + (sectionRect.top - containerRect.top) - offset
 
-    this.element.scrollTo({ top, behavior: "smooth" })
-    this.setActiveLink(sectionId)
+    this.element.scrollTo({ top, behavior: "instant" })
   }
 
   updateActiveLink() {

@@ -161,6 +161,9 @@
     user&.send_reset_password_instructions
 
     redirect_to account_restore_path, notice: "Инструкции по сбросу пароля отправлены на ваш email."
+  rescue StandardError => e
+    Rails.logger.error "Password reset error: #{e.message}"
+    redirect_to account_restore_path, alert: "Не удалось отправить письмо. Проверьте SMTP-настройки."
   end
 
   def send_password_change_code

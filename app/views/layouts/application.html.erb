@@ -76,28 +76,22 @@
       empty.classList.add("hidden")
       modal.classList.remove("invisible", "opacity-0")
 
-      fetch("/messages?q=")
-        .then(r => r.text())
-        .then(html => {
-          const parser = new DOMParser()
-          const doc = parser.parseFromString(html, "text/html")
-          const chatLinks = doc.querySelectorAll("[data-chat-user-id]")
+      fetch("/chat_users")
+        .then(r => r.json())
+        .then(users => {
           list.innerHTML = ""
-          if (chatLinks.length === 0) {
+          if (!users || users.length === 0) {
             empty.classList.remove("hidden")
             return
           }
-          chatLinks.forEach(el => {
-            const userId = el.dataset.chatUserId
-            const name = el.dataset.chatName || "Пользователь"
-            const username = el.dataset.chatUsername || ""
+          users.forEach(u => {
             const div = document.createElement("div")
             div.className = "flex items-center gap-3 rounded-xl border border-zinc-800 bg-black px-4 py-3 cursor-pointer transition hover:border-indigo-500"
             div.innerHTML = `
-              <div class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 flex items-center justify-center text-sm font-bold text-white">${name.charAt(0).toUpperCase()}</div>
+              <div class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 flex items-center justify-center text-sm font-bold text-white">${(u.name || "?").charAt(0).toUpperCase()}</div>
               <div class="min-w-0 flex-1">
-                <div class="truncate text-sm font-semibold text-white">${name}</div>
-                <div class="truncate text-xs text-zinc-500">${username}</div>
+                <div class="truncate text-sm font-semibold text-white">${u.name}</div>
+                <div class="truncate text-xs text-zinc-500">@${u.username}</div>
               </div>
             `
             div.onclick = function() {
@@ -113,11 +107,10 @@
                 input.value = csrf.content
                 form.appendChild(input)
               }
-              if (!userId) { closeModal("shareModal"); return }
               const input = document.createElement("input")
               input.type = "hidden"
               input.name = "recipient_id"
-              input.value = userId
+              input.value = u.id
               form.appendChild(input)
               document.body.appendChild(form)
               form.submit()

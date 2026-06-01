@@ -297,20 +297,42 @@
     end
   end
 
+  def chat_users
+    user_ids = DirectMessage
+      .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
+      .pluck(:sender_id, :recipient_id).flatten.uniq
+      .reject { |id| id == current_user.id }
+
+    users = User.where(id: user_ids).order(:name, :username).map do |u|
+      { id: u.id, name: u.name.presence || u.username, username: u.username }
+    end
+
+    render json: users
+  end
+
   def share_post
-    post = Post.find(params[:id])
     recipient_id = params[:recipient_id].to_s
     unless recipient_id.present?
       redirect_back fallback_location: root_path, alert: "Выберите получателя."
       return
     end
-    recipient = User.find(recipient_id)
+
+    recipient = User.find_by(id: recipient_id)
+    unless recipient
+      redirect_back fallback_location: root_path, alert: "Пользователь не найден."
+      return
+    end
+
+    post = Post.find_by(id: params[:id])
+    unless post
+      redirect_back fallback_location: root_path, alert: "Пост не найден."
+      return
+    end
+
     link = "#{request.base_url}/users/#{post.user_id}"
     share_text = post.content.present? ? "#{post.content} — #{link}" : link
     current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
     redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
-  rescue ActiveRecord::RecordNotFound
-    redirect_back fallback_location: root_path, alert: "Пользователь не найден."
   end
 
   private

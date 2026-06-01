@@ -16,25 +16,23 @@ export default class extends Controller {
     if (!section) return
 
     const offset = this.offsetValue || 24
-    const top = section.offsetTop - offset
+    const containerRect = this.element.getBoundingClientRect()
+    const sectionRect = section.getBoundingClientRect()
+    const top = this.element.scrollTop + (sectionRect.top - containerRect.top) - offset
 
-    this.element.scrollTo({
-      top,
-      behavior: "smooth"
-    })
-
+    this.element.scrollTo({ top, behavior: "smooth" })
     this.setActiveLink(sectionId)
   }
 
   updateActiveLink() {
     const offset = this.offsetValue || 24
     const containerRect = this.element.getBoundingClientRect()
-    const scrollTop = containerRect.top + offset + 8
 
     let currentSection = this.sectionTargets[0]
     this.sectionTargets.forEach((section) => {
-      const rect = section.getBoundingClientRect()
-      if (rect.top <= scrollTop) currentSection = section
+      const sectionRect = section.getBoundingClientRect()
+      const sectionTop = sectionRect.top - containerRect.top
+      if (sectionTop <= offset + 8) currentSection = section
     })
 
     if (currentSection) this.setActiveLink(currentSection.id)

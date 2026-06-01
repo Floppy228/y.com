@@ -120,24 +120,20 @@
       return
     end
 
-    messages = DirectMessage.where(sender: current_user, recipient: selected_user)
-    messages2 = DirectMessage.where(sender: selected_user, recipient: current_user)
-
     if action == :clear
-      DirectMessage.transaction do
-        messages.delete_all
-        messages2.delete_all
-        dm = current_user.sent_direct_messages.build(recipient: selected_user, content: "")
-        dm.save!(validate: false)
-      end
+      DirectMessage.where(sender: current_user, recipient: selected_user).delete_all
+      DirectMessage.where(sender: selected_user, recipient: current_user).delete_all
+      dm = current_user.sent_direct_messages.build(recipient: selected_user, content: "")
+      dm.save!(validate: false)
       redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
     else
-      DirectMessage.transaction do
-        messages.delete_all
-        messages2.delete_all
-      end
+      DirectMessage.where(sender: current_user, recipient: selected_user).delete_all
+      DirectMessage.where(sender: selected_user, recipient: current_user).delete_all
       redirect_to messages_path, notice: "Чат удалён."
     end
+  rescue StandardError => e
+    Rails.logger.error "=== clear_or_delete_messages error: #{e.class}: #{e.message} ==="
+    redirect_to messages_path, alert: "Ошибка: #{e.message}"
   end
 
   def mark_messages_read

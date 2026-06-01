@@ -39,7 +39,7 @@
       </div>
     <% end %>
     <% if message.content.present? %>
-      <div class="whitespace-pre-wrap break-words"><%= message.content %></div>
+      <div class="whitespace-pre-wrap break-words"><%= sanitize(auto_link_text(message.content), tags: %w[a], attributes: %w[href target rel class]) %></div>
     <% end %>
     <div class="mt-1.5 text-[10px] <%= own_message ? 'text-indigo-100/80' : 'text-zinc-500' %>">
       <%= l(message.created_at, format: "%H:%M") %>

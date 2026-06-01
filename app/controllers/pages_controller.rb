@@ -36,14 +36,6 @@
     @chat_users = users_scope.where(id: chat_user_ids).order(:name, :username)
     @chat_rows = @chat_users.map { |user| build_chat_row(user) }
 
-    @search_users = if @query.present?
-      users_scope
-        .where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q OR LOWER(email) LIKE :q", q: "%#{@query.downcase}%")
-        .order(:name, :username)
-    else
-      User.none
-    end
-
     @search_dms = if @query.present?
       DirectMessage
         .where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
@@ -68,7 +60,11 @@
   end
 
   def ai
+    @ai_query = params[:q].to_s.strip
     @ai_messages = current_user.ai_messages.order(:created_at)
+    if @ai_query.present?
+      @ai_messages = @ai_messages.where("LOWER(content) LIKE :q", q: "%#{@ai_query.downcase}%")
+    end
   end
 
   def ai_ask
@@ -103,6 +99,14 @@
   end
 
   def following
+    @query = params[:q].to_s.strip
+    @users = if @query.present?
+      User.where.not(id: current_user.id)
+        .where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
+        .order(:name, :username)
+    else
+      User.none
+    end
   end
 
   def create_message

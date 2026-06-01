@@ -3,7 +3,7 @@
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index
-    @posts = Post.includes(:user, comments: :user, :likes).order(created_at: :desc)
+    @posts = Post.includes(:user, :likes, comments: :user).order(created_at: :desc)
   end
 
   def auth
@@ -12,12 +12,12 @@
 
   def profile
     @user = current_user
-    @posts = current_user.posts.includes(comments: :user, :likes).order(created_at: :desc)
+    @posts = current_user.posts.includes(:likes, comments: :user).order(created_at: :desc)
   end
 
   def user_profile
     @user = User.find(params[:id])
-    @posts = @user.posts.includes(comments: :user, :likes).order(created_at: :desc)
+    @posts = @user.posts.includes(:likes, comments: :user).order(created_at: :desc)
     render :profile
   end
 

@@ -331,6 +331,7 @@
     link = "#{request.base_url}/posts/#{post.id}"
     share_text = post.content.present? ? "#{post.content} — #{link}" : link
     current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
+    post.increment!(:shares_count)
     redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
   end
 

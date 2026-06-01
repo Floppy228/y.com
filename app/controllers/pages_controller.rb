@@ -323,7 +323,6 @@
 
   def show_post
     @posts = Post.where(id: params[:id]).includes(:user, :likes, comments: :user)
-    render :index
   end
 
   def share_post

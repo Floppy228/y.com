@@ -1,0 +1,23 @@
+<div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] grid-cols-[280px_1fr_320px] overflow-hidden bg-black text-white">
+  <%= render "layouts/main_sidebar", active_tab: :index %>
+
+  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+    <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
+      <h1 class="text-[22px] font-bold text-white">Пост</h1>
+    </div>
+
+    <section id="feed">
+      <% if @posts.any? %>
+        <%= render @posts %>
+      <% else %>
+        <div class="px-5 py-16 text-center text-zinc-500">
+          <h3 class="mb-2 text-lg font-semibold text-white">Пост не найден</h3>
+        </div>
+      <% end %>
+    </section>
+  </main>
+
+  <aside class="h-screen overflow-y-auto bg-black p-5">
+    <input id="searchInput" type="text" placeholder="Поиск" class="w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none transition placeholder:text-zinc-500 focus:border-indigo-500">
+  </aside>
+</div>

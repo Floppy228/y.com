@@ -49,6 +49,18 @@ class User < ApplicationRecord
     blocks_as_blocker.find_by(blocked: user)&.destroy
   end
 
+  def following_count
+    friendships.where(status: "accepted").count
+  end
+
+  def followers_count
+    inverse_friendships.where(status: "accepted").count
+  end
+
+  def posts_count
+    posts.count
+  end
+
   validates :name, presence: true
   validates :username, presence: true, uniqueness: true
   validates :message_send_shortcut, presence: true, inclusion: { in: MESSAGE_SEND_SHORTCUTS }

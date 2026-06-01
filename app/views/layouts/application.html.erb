@@ -104,6 +104,7 @@
               const form = document.createElement("form")
               form.method = "POST"
               form.action = "/posts/${postId}/share"
+              form.setAttribute("data-turbo", "false")
               const csrf = document.querySelector("[name='csrf-token']")
               if (csrf) {
                 const input = document.createElement("input")
@@ -112,6 +113,7 @@
                 input.value = csrf.content
                 form.appendChild(input)
               }
+              if (!userId) { closeModal("shareModal"); return }
               const input = document.createElement("input")
               input.type = "hidden"
               input.name = "recipient_id"

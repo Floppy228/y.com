@@ -299,7 +299,12 @@
 
   def share_post
     post = Post.find(params[:id])
-    recipient = User.find(params[:recipient_id])
+    recipient_id = params[:recipient_id].to_s
+    unless recipient_id.present?
+      redirect_back fallback_location: root_path, alert: "Выберите получателя."
+      return
+    end
+    recipient = User.find(recipient_id)
     link = "#{request.base_url}/users/#{post.user_id}"
     share_text = post.content.present? ? "#{post.content} — #{link}" : link
     current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)

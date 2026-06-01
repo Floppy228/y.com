@@ -10,8 +10,12 @@
     <div class="flex-1 min-w-0">
 
       <div class="flex items-center gap-2">
-        <span class="font-semibold text-white"><%= post.user.name %></span>
-        <span class="text-zinc-500 text-sm">@<%= post.user.username %></span>
+        <%= link_to user_path(post.user), class: "font-semibold text-white hover:underline" do %>
+          <%= post.user.name %>
+        <% end %>
+        <%= link_to user_path(post.user), class: "text-zinc-500 text-sm hover:underline" do %>
+          @<%= post.user.username %>
+        <% end %>
         <span class="text-zinc-600 text-sm">·</span>
         <span class="text-zinc-500 text-sm"><%= time_ago_in_words(post.created_at) %> назад</span>
       </div>

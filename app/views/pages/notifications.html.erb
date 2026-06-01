@@ -1,0 +1,60 @@
+<% content_for :title, "Уведомления | Y.com" %>
+
+<div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] overflow-hidden bg-black text-white" style="grid-template-columns: 280px minmax(0, 1fr) 320px;">
+  <%= render "layouts/main_sidebar", active_tab: :notifications %>
+
+  <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
+    <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">
+      <h1 class="text-[22px] font-bold text-white">Уведомления</h1>
+    </div>
+
+    <section>
+      <% if @notifications.any? %>
+        <% @notifications.each do |notification| %>
+          <% actor_name = notification.actor.name.presence || notification.actor.username %>
+          <div class="flex items-start gap-4 border-b border-zinc-900 px-6 py-5 <%= notification.read? ? '' : 'bg-indigo-500/5' %>">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-bold text-white">
+              <% if notification.actor.avatar.attached? %>
+                <%= image_tag notification.actor.avatar, class: "h-full w-full object-cover" %>
+              <% else %>
+                <%= actor_name.split.map { |p| p.first }.join[0, 2].upcase %>
+              <% end %>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="text-sm leading-relaxed text-zinc-200">
+                <%= link_to actor_name, user_path(notification.actor), class: "font-semibold text-white hover:underline" %>
+
+                <% case notification.action %>
+                <% when "like" %>
+                  поставил лайк вашему
+                  <%= link_to "посту", post_path(notification.notifiable), class: "font-semibold text-indigo-400 hover:underline" %>
+                <% when "comment" %>
+                  оставил комментарий под вашим
+                  <%= link_to "постом", post_path(notification.notifiable.post), class: "font-semibold text-indigo-400 hover:underline" %>
+                <% when "friend_request" %>
+                  хочет добавить вас в друзья
+                <% when "friend_accept" %>
+                  принял ваш запрос в друзья
+                <% end %>
+              </p>
+              <p class="mt-1 text-xs text-zinc-500"><%= time_ago_in_words(notification.created_at) %> назад</p>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="px-6 py-16 text-center">
+          <div class="text-lg font-semibold text-white">Нет уведомлений</div>
+          <p class="mt-2 text-sm text-zinc-500">Здесь будут появляться лайки, комментарии и заявки в друзья.</p>
+        </div>
+      <% end %>
+    </section>
+  </main>
+
+  <aside class="h-screen overflow-y-auto bg-black p-5">
+    <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
+      <h3 class="mb-4 text-lg font-semibold text-white">Уведомления</h3>
+      <p class="text-sm text-zinc-500">Лайки, комментарии и заявки в друзья.</p>
+    </div>
+  </aside>
+</div>

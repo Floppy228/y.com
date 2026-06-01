@@ -111,13 +111,27 @@
 
   def following
     @query = params[:q].to_s.strip
-    @users = if @query.present?
-      User.where.not(id: current_user.id)
-        .where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
-        .order(:name, :username)
-    else
-      User.none
+    @age_from = params[:age_from].to_s.strip.presence
+    @age_to = params[:age_to].to_s.strip.presence
+
+    @users = User.where.not(id: current_user.id)
+
+    if @query.present?
+      @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
     end
+
+    if @age_from.present?
+      max_birthday = Date.today - @age_from.to_i.years
+      @users = @users.where("birthday <= ?", max_birthday)
+    end
+
+    if @age_to.present?
+      min_birthday = Date.today - (@age_to.to_i + 1).years + 1.day
+      @users = @users.where("birthday >= ?", min_birthday)
+    end
+
+    @users = @users.order(:name, :username)
+    @users = User.none if @query.blank? && @age_from.blank? && @age_to.blank?
   end
 
   def create_message
@@ -288,7 +302,15 @@
 
   def like_post
     post = Post.find(params[:id])
-    current_user.likes.find_or_create_by!(post: post)
+    liked = current_user.likes.find_or_create_by!(post: post)
+    if liked.previous_new_record? && post.user != current_user
+      Notification.create!(
+        user: post.user,
+        actor: current_user,
+        notifiable: post,
+        action: "like"
+      )
+    end
     redirect_back fallback_location: root_path
   end
 
@@ -302,6 +324,14 @@
     post = Post.find(params[:id])
     comment = post.comments.new(user: current_user, content: params[:comment][:content])
     if comment.save
+      if post.user != current_user
+        Notification.create!(
+          user: post.user,
+          actor: current_user,
+          notifiable: comment,
+          action: "comment"
+        )
+      end
       redirect_back fallback_location: root_path, notice: "Комментарий добавлен."
     else
       redirect_back fallback_location: root_path, alert: comment.errors.full_messages.to_sentence
@@ -343,6 +373,68 @@
     current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
     post.increment!(:shares_count)
     redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
+  end
+
+  # Friendships
+
+  def send_friend_request
+    friend = User.find(params[:id])
+    if current_user == friend
+      redirect_back fallback_location: root_path, alert: "Нельзя отправить запрос самому себе."
+      return
+    end
+
+    friendship = current_user.friendships.build(friend: friend, status: "pending")
+    if friendship.save
+      Notification.create!(
+        user: friend,
+        actor: current_user,
+        notifiable: friendship,
+        action: "friend_request"
+      )
+      redirect_back fallback_location: root_path, notice: "Запрос в друзья отправлен."
+    else
+      redirect_back fallback_location: root_path, alert: friendship.errors.full_messages.to_sentence
+    end
+  end
+
+  def accept_friend_request
+    friendship = current_user.inverse_friendships.find_by(user_id: params[:id], status: "pending")
+    unless friendship
+      redirect_back fallback_location: root_path, alert: "Запрос не найден."
+      return
+    end
+
+    friendship.update!(status: "accepted")
+    Notification.create!(
+      user: friendship.user,
+      actor: current_user,
+      notifiable: friendship,
+      action: "friend_accept"
+    )
+    redirect_back fallback_location: root_path, notice: "Запрос принят."
+  end
+
+  def reject_friend_request
+    friendship = current_user.inverse_friendships.find_by(user_id: params[:id], status: "pending")
+    unless friendship
+      redirect_back fallback_location: root_path, alert: "Запрос не найден."
+      return
+    end
+
+    friendship.destroy
+    redirect_back fallback_location: root_path, notice: "Запрос отклонён."
+  end
+
+  # Notifications
+
+  def notifications
+    @notifications = current_user.notifications.recent.includes(:actor, :notifiable)
+  end
+
+  def mark_notifications_read
+    current_user.notifications.unread.update_all(read_at: Time.current)
+    head :ok
   end
 
   private

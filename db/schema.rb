@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_01_151451) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_01_163446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -75,6 +75,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_151451) do
     t.index ["sender_id"], name: "index_direct_messages_on_sender_id"
   end
 
+  create_table "friendships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "friend_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
+    t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "post_id", null: false
@@ -83,6 +94,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_151451) do
     t.index ["post_id"], name: "index_likes_on_post_id"
     t.index ["user_id", "post_id"], name: "index_likes_on_user_id_and_post_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "action", null: false
+    t.bigint "actor_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "notifiable_id", null: false
+    t.string "notifiable_type", null: false
+    t.datetime "read_at"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -263,8 +289,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_151451) do
   add_foreign_key "comments", "users"
   add_foreign_key "direct_messages", "users", column: "recipient_id"
   add_foreign_key "direct_messages", "users", column: "sender_id"
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "posts", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

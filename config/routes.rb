@@ -41,5 +41,14 @@ Rails.application.routes.draw do
   post "/posts/share", to: "pages#share_post", as: :share_post
   get "/chat_users", to: "pages#chat_users", as: :chat_users
 
+  # Friendships
+  post "/friendships/:id", to: "pages#send_friend_request", as: :send_friend_request
+  patch "/friendships/:id/accept", to: "pages#accept_friend_request", as: :accept_friend_request
+  delete "/friendships/:id", to: "pages#reject_friend_request", as: :reject_friend_request
+
+  # Notifications
+  get "/notifications", to: "pages#notifications", as: :notifications
+  post "/notifications/read", to: "pages#mark_notifications_read", as: :mark_notifications_read
+
   root "pages#index"
 end

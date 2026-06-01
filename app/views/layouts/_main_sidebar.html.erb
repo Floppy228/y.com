@@ -21,6 +21,19 @@
       Профиль
     <% end %>
 
+    <%= link_to notifications_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :notifications ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+      <svg class="h-6 w-6 <%= active_tab == :notifications ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      Уведомления
+      <span id="notification-badge" class="ml-auto">
+        <% if @total_unread_notifications.to_i > 0 %>
+          <span class="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white"><%= @total_unread_notifications %></span>
+        <% end %>
+      </span>
+    <% end %>
+
     <%= link_to messages_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :messages ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
       <svg class="h-6 w-6 <%= active_tab == :messages ? 'text-indigo-500' : '' %>" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>

@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
     return unless user_signed_in?
 
     @total_unread_count = DirectMessage.unread_for(current_user).count
+    @total_unread_notifications = Notification.unread.where(user: current_user).count
   end
 
   def configure_permitted_parameters

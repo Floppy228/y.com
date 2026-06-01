@@ -124,8 +124,8 @@
     messages2 = DirectMessage.where(sender: selected_user, recipient: current_user)
 
     if action == :clear
-      messages.update_all(content: nil, read_at: Time.current)
-      messages2.update_all(content: nil, read_at: Time.current)
+      messages.update_all(content: "", read_at: Time.current)
+      messages2.update_all(content: "", read_at: Time.current)
       redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
     else
       DirectMessage.transaction do
@@ -584,7 +584,7 @@
       elsif last_message.image.attached?
         "#{last_message.content}"
       else
-        last_message.content
+        last_message.content.presence || "Чат очищен"
       end
     else
       "Чат ещё не начат"

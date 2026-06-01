@@ -113,7 +113,7 @@
     end
 
     DirectMessage.between(current_user, selected_user).delete_all
-    redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
+    redirect_to messages_path, notice: "Чат удалён."
   end
 
   def mark_messages_read

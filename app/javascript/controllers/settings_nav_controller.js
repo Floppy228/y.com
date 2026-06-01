@@ -28,11 +28,13 @@ export default class extends Controller {
 
   updateActiveLink() {
     const offset = this.offsetValue || 24
-    const scrollTop = this.element.scrollTop + offset + 8
+    const containerRect = this.element.getBoundingClientRect()
+    const scrollTop = containerRect.top + offset + 8
 
     let currentSection = this.sectionTargets[0]
     this.sectionTargets.forEach((section) => {
-      if (section.offsetTop <= scrollTop) currentSection = section
+      const rect = section.getBoundingClientRect()
+      if (rect.top <= scrollTop) currentSection = section
     })
 
     if (currentSection) this.setActiveLink(currentSection.id)

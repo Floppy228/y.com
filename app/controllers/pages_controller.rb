@@ -98,6 +98,17 @@
     redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
   end
 
+  def mark_messages_read
+    sender = User.find_by(id: params[:sender_id])
+    if sender
+      DirectMessage.unread_for(current_user).where(sender: sender).update_all(read_at: Time.current)
+      unread_count = DirectMessage.unread_for(current_user).count
+      badge_html = render_to_string(partial: "layouts/unread_badge", locals: { count: unread_count })
+      Turbo::StreamsChannel.broadcast_replace_to "messages_user_#{current_user.id}", target: "unread-badge", html: badge_html
+    end
+    head :ok
+  end
+
   def following
     @query = params[:q].to_s.strip
     @users = if @query.present?

@@ -1,6 +1,5 @@
 <% own_message = message.sender_id == current_user.id %>
-<% sender = own_message ? current_user : message.sender %>
-<div class="flex items-end <%= own_message ? 'justify-end' : '' %> gap-3">
+<div class="flex items-end <%= own_message ? 'justify-end' : '' %> gap-3" data-sender-id="<%= message.sender_id %>">
   <% unless own_message %>
     <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-bold text-white">
       <% if sender.avatar.attached? %>

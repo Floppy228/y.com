@@ -32,7 +32,7 @@
         <% end %>
 
         <section data-controller="chat-scroll" class="flex-1 overflow-y-auto px-6 py-6">
-          <div id="messages" class="space-y-5">
+          <div id="messages" class="space-y-5" data-controller="mark-read" data-mark-read-chat-user-id-value="<%= @selected_user&.id %>">
             <% if @direct_messages.any? %>
               <%= render partial: "direct_messages/message", collection: @direct_messages, as: :message %>
             <% else %>

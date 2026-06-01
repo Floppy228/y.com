@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get "/users/:id", to: "pages#user_profile", as: :user
   get "/messages", to: "pages#messages", as: :messages
   post "/messages", to: "pages#create_message", as: :create_message
+  post "/messages/read", to: "pages#mark_messages_read", as: :mark_messages_read
   patch "/messages/:id", to: "pages#update_message", as: :update_message
   delete "/messages/:id", to: "pages#destroy_message", as: :destroy_message
   get "/ai", to: "pages#ai", as: :ai

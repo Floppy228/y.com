@@ -311,21 +311,15 @@
   end
 
   def share_post
-    recipient_id = params[:recipient_id].to_s
-    unless recipient_id.present?
-      redirect_back fallback_location: root_path, alert: "Выберите получателя."
-      return
-    end
-
-    recipient = User.find_by(id: recipient_id)
-    unless recipient
-      redirect_back fallback_location: root_path, alert: "Пользователь не найден."
-      return
-    end
-
-    post = Post.find_by(id: params[:id])
+    post = Post.find_by(id: params[:post_id])
     unless post
       redirect_back fallback_location: root_path, alert: "Пост не найден."
+      return
+    end
+
+    recipient = User.find_by(id: params[:recipient_id])
+    unless recipient
+      redirect_back fallback_location: root_path, alert: "Пользователь не найден."
       return
     end
 

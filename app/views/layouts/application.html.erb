@@ -97,21 +97,20 @@
             div.onclick = function() {
               const form = document.createElement("form")
               form.method = "POST"
-              form.action = "/posts/${postId}/share"
+              form.action = "/posts/share"
               form.setAttribute("data-turbo", "false")
               const csrf = document.querySelector("[name='csrf-token']")
               if (csrf) {
-                const input = document.createElement("input")
-                input.type = "hidden"
-                input.name = "authenticity_token"
-                input.value = csrf.content
-                form.appendChild(input)
+                const h = document.createElement("input")
+                h.type = "hidden"; h.name = "authenticity_token"; h.value = csrf.content
+                form.appendChild(h)
               }
-              const input = document.createElement("input")
-              input.type = "hidden"
-              input.name = "recipient_id"
-              input.value = u.id
-              form.appendChild(input)
+              const p = document.createElement("input")
+              p.type = "hidden"; p.name = "post_id"; p.value = postId
+              form.appendChild(p)
+              const r = document.createElement("input")
+              r.type = "hidden"; r.name = "recipient_id"; r.value = u.id
+              form.appendChild(r)
               document.body.appendChild(form)
               form.submit()
             }

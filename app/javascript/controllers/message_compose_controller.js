@@ -5,6 +5,8 @@ export default class extends Controller {
   static values = { shortcut: String }
 
   submitOnShortcut(event) {
+    if (this.submitting) return
+
     if (this.shouldInsertNewline(event)) {
       event.preventDefault()
       this.insertNewline()
@@ -14,6 +16,7 @@ export default class extends Controller {
     if (!this.shouldSubmit(event)) return
 
     event.preventDefault()
+    this.submitting = true
 
     this.element.requestSubmit()
   }

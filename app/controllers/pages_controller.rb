@@ -124,8 +124,11 @@
     messages2 = DirectMessage.where(sender: selected_user, recipient: current_user)
 
     if action == :clear
-      messages.update_all(content: "", read_at: Time.current)
-      messages2.update_all(content: "", read_at: Time.current)
+      DirectMessage.transaction do
+        messages.delete_all
+        messages2.delete_all
+        DirectMessage.insert!(sender_id: current_user.id, recipient_id: selected_user.id, content: "", created_at: Time.current, updated_at: Time.current)
+      end
       redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
     else
       DirectMessage.transaction do

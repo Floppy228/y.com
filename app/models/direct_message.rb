@@ -16,7 +16,7 @@ class DirectMessage < ApplicationRecord
 
   scope :unread_for, ->(user) { where(recipient: user, read_at: nil) }
 
-  after_create_commit :broadcast_new_message
+  after_create_commit :broadcast_new_message, unless: -> { content.blank? && !image.attached? }
 
   private
 

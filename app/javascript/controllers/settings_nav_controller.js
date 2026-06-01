@@ -20,9 +20,7 @@ export default class extends Controller {
 
     const containerRect = this.element.getBoundingClientRect()
     const sectionRect = section.getBoundingClientRect()
-    const top = this.element.scrollTop + (sectionRect.top - containerRect.top) - offset
-
-    this.element.scrollTo({ top, behavior: "instant" })
+    this.element.scrollTop = this.element.scrollTop + sectionRect.top - containerRect.top - offset
   }
 
   updateActiveLink() {

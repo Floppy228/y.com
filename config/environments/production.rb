@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("config/env_file").to_s
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -58,16 +59,18 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "150.241.123.201" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  # Specify outgoing SMTP server.
+  config.action_mailer.smtp_settings = {
+    address: EnvFile.fetch("SMTP_ADDRESS"),
+    port: EnvFile.fetch("SMTP_PORT").to_i,
+    domain: EnvFile.fetch("SMTP_DOMAIN"),
+    user_name: EnvFile.fetch("SMTP_USERNAME"),
+    password: EnvFile.fetch("SMTP_PASSWORD"),
+    authentication: EnvFile.fetch("SMTP_AUTHENTICATION").presence || "plain",
+    enable_starttls_auto: EnvFile.fetch("SMTP_ENABLE_STARTTLS_AUTO") == "true"
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

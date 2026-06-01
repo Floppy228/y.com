@@ -1,6 +1,4 @@
-﻿require Rails.root.join("config/env_file").to_s
-
-class PagesController < ApplicationController
+﻿class PagesController < ApplicationController
   skip_before_action :require_login, only: [:auth, :send_password_reset_instructions]
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 

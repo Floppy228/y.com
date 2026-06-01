@@ -13,13 +13,13 @@ Rails.application.routes.draw do
   get "/messages", to: "pages#messages", as: :messages
   post "/messages", to: "pages#create_message", as: :create_message
   post "/messages/read", to: "pages#mark_messages_read", as: :mark_messages_read
+  delete "/messages/clear", to: "pages#clear_messages_chat", as: :clear_messages_chat
   patch "/messages/:id", to: "pages#update_message", as: :update_message
   delete "/messages/:id", to: "pages#destroy_message", as: :destroy_message
   get "/ai", to: "pages#ai", as: :ai
   post "/ai/ask", to: "pages#ai_ask", as: :ai_ask
   delete "/ai/clear", to: "pages#clear_ai_chat", as: :clear_ai_chat
   get "/following", to: "pages#following", as: :following
-  delete "/messages/clear", to: "pages#clear_messages_chat", as: :clear_messages_chat
   get "/settings", to: "pages#settings", as: :settings
   get "/settings/password_reset", to: "pages#password_reset", as: :settings_password_reset
   post "/settings/password_reset/send_code", to: "pages#send_password_change_code", as: :settings_password_reset_send_code

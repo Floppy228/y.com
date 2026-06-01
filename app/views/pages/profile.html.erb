@@ -107,7 +107,10 @@
                 <%= button_to "Отклонить", reject_friend_request_path(@user), method: :delete, class: "rounded-full border border-zinc-700 px-6 py-2 text-sm font-semibold text-zinc-300 transition hover:border-red-500 hover:text-red-400" %>
               </div>
             <% elsif fs == "accepted" %>
-              <span class="rounded-full border border-indigo-500/50 bg-indigo-500/10 px-6 py-2 text-sm text-indigo-400">Вы в друзьях</span>
+              <div class="flex items-center gap-2">
+                <span class="rounded-full border border-indigo-500/50 bg-indigo-500/10 px-6 py-2 text-sm text-indigo-400">Вы в друзьях</span>
+                <%= button_to "Удалить из друзей", unfriend_path(@user), method: :delete, class: "rounded-full border border-zinc-700 px-6 py-2 text-sm text-zinc-400 transition hover:border-red-500 hover:text-red-400" %>
+              </div>
             <% end %>
           </div>
         <% end %>
@@ -142,10 +145,10 @@
       <h3 class="mb-4 text-lg font-semibold text-white">Актуальное</h3>
 
       <% [["#Ycom", "Новая версия"], ["#Design", "Минимализм"], ["#AI", "Y-Core"]].each do |tag, title| %>
-        <div class="mt-4 cursor-pointer group">
+        <%= link_to root_path(q: tag), class: "mt-4 block group" do %>
           <span class="text-sm text-zinc-500"><%= tag %></span>
           <div class="mt-1 font-semibold text-white transition group-hover:text-indigo-500"><%= title %></div>
-        </div>
+        <% end %>
       <% end %>
     </div>
 

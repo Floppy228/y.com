@@ -3,7 +3,12 @@
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index
-    @posts = Post.includes(:user, :likes, comments: :user).order(created_at: :desc)
+    @query = params[:q].to_s.strip
+    @posts = Post.includes(:user, :likes, comments: :user)
+    if @query.present?
+      @posts = @posts.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
+    end
+    @posts = @posts.order(created_at: :desc)
   end
 
   def auth
@@ -114,24 +119,27 @@
     @age_from = params[:age_from].to_s.strip.presence
     @age_to = params[:age_to].to_s.strip.presence
 
-    @users = User.where.not(id: current_user.id)
+    @searching = @query.present? || @age_from.present? || @age_to.present?
 
-    if @query.present?
-      @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
+    if @searching
+      @users = User.where.not(id: current_user.id)
+      if @query.present?
+        @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
+      end
+      if @age_from.present?
+        max_birthday = Date.today - @age_from.to_i.years
+        @users = @users.where("birthday <= ?", max_birthday)
+      end
+      if @age_to.present?
+        min_birthday = Date.today - (@age_to.to_i + 1).years + 1.day
+        @users = @users.where("birthday >= ?", min_birthday)
+      end
+      @users = @users.order(:name, :username)
+    else
+      friend_ids = current_user.friendships.where(status: "accepted").pluck(:friend_id) +
+                   current_user.inverse_friendships.where(status: "accepted").pluck(:user_id)
+      @users = User.where(id: friend_ids).order(:name, :username)
     end
-
-    if @age_from.present?
-      max_birthday = Date.today - @age_from.to_i.years
-      @users = @users.where("birthday <= ?", max_birthday)
-    end
-
-    if @age_to.present?
-      min_birthday = Date.today - (@age_to.to_i + 1).years + 1.day
-      @users = @users.where("birthday >= ?", min_birthday)
-    end
-
-    @users = @users.order(:name, :username)
-    @users = User.none if @query.blank? && @age_from.blank? && @age_to.blank?
   end
 
   def create_message
@@ -427,6 +435,17 @@
 
     friendship.destroy
     redirect_back fallback_location: root_path, notice: "Запрос отклонён."
+  end
+
+  def unfriend
+    friendship = current_user.friendships.find_by(friend_id: params[:id], status: "accepted") ||
+                 current_user.inverse_friendships.find_by(user_id: params[:id], status: "accepted")
+    unless friendship
+      redirect_back fallback_location: root_path, alert: "Вы не в друзьях с этим пользователем."
+      return
+    end
+    friendship.destroy
+    redirect_back fallback_location: root_path, notice: "Пользователь удалён из друзей."
   end
 
   # Notifications

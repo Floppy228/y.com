@@ -23,6 +23,7 @@ function previewPostImage(input) {
       <h1 class="text-[22px] font-bold text-white">Главная</h1>
     </div>
 
+    <% if @query.blank? %>
     <div class="border-b border-zinc-900 px-6 py-5">
       <%= form_with url: posts_path, scope: :post, method: :post, local: true, multipart: true, class: "rounded-[20px] border border-zinc-900 bg-zinc-950 p-4 transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/20" do %>
         <%= text_area_tag "post[content]", nil, class: "min-h-20 w-full resize-none bg-transparent text-[17px] leading-relaxed text-white outline-none placeholder:text-zinc-500", placeholder: "Что нового?", rows: 3 %>
@@ -45,32 +46,45 @@ function previewPostImage(input) {
         </div>
       <% end %>
     </div>
+    <% end %>
+
+    <% if @query.present? %>
+    <div class="border-b border-zinc-900 px-6 py-4">
+      <p class="text-sm text-zinc-500">Результаты по запросу «<%= @query %>»</p>
+    </div>
+    <% end %>
 
     <section id="feed">
       <% if @posts.any? %>
         <%= render @posts %>
       <% else %>
         <div class="px-5 py-16 text-center text-zinc-500">
-          <h3 class="mb-2 text-lg font-semibold text-white">Пока нет постов</h3>
-          <p>Создай первый пост через форму выше — он появится здесь.</p>
+          <h3 class="mb-2 text-lg font-semibold text-white"><%= @query.present? ? "Ничего не найдено" : "Пока нет постов" %></h3>
+          <p><%= @query.present? ? "Попробуйте изменить запрос." : "Создай первый пост через форму выше — он появится здесь." %></p>
         </div>
       <% end %>
     </section>
   </main>
 
   <aside class="h-screen overflow-y-auto bg-black p-5">
-    <div>
-      <input id="searchInput" type="text" placeholder="Поиск" class="w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none transition placeholder:text-zinc-500 focus:border-indigo-500">
-    </div>
+    <%= form_with url: root_path, method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
+      <div class="relative">
+        <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <%= text_field_tag :q, @query, placeholder: "Поиск по постам...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 py-3 pl-12 pr-5 text-[15px] text-white outline-none transition placeholder:text-zinc-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20" %>
+      </div>
+    <% end %>
 
-    <div class="mt-6 rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
+    <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
       <h3 class="mb-4 text-lg font-semibold text-white">Актуальное</h3>
 
       <% [["#Ycom", "Новая версия"], ["#Design", "Минимализм"], ["#AI", "Y-Core"]].each do |tag, title| %>
-        <div class="mt-4 cursor-pointer group">
+        <%= link_to root_path(q: tag), class: "mt-4 block group" do %>
           <span class="text-sm text-zinc-500"><%= tag %></span>
           <div class="mt-1 font-semibold text-white transition group-hover:text-indigo-500"><%= title %></div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </aside>

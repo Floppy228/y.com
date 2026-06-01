@@ -72,15 +72,15 @@
             </article>
           <% end %>
         <% end %>
-      <% elsif @query.present? %>
+      <% elsif @searching %>
         <div class="px-6 py-12 text-center">
           <div class="text-lg font-semibold text-white">Ничего не найдено</div>
           <div class="mt-2 text-sm text-zinc-500">Пользователи с таким именем не зарегистрированы.</div>
         </div>
       <% else %>
         <div class="px-6 py-12 text-center">
-          <div class="text-lg font-semibold text-white">Нет подписок</div>
-          <div class="mt-2 text-sm text-zinc-500">Воспользуйтесь поиском, чтобы найти пользователей.</div>
+          <div class="text-lg font-semibold text-white">У вас пока нет друзей</div>
+          <div class="mt-2 text-sm text-zinc-500">Воспользуйтесь поиском, чтобы найти пользователей и отправить заявку в друзья.</div>
         </div>
       <% end %>
     </section>
@@ -91,11 +91,11 @@
     <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
       <h3 class="mb-4 text-lg font-semibold text-white">Актуальное</h3>
 
-      <% [["#Ycom", "Новая версия"], ["#Community", "Рост сообщества"], ["#Rails", "Новые идеи для проекта"]].each do |tag, title| %>
-        <div class="mt-4 cursor-pointer group">
+      <% [["#Ycom", "Новая версия"], ["#Design", "Минимализм"], ["#AI", "Y-Core"]].each do |tag, title| %>
+        <%= link_to root_path(q: tag), class: "mt-4 block group" do %>
           <span class="text-sm text-zinc-500"><%= tag %></span>
           <div class="mt-1 font-semibold text-white transition group-hover:text-indigo-500"><%= title %></div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </aside>

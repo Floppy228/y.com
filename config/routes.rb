@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   post "/friendships/:id", to: "pages#send_friend_request", as: :send_friend_request
   patch "/friendships/:id/accept", to: "pages#accept_friend_request", as: :accept_friend_request
   delete "/friendships/:id", to: "pages#reject_friend_request", as: :reject_friend_request
+  delete "/friendships/:id/unfriend", to: "pages#unfriend", as: :unfriend
 
   # Notifications
   get "/notifications", to: "pages#notifications", as: :notifications

@@ -172,7 +172,13 @@
 
     email = params.dig(:user, :email).to_s.strip
     user = User.find_by(email: email)
-    user&.send_reset_password_instructions
+
+    unless user
+      redirect_to account_restore_path, alert: "Пользователь с таким email не найден."
+      return
+    end
+
+    user.send_reset_password_instructions
 
     redirect_to account_restore_path, notice: "Инструкции по сбросу пароля отправлены на ваш email."
   rescue StandardError => e

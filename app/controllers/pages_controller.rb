@@ -266,6 +266,7 @@
 
   def create_post
     post = current_user.posts.new(content: params[:post][:content])
+    post.image.attach(params[:post][:image]) if params[:post][:image].present?
 
     if post.save
       redirect_to root_path, notice: "Пост опубликован."

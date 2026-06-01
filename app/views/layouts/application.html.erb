@@ -29,5 +29,29 @@
     <% if user_signed_in? %>
       <%= turbo_stream_from "messages_user_#{current_user.id}" %>
     <% end %>
+
+    <div id="imageModal" class="invisible fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 opacity-0 transition">
+      <button class="absolute right-8 top-8 flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 text-2xl text-white transition hover:bg-red-500" onclick="closeImageModal()">&times;</button>
+      <img id="modalImage" src="" alt="" class="max-h-[90%] max-w-[90%] rounded-lg border border-zinc-800">
+    </div>
+
+    <script>
+    function openImageModal(src) {
+      const modal = document.getElementById("imageModal")
+      document.getElementById("modalImage").src = src
+      modal.classList.remove("invisible", "opacity-0")
+    }
+    function closeImageModal() {
+      const modal = document.getElementById("imageModal")
+      modal.classList.add("invisible", "opacity-0")
+      document.getElementById("modalImage").src = ""
+    }
+    document.addEventListener("click", function(e) {
+      if (e.target.id === "imageModal") closeImageModal()
+    })
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeImageModal()
+    })
+    </script>
   </body>
 </html>

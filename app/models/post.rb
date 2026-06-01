@@ -1,4 +1,7 @@
 class Post < ApplicationRecord
-  belongs_to :user          # пост принадлежит пользователю
-  validates :content, presence: true, length: { maximum: 500 }
+  belongs_to :user
+  has_one_attached :image
+
+  validates :content, presence: true, unless: -> { image.attached? }
+  validates :content, length: { maximum: 500 }
 end

@@ -64,5 +64,9 @@ Rails.application.routes.draw do
   post "/users/:id/block", to: "blocks#create", as: :block_user
   delete "/users/:id/unblock", to: "blocks#destroy", as: :unblock_user
 
+  # Admin
+  get "/admin", to: "admin#index", as: :admin
+  post "/admin/users/:id/toggle_admin", to: "admin#toggle_admin", as: :toggle_admin
+
   root "pages#index"
 end

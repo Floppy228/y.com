@@ -71,6 +71,15 @@
       </svg>
       Настройки
     <% end %>
+
+    <% if user_signed_in? && current_user.admin? %>
+      <%= link_to admin_path, class: "flex items-center gap-4 rounded-full px-4 py-3 text-lg transition #{active_tab == :admin ? 'bg-zinc-950 font-semibold text-white' : 'font-medium text-zinc-500 hover:bg-zinc-950 hover:text-white'}" do %>
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Админ
+      <% end %>
+    <% end %>
   </nav>
 
   <% if user_signed_in? %>

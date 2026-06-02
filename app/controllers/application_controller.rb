@@ -19,6 +19,30 @@ class ApplicationController < ActionController::Base
     @total_unread_notifications = Notification.unread.where(user: current_user).count
   end
 
+  def excluded_user_ids
+    return [] unless user_signed_in?
+
+    blocker_ids = current_user.blocks_as_blocker.select(:blocked_id)
+    blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
+    [blocker_ids, blocked_by_ids].flatten
+  end
+
+  def create_notification(user:, actor:, notifiable:, action:)
+    Notification.create!(user: user, actor: actor, notifiable: notifiable, action: action)
+  end
+
+  def broadcast_unread_badge(recipient)
+    unread_count = DirectMessage.unread_for(recipient).count
+    badge_html = render_to_string(partial: "layouts/unread_badge", locals: { count: unread_count })
+    Turbo::StreamsChannel.broadcast_replace_to "messages_user_#{recipient.id}", target: "unread-badge", html: badge_html
+  end
+
+  def broadcast_notification_badge(user)
+    count = Notification.unread.where(user: user).count
+    badge_html = count > 0 ? render_to_string(partial: "layouts/unread_badge", locals: { count: count }) : ""
+    Turbo::StreamsChannel.broadcast_replace_to "notifications_user_#{user.id}", target: "notification-badge", html: badge_html
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :username])
     devise_parameter_sanitizer.permit(:account_update, keys: [:name, :username])

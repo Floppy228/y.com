@@ -1,13 +1,13 @@
 ﻿<%
   profile_name = @user.name.presence || @user.username.presence || "Пользователь"
   profile_handle = @user.username.present? ? "@#{@user.username}" : "@user"
-  profile_bio = @user.respond_to?(:bio) && @user.bio.present? ? @user.bio : "Добавьте описание в настройках профиля."
-  profile_status = @user.respond_to?(:status) && @user.status.present? ? @user.status : "Без статуса"
+  profile_bio = @user.bio.presence || "Добавьте описание в настройках профиля."
+  profile_status = @user.status.presence || "Без статуса"
   profile_initials = profile_name.split.map { |part| part.first }.join[0, 2].to_s.upcase
 
-  posts_count = @user.respond_to?(:posts_count) ? @user.posts_count : 0
-  following_count = @user.respond_to?(:following_count) ? @user.following_count : 0
-  followers_count = @user.respond_to?(:followers_count) ? @user.followers_count : 0
+  posts_count = @user.posts_count
+  following_count = @user.following_count
+  followers_count = @user.followers_count
 %>
 
 <div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] grid-cols-[280px_1fr_320px] overflow-hidden bg-black text-white">

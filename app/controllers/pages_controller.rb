@@ -6,8 +6,8 @@
     @query = params[:q].to_s.strip
     @posts = Post.includes(:user, :likes, comments: :user)
     if user_signed_in?
-      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
-      @posts = @posts.where.not(user_id: blocked_ids)
+      excluded = excluded_user_ids
+      @posts = @posts.where.not(user_id: excluded)
     end
     if @query.present?
       @posts = @posts.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
@@ -35,45 +35,29 @@
     render :profile
   end
 
-  def messages
+  def following
     @query = params[:q].to_s.strip
-    users_scope = User.where.not(id: current_user.id)
-    @selected_user = users_scope.find_by(id: params[:user_id])
+    @age_from = params[:age_from].to_s.strip.presence
+    @age_to = params[:age_to].to_s.strip.presence
+    @searching = @query.present? || @age_from.present? || @age_to.present?
 
-    blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
-    chat_user_ids = DirectMessage
-      .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
-      .pluck(:sender_id, :recipient_id)
-      .flatten
-      .uniq
-      .reject { |id| id == current_user.id || blocked_ids.include?(id) }
-
-    blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
-    chat_user_ids.reject! { |id| blocked_by_ids.include?(id) }
-
-    @chat_users = users_scope.where(id: chat_user_ids).order(:name, :username)
-    @chat_rows = @chat_users.map { |user| build_chat_row(user) }
-
-    @search_dms = if @query.present?
-      DirectMessage
-        .where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
-        .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
-        .includes(:sender, :recipient)
-        .order(created_at: :desc)
-        .limit(20)
-    else
-      DirectMessage.none
-    end
-
-    @direct_messages = if @selected_user
-      msgs = DirectMessage.between(current_user, @selected_user)
+    if @searching
+      @users = User.where.not(id: current_user.id)
+      @users = @users.where.not(id: excluded_user_ids)
       if @query.present?
-        msgs = msgs.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
+        @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
       end
-      DirectMessage.unread_for(current_user).where(sender: @selected_user).update_all(read_at: Time.current)
-      msgs
+      if @age_from.present?
+        @users = @users.where("birthday <= ?", Date.today - @age_from.to_i.years)
+      end
+      if @age_to.present?
+        @users = @users.where("birthday >= ?", Date.today - (@age_to.to_i + 1).years + 1.day)
+      end
+      @users = @users.order(:name, :username)
     else
-      DirectMessage.none
+      friend_ids = current_user.friendships.where(status: "accepted").pluck(:friend_id) +
+                   current_user.inverse_friendships.where(status: "accepted").pluck(:user_id)
+      @users = User.where(id: friend_ids).where.not(id: excluded_user_ids).order(:name, :username)
     end
   end
 
@@ -105,136 +89,76 @@
     redirect_to ai_path, notice: "Чат Y-Core очищен."
   end
 
-  def clear_messages_chat
-    clear_or_delete_messages(:clear)
+  def create_post
+    post = current_user.posts.new(content: params[:post][:content])
+    post.image.attach(params[:post][:image]) if params[:post][:image].present?
+
+    if post.save
+      redirect_to root_path, notice: "Пост опубликован."
+    else
+      redirect_to root_path, alert: post.errors.full_messages.to_sentence
+    end
   end
 
-  def delete_messages_chat
-    clear_or_delete_messages(:delete)
+  def like_post
+    post = Post.find(params[:id])
+    already_liked = current_user.likes.exists?(post: post)
+    unless already_liked
+      current_user.likes.create!(post: post)
+      if post.user != current_user
+        create_notification(user: post.user, actor: current_user, notifiable: post, action: "like")
+      end
+    end
+    redirect_back fallback_location: root_path
   end
 
-  def clear_or_delete_messages(action)
-    selected_user = User.where.not(id: current_user.id).find_by(id: params[:user_id])
-    unless selected_user
-      redirect_to messages_path, alert: "Сначала выберите чат."
+  def unlike_post
+    post = Post.find(params[:id])
+    current_user.likes.find_by(post: post)&.destroy
+    redirect_back fallback_location: root_path
+  end
+
+  def create_comment
+    post = Post.find(params[:id])
+    comment = post.comments.new(user: current_user, content: params[:comment][:content])
+    if comment.save
+      if post.user != current_user
+        create_notification(user: post.user, actor: current_user, notifiable: comment, action: "comment")
+      end
+      redirect_back fallback_location: root_path, notice: "Комментарий добавлен."
+    else
+      redirect_back fallback_location: root_path, alert: comment.errors.full_messages.to_sentence
+    end
+  end
+
+  def show_post
+    @posts = Post.where(id: params[:id]).includes(:user, :likes, comments: :user)
+  end
+
+  def share_post
+    post = Post.find_by(id: params[:post_id])
+    unless post
+      redirect_back fallback_location: root_path, alert: "Пост не найден."
       return
     end
 
-    if action == :clear
-      DirectMessage.where(sender: current_user, recipient: selected_user).delete_all
-      DirectMessage.where(sender: selected_user, recipient: current_user).delete_all
-      dm = current_user.sent_direct_messages.build(recipient: selected_user, content: "")
-      dm.save!(validate: false)
-      redirect_to messages_path(user_id: selected_user.id), notice: "Чат очищен."
-    else
-      DirectMessage.where(sender: current_user, recipient: selected_user).delete_all
-      DirectMessage.where(sender: selected_user, recipient: current_user).delete_all
-      redirect_to messages_path, notice: "Чат удалён."
-    end
-  rescue StandardError => e
-    Rails.logger.error "=== clear_or_delete_messages error: #{e.class}: #{e.message} ==="
-    redirect_to messages_path, alert: "Ошибка: #{e.message}"
-  end
-
-  def mark_messages_read
-    sender = User.find_by(id: params[:sender_id])
-    if sender
-      DirectMessage.unread_for(current_user).where(sender: sender).update_all(read_at: Time.current)
-      unread_count = DirectMessage.unread_for(current_user).count
-      badge_html = render_to_string(partial: "layouts/unread_badge", locals: { count: unread_count })
-      Turbo::StreamsChannel.broadcast_replace_to "messages_user_#{current_user.id}", target: "unread-badge", html: badge_html
-    end
-    head :ok
-  end
-
-  def following
-    @query = params[:q].to_s.strip
-    @age_from = params[:age_from].to_s.strip.presence
-    @age_to = params[:age_to].to_s.strip.presence
-
-    @searching = @query.present? || @age_from.present? || @age_to.present?
-
-    if @searching
-      @users = User.where.not(id: current_user.id)
-      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
-      blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
-      @users = @users.where.not(id: [blocked_ids, blocked_by_ids].flatten)
-      if @query.present?
-        @users = @users.where("LOWER(name) LIKE :q OR LOWER(username) LIKE :q", q: "%#{@query.downcase}%")
-      end
-      if @age_from.present?
-        max_birthday = Date.today - @age_from.to_i.years
-        @users = @users.where("birthday <= ?", max_birthday)
-      end
-      if @age_to.present?
-        min_birthday = Date.today - (@age_to.to_i + 1).years + 1.day
-        @users = @users.where("birthday >= ?", min_birthday)
-      end
-      @users = @users.order(:name, :username)
-    else
-      friend_ids = current_user.friendships.where(status: "accepted").pluck(:friend_id) +
-                   current_user.inverse_friendships.where(status: "accepted").pluck(:user_id)
-      blocked_ids = current_user.blocks_as_blocker.select(:blocked_id)
-      blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
-      excluded_ids = [blocked_ids, blocked_by_ids].flatten
-      @users = User.where(id: friend_ids).where.not(id: excluded_ids).order(:name, :username)
-    end
-  end
-
-  def create_message
-    recipient = User.where.not(id: current_user.id).find_by(id: params[:recipient_id])
-    content = params[:content].to_s.strip
-    has_image = params[:image].present?
-
+    recipient = User.find_by(id: params[:recipient_id])
     unless recipient
-      redirect_to messages_path, alert: "Выберите пользователя для чата."
+      redirect_back fallback_location: root_path, alert: "Пользователь не найден."
       return
     end
 
     if current_user.blocked?(recipient) || current_user.blocked_by?(recipient)
-      redirect_to messages_path, alert: "Невозможно отправить сообщение этому пользователю."
+      redirect_back fallback_location: root_path, alert: "Невозможно отправить пост этому пользователю."
       return
     end
 
-    if content.blank? && !has_image
-      redirect_to messages_path(user_id: recipient.id), alert: "Введите сообщение или прикрепите изображение."
-      return
-    end
-
-    message = current_user.sent_direct_messages.build(recipient: recipient, content: content)
-    message.image.attach(params[:image]) if has_image
-    message.save!
-    redirect_to messages_path(user_id: recipient.id), notice: "Сообщение отправлено."
-  rescue StandardError
-    redirect_to messages_path(user_id: recipient&.id), alert: "Не удалось отправить сообщение."
-  end
-
-  def update_message
-    message = current_user.sent_direct_messages.find_by(id: params[:id])
-    unless message
-      redirect_to messages_path, alert: "Сообщение не найдено."
-      return
-    end
-    content = params[:content].to_s.strip
-    if content.blank?
-      redirect_to messages_path(user_id: direct_message_partner(message).id), alert: "Текст сообщения не может быть пустым."
-      return
-    end
-    if message.update(content: content)
-      redirect_to messages_path(user_id: direct_message_partner(message).id), notice: "Сообщение изменено."
-    else
-      redirect_to messages_path(user_id: direct_message_partner(message).id), alert: message.errors.full_messages.to_sentence
-    end
-  end
-  def destroy_message
-    message = current_user.sent_direct_messages.find_by(id: params[:id])
-    unless message
-      redirect_to messages_path, alert: "Сообщение не найдено."
-      return
-    end
-    chat_user = direct_message_partner(message)
-    message.destroy
-    redirect_to messages_path(user_id: chat_user.id), notice: "Сообщение удалено."
+    link = "#{request.base_url}/posts/#{post.id}"
+    share_text = post.content.present? ? "#{post.content} — #{link}" : link
+    current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
+    broadcast_unread_badge(recipient)
+    post.increment!(:shares_count)
+    redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
   end
 
   def settings
@@ -341,197 +265,6 @@
     end
   end
 
-  def create_post
-    post = current_user.posts.new(content: params[:post][:content])
-    post.image.attach(params[:post][:image]) if params[:post][:image].present?
-
-    if post.save
-      redirect_to root_path, notice: "Пост опубликован."
-    else
-      redirect_to root_path, alert: post.errors.full_messages.to_sentence
-    end
-  end
-
-  def like_post
-    post = Post.find(params[:id])
-    already_liked = current_user.likes.exists?(post: post)
-    unless already_liked
-      current_user.likes.create!(post: post)
-      if post.user != current_user
-        Notification.create!(
-          user: post.user,
-          actor: current_user,
-          notifiable: post,
-          action: "like"
-        )
-      end
-    end
-    redirect_back fallback_location: root_path
-  end
-
-  def unlike_post
-    post = Post.find(params[:id])
-    current_user.likes.find_by(post: post)&.destroy
-    redirect_back fallback_location: root_path
-  end
-
-  def create_comment
-    post = Post.find(params[:id])
-    comment = post.comments.new(user: current_user, content: params[:comment][:content])
-    if comment.save
-      if post.user != current_user
-        Notification.create!(
-          user: post.user,
-          actor: current_user,
-          notifiable: comment,
-          action: "comment"
-        )
-      end
-      redirect_back fallback_location: root_path, notice: "Комментарий добавлен."
-    else
-      redirect_back fallback_location: root_path, alert: comment.errors.full_messages.to_sentence
-    end
-  end
-
-  def chat_users
-    user_ids = DirectMessage
-      .where("sender_id = :id OR recipient_id = :id", id: current_user.id)
-      .pluck(:sender_id, :recipient_id).flatten.uniq
-      .reject { |id| id == current_user.id }
-
-    users = User.where(id: user_ids).order(:name, :username).map do |u|
-      { id: u.id, name: u.name.presence || u.username, username: u.username }
-    end
-
-    render json: users
-  end
-
-  def show_post
-    @posts = Post.where(id: params[:id]).includes(:user, :likes, comments: :user)
-  end
-
-  def share_post
-    post = Post.find_by(id: params[:post_id])
-    unless post
-      redirect_back fallback_location: root_path, alert: "Пост не найден."
-      return
-    end
-
-    recipient = User.find_by(id: params[:recipient_id])
-    unless recipient
-      redirect_back fallback_location: root_path, alert: "Пользователь не найден."
-      return
-    end
-
-    if current_user.blocked?(recipient) || current_user.blocked_by?(recipient)
-      redirect_back fallback_location: root_path, alert: "Невозможно отправить пост этому пользователю."
-      return
-    end
-
-    link = "#{request.base_url}/posts/#{post.id}"
-    share_text = post.content.present? ? "#{post.content} — #{link}" : link
-    current_user.sent_direct_messages.create!(recipient: recipient, content: share_text)
-    post.increment!(:shares_count)
-    redirect_to messages_path(user_id: recipient.id), notice: "Пост отправлен."
-  end
-
-  # Friendships
-
-  def send_friend_request
-    friend = User.find(params[:id])
-    if current_user == friend
-      redirect_back fallback_location: root_path, alert: "Нельзя отправить запрос самому себе."
-      return
-    end
-
-    friendship = current_user.friendships.build(friend: friend, status: "pending")
-    if friendship.save
-      Notification.create!(
-        user: friend,
-        actor: current_user,
-        notifiable: friendship,
-        action: "friend_request"
-      )
-      redirect_back fallback_location: root_path, notice: "Запрос в друзья отправлен."
-    else
-      redirect_back fallback_location: root_path, alert: friendship.errors.full_messages.to_sentence
-    end
-  end
-
-  def accept_friend_request
-    friendship = current_user.inverse_friendships.find_by(user_id: params[:id], status: "pending")
-    unless friendship
-      redirect_back fallback_location: root_path, alert: "Запрос не найден."
-      return
-    end
-
-    friendship.update!(status: "accepted")
-    Notification.create!(
-      user: friendship.user,
-      actor: current_user,
-      notifiable: friendship,
-      action: "friend_accept"
-    )
-    redirect_back fallback_location: root_path, notice: "Запрос принят."
-  end
-
-  def reject_friend_request
-    friendship = current_user.inverse_friendships.find_by(user_id: params[:id], status: "pending")
-    unless friendship
-      redirect_back fallback_location: root_path, alert: "Запрос не найден."
-      return
-    end
-
-    friendship.destroy
-    redirect_back fallback_location: root_path, notice: "Запрос отклонён."
-  end
-
-  def unfriend
-    friendship = current_user.friendships.find_by(friend_id: params[:id], status: "accepted") ||
-                 current_user.inverse_friendships.find_by(user_id: params[:id], status: "accepted")
-    unless friendship
-      redirect_back fallback_location: root_path, alert: "Вы не в друзьях с этим пользователем."
-      return
-    end
-    friendship.destroy
-    redirect_back fallback_location: root_path, notice: "Пользователь удалён из друзей."
-  end
-
-  # Notifications
-
-  def notifications
-    @notifications = current_user.notifications.recent.includes(:actor, :notifiable)
-    if current_user.notifications.unread.any?
-      current_user.notifications.unread.update_all(read_at: Time.current)
-      count = Notification.unread.where(user: current_user).count
-      badge_html = count > 0 ? "<span class=\"flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white\">#{count}</span>" : ""
-      Turbo::StreamsChannel.broadcast_replace_to "notifications_user_#{current_user.id}", target: "notification-badge", html: badge_html
-    end
-  end
-
-  def mark_notifications_read
-    current_user.notifications.unread.update_all(read_at: Time.current)
-    head :ok
-  end
-
-  # Blocks
-
-  def block_user
-    user = User.find(params[:id])
-    if current_user == user
-      redirect_back fallback_location: root_path, alert: "Нельзя заблокировать самого себя."
-      return
-    end
-    current_user.block(user)
-    redirect_back fallback_location: root_path, notice: "Пользователь заблокирован."
-  end
-
-  def unblock_user
-    user = User.find(params[:id])
-    current_user.unblock(user)
-    redirect_back fallback_location: root_path, notice: "Пользователь разблокирован."
-  end
-
   private
 
   def redirect_authenticated_user_from_auth
@@ -575,33 +308,4 @@
     session.delete(:password_change_code)
     session.delete(:password_change_code_sent_at)
   end
-
-  def build_chat_row(user)
-    last_message = DirectMessage.between(current_user, user).last
-    preview = if last_message
-      if last_message.image.attached? && last_message.content.blank?
-        "Изображение"
-      elsif last_message.image.attached?
-        "#{last_message.content}"
-      else
-        last_message.content.presence || "Чат очищен"
-      end
-    else
-      "Чат ещё не начат"
-    end
-
-    {
-      user: user,
-      preview: preview,
-      time: last_message&.created_at,
-      active: @selected_user&.id == user.id,
-      unread_count: DirectMessage.unread_for(current_user).where(sender: user).count
-    }
-  end
-
-  def direct_message_partner(message)
-    message.sender_id == current_user.id ? message.recipient : message.sender
-  end
 end
-
-

@@ -15,7 +15,7 @@
       sign_in(resource_name, resource)
       redirect_to after_sign_in_path_for(resource)
     else
-      redirect_to auth_path(auth_mode: "login"), alert: "Invalid login or password."
+      redirect_to auth_path(auth_mode: "login"), alert: "Неверный логин или пароль."
     end
   end
 end

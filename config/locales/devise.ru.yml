@@ -1,0 +1,62 @@
+ru:
+  devise:
+    confirmations:
+      confirmed: "Ваш email успешно подтверждён."
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по подтверждению email."
+      send_paranoid_instructions: "Если ваш email существует в нашей базе, вы получите письмо с инструкциями по подтверждению."
+    failure:
+      already_authenticated: "Вы уже вошли."
+      inactive: "Ваш аккаунт ещё не активирован."
+      invalid: "Неверный логин или пароль."
+      locked: "Ваш аккаунт заблокирован."
+      last_attempt: "У вас осталась ещё одна попытка перед блокировкой."
+      not_found_in_database: "Неверный логин или пароль."
+      timeout: "Ваша сессия истекла. Пожалуйста, войдите снова."
+      unauthenticated: "Для продолжения необходимо войти."
+      unconfirmed: "Вы должны подтвердить ваш email."
+    mailer:
+      confirmation_instructions:
+        subject: "Инструкции по подтверждению аккаунта"
+      reset_password_instructions:
+        subject: "Инструкции по восстановлению пароля"
+      unlock_instructions:
+        subject: "Инструкции по разблокировке"
+      email_changed:
+        subject: "Email изменён"
+      password_change:
+        subject: "Пароль изменён"
+    omniauth_callbacks:
+      failure: "Не удалось авторизоваться через %{kind}: \"%{reason}\"."
+      success: "Успешная авторизация через %{kind}."
+    passwords:
+      no_token: "Эта страница доступна только при переходе по ссылке из письма."
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по сбросу пароля."
+      send_paranoid_instructions: "Если ваш email существует в нашей базе, вы получите письмо с инструкциями по сбросу пароля."
+      updated: "Пароль успешно изменён."
+      updated_not_active: "Пароль успешно изменён."
+    registrations:
+      destroyed: "Аккаунт удалён."
+      signed_up: "Регистрация прошла успешно."
+      signed_up_but_inactive: "Вы зарегистрировались, но ваш аккаунт ещё не активирован."
+      signed_up_but_locked: "Вы зарегистрировались, но ваш аккаунт заблокирован."
+      signed_up_but_unconfirmed: "Письмо со ссылкой для подтверждения отправлено на ваш email."
+      update_needs_confirmation: "Вы обновили аккаунт, но необходимо подтвердить новый email."
+      updated: "Аккаунт обновлён."
+    sessions:
+      signed_in: "Вы вошли."
+      signed_out: "Вы вышли."
+      already_signed_out: "Вы уже вышли."
+    unlocks:
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по разблокировке."
+      send_paranoid_instructions: "Если ваш аккаунт существует, вы получите письмо с инструкциями по разблокировке."
+      unlocked: "Ваш аккаунт разблокирован."
+  errors:
+    messages:
+      already_confirmed: "уже подтверждён"
+      confirmation_period_expired: "должен быть подтверждён в течение %{period}, пожалуйста, запросите новый"
+      expired: "устарел, пожалуйста, запросите новый"
+      not_found: "не найден"
+      not_locked: "не заблокирован"
+      not_saved:
+        one: "1 ошибка не позволила сохранить %{resource}:"
+        other: "%{count} ошибок не позволили сохранить %{resource}:"

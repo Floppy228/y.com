@@ -1,7 +1,7 @@
 <% content_for :title, "Админ | Y.com" %>
 
 <div class="fixed inset-0 mx-auto grid h-screen w-full max-w-[1400px] overflow-hidden bg-black text-white" style="grid-template-columns: 280px minmax(0, 1fr) 320px;">
-  <%= render "layouts/main_sidebar", active_tab: nil %>
+  <%= render "layouts/main_sidebar", active_tab: :admin %>
 
   <main class="h-screen overflow-y-auto border-r border-zinc-900 bg-black">
     <div class="sticky top-0 z-30 border-b border-zinc-900 bg-black/95 px-6 py-4 backdrop-blur">

@@ -56,8 +56,6 @@
                 <th class="px-4 py-3 font-semibold text-zinc-300">Имя</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300">Юзернейм</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300">Email</th>
-                <th class="px-4 py-3 font-semibold text-zinc-300">Админ</th>
-                <th class="px-4 py-3 font-semibold text-zinc-300">Бан</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300"></th>
               </tr>
             </thead>
@@ -67,20 +65,6 @@
                   <td class="px-4 py-3 text-white"><%= user.name.presence || "—" %></td>
                   <td class="px-4 py-3 text-zinc-400"><%= link_to user.username, user_path(user), class: "hover:text-indigo-400" %></td>
                   <td class="px-4 py-3 text-zinc-400"><%= user.email %></td>
-                  <td class="px-4 py-3">
-                    <% if user.admin? %>
-                      <span class="rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400">Да</span>
-                    <% else %>
-                      <span class="rounded-full bg-zinc-900 px-3 py-1 text-xs text-zinc-500">Нет</span>
-                    <% end %>
-                  </td>
-                  <td class="px-4 py-3">
-                    <% if user.banned? %>
-                      <span class="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-400" title="<%= user.ban_reason %>">Забанен</span>
-                    <% else %>
-                      <span class="rounded-full bg-zinc-900 px-3 py-1 text-xs text-zinc-500">Нет</span>
-                    <% end %>
-                  </td>
                   <td class="px-4 py-3">
                     <div class="flex gap-2">
                       <% if user != current_user %>

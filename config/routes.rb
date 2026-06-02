@@ -67,6 +67,8 @@ Rails.application.routes.draw do
   # Admin
   get "/admin", to: "admin#index", as: :admin
   post "/admin/users/:id/toggle_admin", to: "admin#toggle_admin", as: :toggle_admin
+  delete "/admin/users/:id", to: "admin#destroy_user", as: :admin_destroy_user
+  delete "/admin/posts/:id", to: "admin#destroy_post", as: :admin_destroy_post
 
   root "pages#index"
 end

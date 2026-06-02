@@ -8,50 +8,120 @@
       <h1 class="text-[22px] font-bold text-white">Админ-панель</h1>
     </div>
 
+    <div class="flex gap-1 border-b border-zinc-900 bg-black px-6 pt-4">
+      <%= link_to "Статистика", admin_path, class: "rounded-t-xl border border-b-0 px-5 py-2.5 text-sm font-semibold transition #{@tab == 'dashboard' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-transparent text-zinc-500 hover:text-white'}" %>
+      <%= link_to "Пользователи", admin_path(tab: "users"), class: "rounded-t-xl border border-b-0 px-5 py-2.5 text-sm font-semibold transition #{@tab == 'users' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-transparent text-zinc-500 hover:text-white'}" %>
+      <%= link_to "Посты", admin_path(tab: "posts"), class: "rounded-t-xl border border-b-0 px-5 py-2.5 text-sm font-semibold transition #{@tab == 'posts' ? 'border-zinc-900 bg-zinc-950 text-white' : 'border-transparent text-zinc-500 hover:text-white'}" %>
+    </div>
+
     <div class="p-6">
-      <%= form_with url: admin_path, method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
-        <%= text_field_tag :q, @query, placeholder: "Поиск пользователей...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500" %>
-      <% end %>
+      <% if @tab == "dashboard" %>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:users] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Пользователей</div>
+          </div>
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:posts] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Постов</div>
+          </div>
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:comments] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Комментариев</div>
+          </div>
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:likes] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Лайков</div>
+          </div>
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:messages] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Сообщений</div>
+          </div>
+          <div class="rounded-xl border border-zinc-900 bg-zinc-950 p-5">
+            <div class="text-3xl font-bold text-white"><%= @stats[:shares] %></div>
+            <div class="mt-1 text-sm text-zinc-500">Репостов</div>
+          </div>
+        </div>
 
-      <div class="overflow-x-auto rounded-xl border border-zinc-900">
-        <table class="w-full text-left text-sm">
-          <thead>
-            <tr class="border-b border-zinc-900 bg-zinc-950">
-              <th class="px-4 py-3 font-semibold text-zinc-300">Имя</th>
-              <th class="px-4 py-3 font-semibold text-zinc-300">Юзернейм</th>
-              <th class="px-4 py-3 font-semibold text-zinc-300">Email</th>
-              <th class="px-4 py-3 font-semibold text-zinc-300">Админ</th>
-              <th class="px-4 py-3 font-semibold text-zinc-300"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @users.each do |user| %>
-              <tr class="border-b border-zinc-900 hover:bg-zinc-950">
-                <td class="px-4 py-3 text-white"><%= user.name.presence || "—" %></td>
-                <td class="px-4 py-3 text-zinc-400"><%= user.username %></td>
-                <td class="px-4 py-3 text-zinc-400"><%= user.email %></td>
-                <td class="px-4 py-3">
-                  <% if user.admin? %>
-                    <span class="rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400">Да</span>
-                  <% else %>
-                    <span class="rounded-full bg-zinc-900 px-3 py-1 text-xs text-zinc-500">Нет</span>
-                  <% end %>
-                </td>
-                <td class="px-4 py-3">
-                  <% if user != current_user %>
-                    <%= button_to user.admin? ? "Снять" : "Назначить", toggle_admin_path(user, q: @query), method: :post, class: "rounded-full border px-4 py-1 text-xs font-semibold transition #{user.admin? ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : 'border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10'}" %>
-                  <% else %>
-                    <span class="text-xs text-zinc-600">Вы</span>
-                  <% end %>
-                </td>
+      <% elsif @tab == "users" %>
+        <%= form_with url: admin_path(tab: "users"), method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
+          <%= text_field_tag :q, @query, placeholder: "Поиск пользователей...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500" %>
+        <% end %>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-900">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="border-b border-zinc-900 bg-zinc-950">
+                <th class="px-4 py-3 font-semibold text-zinc-300">Имя</th>
+                <th class="px-4 py-3 font-semibold text-zinc-300">Юзернейм</th>
+                <th class="px-4 py-3 font-semibold text-zinc-300">Email</th>
+                <th class="px-4 py-3 font-semibold text-zinc-300">Админ</th>
+                <th class="px-4 py-3 font-semibold text-zinc-300"></th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <% @users.each do |user| %>
+                <tr class="border-b border-zinc-900 hover:bg-zinc-950">
+                  <td class="px-4 py-3 text-white"><%= user.name.presence || "—" %></td>
+                  <td class="px-4 py-3 text-zinc-400"><%= link_to user.username, user_path(user), class: "hover:text-indigo-400" %></td>
+                  <td class="px-4 py-3 text-zinc-400"><%= user.email %></td>
+                  <td class="px-4 py-3">
+                    <% if user.admin? %>
+                      <span class="rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400">Да</span>
+                    <% else %>
+                      <span class="rounded-full bg-zinc-900 px-3 py-1 text-xs text-zinc-500">Нет</span>
+                    <% end %>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                      <% if user != current_user %>
+                        <%= button_to user.admin? ? "Снять" : "Назначить", toggle_admin_path(user, q: @query), method: :post, class: "rounded-full border px-4 py-1 text-xs font-semibold transition #{user.admin? ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : 'border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10'}" %>
+                        <%= button_to "Удалить", admin_destroy_user_path(user), method: :delete, data: { turbo_confirm: "Точно удалить #{user.username}?" }, class: "rounded-full border border-zinc-700 px-4 py-1 text-xs font-semibold text-zinc-500 transition hover:border-red-500 hover:text-red-400" %>
+                      <% else %>
+                        <span class="text-xs text-zinc-600">Вы</span>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
 
-      <% if @users.size >= 100 %>
-        <p class="mt-4 text-center text-xs text-zinc-600">Показано первых 100 пользователей. Уточните поиск.</p>
+        <% if @users.size >= 100 %>
+          <p class="mt-4 text-center text-xs text-zinc-600">Показано первых 100 пользователей. Уточните поиск.</p>
+        <% end %>
+
+      <% elsif @tab == "posts" %>
+        <%= form_with url: admin_path(tab: "posts"), method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
+          <%= text_field_tag :q, @query, placeholder: "Поиск постов...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500" %>
+        <% end %>
+
+        <div class="space-y-3">
+          <% @posts.each do |post| %>
+            <div class="flex items-start gap-4 rounded-xl border border-zinc-900 bg-zinc-950 p-4">
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 text-sm font-bold text-white">
+                <% if post.user.avatar.attached? %>
+                  <%= image_tag post.user.avatar, class: "h-full w-full object-cover" %>
+                <% else %>
+                  <%= (post.user.name.presence || post.user.username).split.map { |p| p.first }.join[0, 2].upcase %>
+                <% end %>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 text-sm">
+                  <%= link_to post.user.name.presence || post.user.username, user_path(post.user), class: "font-semibold text-white hover:underline" %>
+                  <span class="text-xs text-zinc-600"><%= time_ago_in_words(post.created_at) %> назад</span>
+                </div>
+                <p class="mt-1 text-sm text-zinc-300"><%= truncate(post.content, length: 200) %></p>
+              </div>
+              <%= button_to "Удалить", admin_destroy_post_path(post, q: @query), method: :delete, data: { turbo_confirm: "Точно удалить этот пост?" }, class: "shrink-0 rounded-full border border-zinc-700 px-4 py-2 text-xs font-semibold text-zinc-500 transition hover:border-red-500 hover:text-red-400" %>
+            </div>
+          <% end %>
+
+          <% if @posts.empty? %>
+            <div class="py-16 text-center text-sm text-zinc-500">Постов не найдено.</div>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </main>
@@ -59,7 +129,7 @@
   <aside class="h-screen overflow-y-auto bg-black p-5">
     <div class="rounded-2xl border border-zinc-900 bg-zinc-950 p-5">
       <h3 class="mb-4 text-lg font-semibold text-white">Админ-панель</h3>
-      <p class="text-sm text-zinc-500">Управление администраторами и пользователями.</p>
+      <p class="text-sm text-zinc-500">Управление пользователями и контентом.</p>
     </div>
   </aside>
 </div>

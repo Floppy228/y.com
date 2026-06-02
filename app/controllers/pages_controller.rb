@@ -21,11 +21,13 @@
 
   def profile
     @user = current_user
+    @banned_user = @user.banned?
     @posts = current_user.posts.includes(:likes, comments: :user).order(created_at: :desc)
   end
 
   def user_profile
     @user = User.find(params[:id])
+    @banned_user = @user.banned?
     @blocked_by_them = current_user.blocked_by?(@user)
     unless @blocked_by_them
       @posts = @user.posts.includes(:likes, comments: :user).order(created_at: :desc)

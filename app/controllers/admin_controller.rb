@@ -41,6 +41,22 @@ class AdminController < ApplicationController
     redirect_to admin_path(tab: "users", q: params[:q]), notice: "Права администратора #{user.admin? ? 'выданы' : 'сняты'} для #{user.name.presence || user.username}."
   end
 
+  def ban
+    user = User.find(params[:id])
+    if user == current_user
+      redirect_to admin_path(tab: "users", q: params[:q]), alert: "Нельзя забанить самого себя."
+      return
+    end
+    user.update(banned: true, ban_reason: params[:ban_reason].to_s.strip)
+    redirect_to admin_path(tab: "users", q: params[:q]), notice: "Пользователь #{user.username} забанен."
+  end
+
+  def unban
+    user = User.find(params[:id])
+    user.update(banned: false, ban_reason: nil)
+    redirect_to admin_path(tab: "users", q: params[:q]), notice: "Пользователь #{user.username} разбанен."
+  end
+
   def destroy_user
     user = User.find(params[:id])
     if user == current_user

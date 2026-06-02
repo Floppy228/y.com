@@ -44,7 +44,8 @@
         </div>
 
       <% elsif @tab == "users" %>
-        <%= form_with url: admin_path(tab: "users"), method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
+        <%= form_with url: admin_path(tab: "users"), method: :get, data: { turbo: false }, class: "mb-6" do %>
+          <%= hidden_field_tag :tab, "users" %>
           <%= text_field_tag :q, @query, placeholder: "Поиск пользователей...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500" %>
         <% end %>
 
@@ -56,6 +57,7 @@
                 <th class="px-4 py-3 font-semibold text-zinc-300">Юзернейм</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300">Email</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300">Админ</th>
+                <th class="px-4 py-3 font-semibold text-zinc-300">Бан</th>
                 <th class="px-4 py-3 font-semibold text-zinc-300"></th>
               </tr>
             </thead>
@@ -73,9 +75,24 @@
                     <% end %>
                   </td>
                   <td class="px-4 py-3">
+                    <% if user.banned? %>
+                      <span class="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-400" title="<%= user.ban_reason %>">Забанен</span>
+                    <% else %>
+                      <span class="rounded-full bg-zinc-900 px-3 py-1 text-xs text-zinc-500">Нет</span>
+                    <% end %>
+                  </td>
+                  <td class="px-4 py-3">
                     <div class="flex gap-2">
                       <% if user != current_user %>
                         <%= button_to user.admin? ? "Снять" : "Назначить", toggle_admin_path(user, q: @query), method: :post, class: "rounded-full border px-4 py-1 text-xs font-semibold transition #{user.admin? ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : 'border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10'}" %>
+                        <% if user.banned? %>
+                          <%= button_to "Разбанить", unban_user_path(user, q: @query), method: :post, class: "rounded-full border border-zinc-700 px-4 py-1 text-xs font-semibold text-zinc-500 transition hover:border-green-500 hover:text-green-400" %>
+                        <% else %>
+                          <%= form_with url: ban_user_path(user, q: @query), method: :post, data: { turbo: false }, class: "inline" do |f| %>
+                            <%= text_field_tag "ban_reason", nil, placeholder: "Причина", class: "mr-1 w-28 rounded-full border border-zinc-800 bg-zinc-950 px-3 py-1 text-xs text-white outline-none placeholder:text-zinc-600 focus:border-red-500", required: true %>
+                            <%= f.submit "Забанить", class: "rounded-full border border-red-500/50 px-4 py-1 text-xs font-semibold text-red-400 transition hover:bg-red-500/10" %>
+                          <% end %>
+                        <% end %>
                         <%= button_to "Удалить", admin_destroy_user_path(user), method: :delete, data: { turbo_confirm: "Точно удалить #{user.username}?" }, class: "rounded-full border border-zinc-700 px-4 py-1 text-xs font-semibold text-zinc-500 transition hover:border-red-500 hover:text-red-400" %>
                       <% else %>
                         <span class="text-xs text-zinc-600">Вы</span>
@@ -93,7 +110,8 @@
         <% end %>
 
       <% elsif @tab == "posts" %>
-        <%= form_with url: admin_path(tab: "posts"), method: :get, local: true, data: { turbo: false }, class: "mb-6" do %>
+        <%= form_with url: admin_path(tab: "posts"), method: :get, data: { turbo: false }, class: "mb-6" do %>
+          <%= hidden_field_tag :tab, "posts" %>
           <%= text_field_tag :q, @query, placeholder: "Поиск постов...", class: "w-full rounded-full border border-zinc-900 bg-zinc-950 px-5 py-3 text-[15px] text-white outline-none placeholder:text-zinc-500 focus:border-indigo-500" %>
         <% end %>
 

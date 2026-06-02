@@ -24,7 +24,8 @@ class ApplicationController < ActionController::Base
 
     blocker_ids = current_user.blocks_as_blocker.select(:blocked_id)
     blocked_by_ids = current_user.blocks_as_blocked.select(:blocker_id)
-    [blocker_ids, blocked_by_ids].flatten
+    banned_ids = User.where(banned: true).pluck(:id)
+    [blocker_ids, blocked_by_ids, banned_ids].flatten
   end
 
   def create_notification(user:, actor:, notifiable:, action:)

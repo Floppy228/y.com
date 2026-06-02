@@ -1,9 +1,8 @@
-﻿# frozen_string_literal: true
-
-require "json"
+﻿require "json"
 require "net/http"
 require Rails.root.join("config/env_file").to_s
 
+# клиент для API DeepSeek (Y-Core — ИИ-помощник на сайте)
 class DeepseekClient
   API_URL = URI("https://api.deepseek.com/v1/chat/completions")
   MODEL = "deepseek-chat"

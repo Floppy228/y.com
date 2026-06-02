@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get "/profile", to: "pages#profile", as: :profile
   get "/users/:id", to: "pages#user_profile", as: :user
 
-  # Messages
+  # Сообщения
   get "/messages", to: "messages#messages", as: :messages
   post "/messages", to: "messages#create_message", as: :create_message
   post "/messages/read", to: "messages#mark_messages_read", as: :mark_messages_read
@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
   get "/following", to: "pages#following", as: :following
 
-  # Settings
+  # Настройки
   get "/settings", to: "pages#settings", as: :settings
   get "/settings/password_reset", to: "pages#password_reset", as: :settings_password_reset
   post "/settings/password_reset/send_code", to: "pages#send_password_change_code", as: :settings_password_reset_send_code
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     post "/account_restore", to: "pages#send_password_reset_instructions", as: :account_restore_send
   end
 
-  # Posts
+  # Посты
   get "/posts/:id", to: "pages#show_post", as: :post
   post "/posts", to: "pages#create_post", as: :posts
   post "/posts/:id/like", to: "pages#like_post", as: :like_post
@@ -50,21 +50,21 @@ Rails.application.routes.draw do
 
   get "/chat_users", to: "messages#chat_users", as: :chat_users
 
-  # Friendships
+  # Дружба
   post "/friendships/:id", to: "friendships#create", as: :send_friend_request
   patch "/friendships/:id/accept", to: "friendships#accept", as: :accept_friend_request
   delete "/friendships/:id", to: "friendships#reject", as: :reject_friend_request
   delete "/friendships/:id/unfriend", to: "friendships#unfriend", as: :unfriend
 
-  # Notifications
+  # Уведомления
   get "/notifications", to: "notifications#index", as: :notifications
   post "/notifications/read", to: "notifications#mark_read", as: :mark_notifications_read
 
-  # Blocks
+  # Блокировка
   post "/users/:id/block", to: "blocks#create", as: :block_user
   delete "/users/:id/unblock", to: "blocks#destroy", as: :unblock_user
 
-  # Admin
+  # Админка
   get "/admin", to: "admin#index", as: :admin
   post "/admin/users/:id/toggle_admin", to: "admin#toggle_admin", as: :toggle_admin
   post "/admin/users/:id/ban", to: "admin#ban", as: :ban_user

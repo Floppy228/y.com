@@ -111,13 +111,19 @@
         create_notification(user: post.user, actor: current_user, notifiable: post, action: "like")
       end
     end
-    redirect_back fallback_location: root_path
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("post_#{post.id}", partial: "posts/post", locals: { post: post.reload }) }
+      format.html { redirect_back fallback_location: root_path }
+    end
   end
 
   def unlike_post
     post = Post.find(params[:id])
     current_user.likes.find_by(post: post)&.destroy
-    redirect_back fallback_location: root_path
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("post_#{post.id}", partial: "posts/post", locals: { post: post.reload }) }
+      format.html { redirect_back fallback_location: root_path }
+    end
   end
 
   def create_comment

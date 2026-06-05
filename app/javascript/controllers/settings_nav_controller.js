@@ -36,6 +36,11 @@ export default class extends Controller {
       if (sectionTop <= offset + 8) currentSection = section
     })
 
+    const lastSection = this.sectionTargets[this.sectionTargets.length - 1]
+    if (this.element.scrollHeight - this.element.scrollTop - this.element.clientHeight < 50) {
+      currentSection = lastSection
+    }
+
     if (currentSection) this.setActiveLink(currentSection.id)
   }
 

@@ -35,7 +35,7 @@ export default class extends Controller {
       const rect = section.getBoundingClientRect()
       const top = rect.top - containerRect.top
       const dist = Math.abs(top - offset)
-      if (top < containerRect.height - 10 && dist < minDist) {
+      if (dist < minDist) {
         nearest = section
         minDist = dist
       }

@@ -27,7 +27,14 @@ export default class extends Controller {
 
   updateActiveLink() {
     const offset = this.offsetValue || 24
-    const containerRect = this.element.getBoundingClientRect()
+    const el = this.element
+
+    if (el.scrollHeight > el.clientHeight && el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+      this.setActiveLink(this.sectionTargets[this.sectionTargets.length - 1].id)
+      return
+    }
+
+    const containerRect = el.getBoundingClientRect()
 
     let nearest = this.sectionTargets[0]
     let minDist = Infinity

@@ -11,6 +11,7 @@
         redirect_to auth_path(auth_mode: "login"), alert: "Ваш аккаунт заблокирован. Причина: #{reason}"
         return
       end
+      resource.remember_me = Devise::TRUE_VALUES.include?(params.dig(:user, :remember_me))
       set_flash_message!(:notice, :signed_in)
       sign_in(resource_name, resource)
       redirect_to after_sign_in_path_for(resource)

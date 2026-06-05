@@ -29,19 +29,19 @@ export default class extends Controller {
     const offset = this.offsetValue || 24
     const containerRect = this.element.getBoundingClientRect()
 
-    let currentSection = this.sectionTargets[0]
+    let nearest = this.sectionTargets[0]
+    let minDist = Infinity
     this.sectionTargets.forEach((section) => {
-      const sectionRect = section.getBoundingClientRect()
-      const sectionTop = sectionRect.top - containerRect.top
-      if (sectionTop <= offset + 8) currentSection = section
+      const rect = section.getBoundingClientRect()
+      const top = rect.top - containerRect.top
+      const dist = Math.abs(top - offset)
+      if (top < containerRect.height - 10 && dist < minDist) {
+        nearest = section
+        minDist = dist
+      }
     })
 
-    const lastSection = this.sectionTargets[this.sectionTargets.length - 1]
-    if (this.element.scrollHeight - this.element.scrollTop - this.element.clientHeight < 50) {
-      currentSection = lastSection
-    }
-
-    if (currentSection) this.setActiveLink(currentSection.id)
+    this.setActiveLink(nearest.id)
   }
 
   setActiveLink(sectionId) {

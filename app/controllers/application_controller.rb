@@ -40,8 +40,12 @@ class ApplicationController < ActionController::Base
 
   def broadcast_notification_badge(user)
     count = Notification.unread.where(user: user).count
-    badge_html = count > 0 ? render_to_string(partial: "layouts/unread_badge", locals: { count: count }) : ""
-    Turbo::StreamsChannel.broadcast_replace_to "notifications_user_#{user.id}", target: "notification-badge", html: badge_html
+    badge_html = if count > 0
+      "<span class=\"flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-500 px-1.5 text-xs font-bold text-white\">#{count}</span>"
+    else
+      ""
+    end
+    Turbo::StreamsChannel.broadcast_update_to "notifications_user_#{user.id}", target: "notification-badge", html: badge_html
   end
 
   def configure_permitted_parameters

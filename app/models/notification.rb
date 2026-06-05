@@ -25,7 +25,7 @@ class Notification < ApplicationRecord
     else
       ""
     end
-    Turbo::StreamsChannel.broadcast_replace_to "notifications_user_#{user_id}", target: "notification-badge", html: badge_html
+    Turbo::StreamsChannel.broadcast_update_to "notifications_user_#{user_id}", target: "notification-badge", html: badge_html
   rescue StandardError => e
     Rails.logger.error "Notification broadcast failed: #{e.message}"
   end

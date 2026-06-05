@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
     end
 
     @direct_messages = if @selected_user
-      msgs = DirectMessage.between(current_user, @selected_user)
+      msgs = DirectMessage.between(current_user, @selected_user).includes(:sender, :recipient)
       if @query.present?
         msgs = msgs.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
       end

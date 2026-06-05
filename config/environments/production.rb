@@ -29,6 +29,8 @@ Rails.application.configure do
     enable_starttls_auto: EnvFile.fetch("SMTP_ENABLE_STARTTLS_AUTO") == "true"
   }
   config.i18n.fallbacks = true
+  Rails.application.routes.default_url_options = { host: "150.241.123.201" }
+  config.active_storage.service_urls_expire_in = 1.week
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
 end

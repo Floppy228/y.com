@@ -1,5 +1,5 @@
 ﻿class PagesController < ApplicationController
-  skip_before_action :require_login, only: [:auth, :send_password_reset_instructions]
+  skip_before_action :require_login, only: [:auth, :send_password_reset_instructions, :terms]
   before_action :redirect_authenticated_user_from_auth, only: [:auth]
 
   def index

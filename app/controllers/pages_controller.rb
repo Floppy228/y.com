@@ -316,4 +316,7 @@
     session.delete(:password_change_code)
     session.delete(:password_change_code_sent_at)
   end
+
+  def terms
+  end
 end

@@ -207,7 +207,7 @@
             <div class="my-4">
               <label class="flex cursor-pointer items-center gap-2 text-sm text-zinc-500 transition hover:text-white">
                 <%= check_box_tag :terms_check, "1", false, id: "termsCheck", required: true, class: "h-4 w-4 rounded border-zinc-800 bg-zinc-950 text-indigo-500 focus:ring-indigo-500" %>
-                <span>Я принимаю условия</span>
+                <span>Я принимаю <%= link_to "условия", terms_path, target: "_blank", class: "text-indigo-500 hover:text-indigo-400 underline" %></span>
               </label>
             </div>
 

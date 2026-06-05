@@ -72,5 +72,7 @@ Rails.application.routes.draw do
   delete "/admin/users/:id", to: "admin#destroy_user", as: :admin_destroy_user
   delete "/admin/posts/:id", to: "admin#destroy_post", as: :admin_destroy_post
 
+  get "/terms", to: "pages#terms", as: :terms
+
   root "pages#index"
 end

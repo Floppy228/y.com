@@ -10,7 +10,7 @@
       else
         "border-red-400/30 bg-gradient-to-br from-red-600/35 to-red-700/30 shadow-[0_12px_32px_rgba(239,68,68,0.14)]"
       end %>
-      <div data-controller="toast" class="pointer-events-auto w-full max-w-xl rounded-2xl border px-4 py-3 text-sm font-semibold text-white backdrop-blur-md <%= container_classes %>">
+      <div data-controller="toast" data-action="mouseenter->toast#pause mouseleave->toast#resume" class="pointer-events-auto w-full max-w-xl rounded-2xl border px-4 py-3 text-sm font-semibold text-white backdrop-blur-md <%= container_classes %>">
         <div class="flex items-start gap-2">
           <span class="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-white/85"></span>
           <span class="flex-1"><%= message %></span>

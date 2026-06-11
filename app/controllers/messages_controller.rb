@@ -8,9 +8,6 @@ class MessagesController < ApplicationController
     excluded = excluded_user_ids
     chat_partner_ids.reject! { |id| excluded.include?(id) }
 
-    @chat_users = users_scope.where(id: chat_partner_ids).order(:name, :username)
-    @chat_rows = @chat_users.map { |user| build_chat_row(user) }
-
     @search_dms = if @query.present?
       DirectMessage
         .where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
@@ -34,6 +31,9 @@ class MessagesController < ApplicationController
     else
       DirectMessage.none
     end
+
+    @chat_users = users_scope.where(id: chat_partner_ids).order(:name, :username)
+    @chat_rows = @chat_users.map { |user| build_chat_row(user) }
   end
 
   def create_message

@@ -3,8 +3,12 @@
 <article id="post_<%= post.id %>" class="border-b border-zinc-900 px-6 py-5 hover:bg-zinc-950 transition" data-post-id="<%= post.id %>">
   <div class="flex gap-3">
 
-    <div class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 flex items-center justify-center text-sm font-bold text-white">
-      <%= post.user.name.first.upcase %>
+    <div class="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-purple-950 flex items-center justify-center text-sm font-bold text-white">
+      <% if post.user.avatar.attached? %>
+        <%= image_tag post.user.avatar, class: "h-full w-full object-cover" %>
+      <% else %>
+        <%= post.user.name.first.upcase %>
+      <% end %>
     </div>
 
     <div class="flex-1 min-w-0">

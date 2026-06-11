@@ -28,6 +28,8 @@ class MessagesController < ApplicationController
         msgs = msgs.where("LOWER(content) LIKE :q", q: "%#{@query.downcase}%")
       end
       DirectMessage.unread_for(current_user).where(sender: @selected_user).update_all(read_at: Time.current)
+      @total_unread_count = DirectMessage.unread_for(current_user).count
+      broadcast_unread_badge(current_user)
       msgs
     else
       DirectMessage.none

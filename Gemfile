@@ -20,7 +20,7 @@ gem "solid_cable"
 gem "bootsnap", require: false # ускорение загрузки
 gem "kamal", require: false    # деплой через Docker
 gem "thruster", require: false # проксирование статики
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.0"
 gem 'pg', '~> 1.5'            # PostgreSQL для продакшена
 
 gem "devise"           # аутентификация
